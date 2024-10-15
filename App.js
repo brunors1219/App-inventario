@@ -1,20 +1,57 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-export default function App() {
-  return (
+export default function App(){
+  return(
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.title}>Bem vindo</Text>
+      <Text style={styles.text}>Este é Um aplicativo de inventário com login obrigatório permite que os usuários acessem e gerenciem inventários de forma segura e organizada.</Text>
+      <View style={styles.conbutton}>
+        <TouchableOpacity style={styles.loginbutton}>
+          <Text style={styles.logintext}>Login ➡️</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  container:{
+    flex:1,
+    backgroundColor: '#447FFF',
     justifyContent: 'center',
+    padding:'2rem'
+
   },
-});
+  title:{
+    fontSize:'30px',
+    fontStyle:'bold',
+    marginBottom: '10px',
+    textAlign:'left'
+  },
+  text:{
+    fontSize:'15px',
+    marginBottom:'20px',
+    width:'80%',
+    textAlign:'left'
+  },
+  conbutton:{
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:'1.25rem'
+  },
+  loginbutton:{
+    alignItems:'center',
+    alignContent:'center',
+    paddingHorizontal:'10px',
+    paddingVertical:'10px',
+    backgroundColor:'#D9D9D9',
+    width:'200px',
+    borderRadius:5
+  },
+  logintext:{
+    fontSize:'20px',
+    textAlign:'center'
+  },
+
+
+})
