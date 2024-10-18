@@ -1,9 +1,95 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {React, useState} from "react";
+import { View, Text, Button, StyleSheet, TextInput, Alert, Image } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 
-export default function Login(){
-    return(
-        <View>
-            <Text>Login</Text>
-        </View>
-    )
+export default function Login({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleLogin() {
+    if (email === "" || password === "") {
+      Alert.alert("Erro", "Preencha todos os campos");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("Login realizado com sucesso! ID: " + user.uid);
+
+      navigation.navigate("CadProd");
+      // Aqui você pode redirecionar o usuário para outra tela, se necessário
+      // Exemplo: navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Erro de login", error.message);
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+    <View style={styles.box}>
+        <Image source={require('../assets/adaptive-icon.png')} style={styles.image}/>
+          <Text style={styles.title}>Login</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor="#313131"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            placeholderTextColor="#313131"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true} // Oculta a senha enquanto o usuário digita
+          />
+          <Button title="Entrar" onPress={handleLogin} />
+    </View>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  input: {
+    width: "80%",
+    height: 50,
+    fontSize:20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    marginBottom: 20,
+    padding: 10,
+  },
+  image:{
+    width:100,
+    height:100,
+  },
+  box:{
+    width:350,
+    justifyContent:'center',
+    alignItems:"center",
+    backgroundColor: '#fff', // Cor de fundo do container
+    borderRadius: 20, // Bordas arredondadas
+    padding: 20, // Espaçamento interno
+    shadowColor: '#000', // Cor da sombra
+    shadowOffset: { width: 0, height: 2 }, // Deslocamento da sombra
+    shadowOpacity: 0.25, // Opacidade da sombra
+    shadowRadius: 3.84, // Raio da sombra
+    elevation: 5, // Elevação (necessário para Android)
+    height: 500, 
+  }
+});
