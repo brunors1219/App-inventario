@@ -21,13 +21,33 @@ setPos("");
 
         <View style={styles.container}>
             <Text style={styles.text}>Cadastro de produto</Text>
-            <TextInput placeholder="Codigo"style={styles.input}
-valeu={} />
+
+
+
+            <Text style={styles.label}>Código do produto: </Text>
+            <TextInput placeholder="Digite código"style={styles.input}
+valeu={id}
+onChangeText={setId}
+ />
+
+
+
+<Text style={styles.label}>Quantidade: </Text>
+            <TextInput placeholder="Digitei quantidade"style={styles.input}
+valeu={quant} 
+onChangeText={setQuant}/>
+
+
+<Text style={styles.label}>Posição: </Text>
+            <TextInput placeholder="Digitei posição"style={styles.input}
+valeu={pos}
+onChangeText={setPos}/>
+
         </View>
     )
 }
 
-styles = StyleSheet.create{
+styles = StyleSheet.create({
  container:{
  flex:1,
  padding:20,
@@ -35,10 +55,20 @@ styles = StyleSheet.create{
 },
 
  text:{
-  fontsize:10
+  fontsize:20,
  },
-input:{
- 
 
-}
-}
+label:{
+ fontSize: 16,
+ marginaBottom:5,
+ color:#333
+},
+input:{
+ boderColor:"black",
+ borderWidth:1,
+ marginaBottom:15,
+ paddingHorizontal:10,
+ borderRadius:5
+
+},
+});
