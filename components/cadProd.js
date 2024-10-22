@@ -3,8 +3,14 @@ import { Text, View, TextInput, StyleSheet, TouchableOpacity } from "react-nativ
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
 
-export default function Cadprod() {
 
+
+
+export default function Cadprod({navigation}) {
+
+    const handlePress = () =>{
+        navigation.navigate('Inventario');
+    };
 
     const [id, setId] = useState("");
     const [quant, setQuant] = useState("");
@@ -63,6 +69,10 @@ export default function Cadprod() {
                 <Text style={styles.text}>Enviar</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity onPress={handlePress} style={styles.button}>
+                <Text style={styles.text}>Inventario</Text>
+            </TouchableOpacity>
+          
         </View>
     )
 }
@@ -107,6 +117,6 @@ styles = StyleSheet.create({
         alignItems:'center',
         alignContent:'center',
         borderRadius:10,
-        
+        marginBottom:20,
     }
 });
