@@ -18,9 +18,8 @@ export default function Login({ navigation }) {
       const user = userCredential.user;
       console.log("Login realizado com sucesso! ID: " + user.uid);
 
-      navigation.navigate("CadProd");
-      // Aqui você pode redirecionar o usuário para outra tela, se necessário
-      // Exemplo: navigation.navigate('Home');
+      navigation.navigate("Main");
+      
     } catch (error) {
       console.log(error);
       Alert.alert("Erro de login", error.message);
@@ -64,19 +63,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
+    fontStyle:'bold'
   },
   input: {
     width: "80%",
     height: 50,
     fontSize:20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
+    boderColor: "black",
+    borderWidth: 1,
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 5,
     marginBottom: 20,
     padding: 10,
   },
   image:{
-    width:100,
-    height:100,
+    width:120,
+    height:120,
   },
   box:{
     width:350,

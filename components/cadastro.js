@@ -23,7 +23,7 @@ const [password, setPassword] = useState("")
         <View style= {styles.container}>
             <View style={styles.box}>
                 <Image source={require('../assets/adaptive-icon.png')} style={styles.image}/>
-                <Text style={styles.text}>Cadastro</Text>
+                <Text style={styles.title}>Cadastro</Text>
                 <TextInput
                 placeholder="Email"
                 placeholderTextColor="#313131"
@@ -51,15 +51,33 @@ const styles = StyleSheet.create({
         alignItems:'center',
 
     },
-    input:{
-        borderBottomWidth:1,
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+      },
+      title: {
+        fontSize: 24,
+        marginBottom: 20,
+      },
+      input: {
+        width: "80%",
+        height: 50,
         fontSize:20,
-        borderBottomColor:'black',
-        marginBottom:10,
-        width:'80%',
-        height:50,
-    },
-    box:{
+        boderColor: "black",
+        borderWidth: 1,
+        marginBottom: 15,
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 20,
+        padding: 10,
+      },
+      image:{
+        width:120,
+        height:120,
+      },
+      box:{
         width:350,
         justifyContent:'center',
         alignItems:"center",
@@ -72,12 +90,5 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84, // Raio da sombra
         elevation: 5, // Elevação (necessário para Android)
         height: 500, 
-    },
-    text:{
-        fontSize:20
-    },
-    image:{
-        width:100,
-        height:100,
-      },
+      }
 })

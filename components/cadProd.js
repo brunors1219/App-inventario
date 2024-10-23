@@ -6,11 +6,9 @@ import { collection, addDoc } from "firebase/firestore";
 
 
 
-export default function Cadprod({navigation}) {
 
-    const handlePress = () =>{
-        navigation.navigate('Inventario');
-    };
+export default function Cadprod() {
+
 
     const [id, setId] = useState("");
     const [quant, setQuant] = useState("");
@@ -68,10 +66,6 @@ export default function Cadprod({navigation}) {
             <TouchableOpacity onPress={handleRegister} style={styles.button}>
                 <Text style={styles.text}>Enviar</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={handlePress} style={styles.button}>
-                <Text style={styles.text}>Inventario</Text>
-            </TouchableOpacity>
           
         </View>
     )
@@ -88,6 +82,7 @@ styles = StyleSheet.create({
         fontSize: 25,
         color: 'white',
         padding: 15
+
     },
 
     label: {
@@ -100,8 +95,8 @@ styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 15,
         padding: 10,
-        borderRadius: 5
-
+        borderRadius: 5,
+        fontSize:15,
     },
     title: {
         justifyContent: 'center',

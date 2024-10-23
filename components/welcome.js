@@ -13,7 +13,7 @@ export default function Welcome({ navigation }){
     <View style={styles.container}>
       <Text style={styles.title}>Bem vindo </Text>
       <Text style={styles.text}>Este é um aplicativo de inventário com login obrigatório permite que os usuários acessem e gerenciem inventários de forma segura e organizada.
-        Caso não tenha cadatro vai em registrar.
+        Caso não tenha cadatro vai em "Registrar".
       </Text>
       <View style={styles.conbutton}>
         <TouchableOpacity onPress={handleLoginPress} style={styles.loginbutton}>
@@ -30,7 +30,7 @@ export default function Welcome({ navigation }){
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    backgroundColor: '#447FFF',
+    backgroundColor: 'gray',
     justifyContent: 'center',
     padding:20
 
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize:20,
     color:'white',
     marginBottom:20,
-    width:'80%',
+    width:'95%',
     textAlign:'left'
   },
   conbutton:{
