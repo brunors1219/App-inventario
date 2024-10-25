@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 
 export default function Welcome({ navigation }){
 
@@ -16,12 +16,12 @@ export default function Welcome({ navigation }){
         Caso não tenha cadatro vai em "Registrar".
       </Text>
       <View style={styles.conbutton}>
-        <TouchableOpacity onPress={handleLoginPress} style={styles.loginbutton}>
+        <Pressable onPress={handleLoginPress} style={styles.loginbutton}>
           <Text style={styles.logintext}>Login ➡️</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleCadastraPress} style={styles.loginbutton}>
+        </Pressable>
+        <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
           <Text style={styles.logintext}>Registrar ✅</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

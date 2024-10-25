@@ -1,7 +1,8 @@
 import { React, useState } from "react";
-import { Text, View, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button } from "react-native";
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 
 export default function Inventario() {
@@ -13,6 +14,27 @@ export default function Inventario() {
     const [datahora, setData] = useState("");
     const [numbercontacao, setNumbercontacao] = useState("");
 
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
+    const onChange = (event, selectedDate) => {
+
+        if (event.type === "set") {
+            const currentDate = selectedDate || date;
+            setDate(currentDate);
+        }
+        setShow(false);
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
 
     const handleRegister = async () => {
         try {
@@ -20,10 +42,10 @@ export default function Inventario() {
             await addDoc(collection(db, "Inventario"), {
                 cod: cod,
                 nomeus: nomeus,
-                datahora: datahora,
                 numbercontacao: numbercontacao,
                 quantidade: quant,
-                posicao: pos
+                posicao: pos,
+                date: date
             });
             console.log("Produto cadastrado com sucesso!");
 
@@ -31,9 +53,9 @@ export default function Inventario() {
             setCod('');
             setQuant('');
             setPos('');
-            setData('');
             setNumbercontacao('');
             setNomeus('');
+            setDate('');
 
         } catch (e) {
             console.error("Erro ao cadastrar o produto: ", e);
@@ -45,14 +67,14 @@ export default function Inventario() {
 
     return (
 
-        <ScrollView  style={styles.scroll}>
+        <ScrollView style={styles.scroll}>
             <View style={styles.container}>
                 <View style={styles.title}>
                     <Text style={styles.text}>Inventario</Text>
                 </View>
                 <Text style={styles.label}>Código do produto: </Text>
                 <TextInput placeholder="Digite código" style={styles.input} value={cod}
-                onChangeText={setCod}
+                    onChangeText={setCod}
                     keyboardType="numeric"
                 />
                 <Text style={styles.label}>Quantidade: </Text>
@@ -68,34 +90,55 @@ export default function Inventario() {
                 <TextInput placeholder="Digite nome do usuario" style={styles.input}
                     value={nomeus}
                     onChangeText={setNomeus} />
-                <Text style={styles.label}>Data: </Text>
-                <TextInput placeholder="Digite Data" style={styles.input}
-                    value={datahora}
-                    onChangeText={setData}
-                    keyboardType="numeric" />
 
                 <Text style={styles.label}>Numero Cont.: </Text>
                 <TextInput placeholder="Digite número de contagem:" style={styles.input}
                     value={numbercontacao}
                     onChangeText={setNumbercontacao}
-                    keyboardType="numeric"/>
+                    keyboardType="numeric" />
 
 
-                <TouchableOpacity onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>Enviar</Text>
-                </TouchableOpacity>
-            
+                <Text style={styles.label}>Data: </Text>
+
+                <View>
+                    <Button onPress={showDatepicker} title="Escolher Data" />
+                </View>
+
+                {
+                    show && (
+                        <DateTimePicker
+                            value={date}
+                            mode={mode}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )
+                }
+
+                <Text style={{ marginVertical: 20, fontSize: 18 }}>
+                    Data selecionada: {date ? date.toLocaleDateString() : 'Nenhuma data selecionada'}
+                </Text>
             </View>
-        </ScrollView>
+
+
+
+
+            <Pressable onPress={handleRegister} style={styles.button}>
+                <Text style={styles.text}>Enviar</Text>
+            </Pressable>
+
+        
+        </ScrollView >
     )
 }
 
 styles = StyleSheet.create({
-    scroll:{
-        flex:1,
-        backgroundColor:"#FFF"
+    scroll: {
+        flex: 1,
+        backgroundColor: "#FFF"
     },
-    container:{
+    container: {
         padding: 20,
         justifyContent: 'center',
     },
