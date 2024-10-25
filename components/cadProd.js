@@ -108,6 +108,7 @@ export default function Cadprod() {
             <Pressable onPress={handleRegister} style={styles.button}>
                 <Text style={styles.text}>Enviar</Text>
             </Pressable>
+            <Text>Test</Text>
 
         </View>
     )
