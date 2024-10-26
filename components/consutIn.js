@@ -1,12 +1,12 @@
 import { React, useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./src/service/firebase";
-
 
 export default function ConsultIn() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchId, setSearchId] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,14 +26,25 @@ export default function ConsultIn() {
         fetchData();
     }, []);
 
+   
+
+
     if (loading) {
         return <Text>Carregando dados...</Text>
     }
+    const filteredData = searchId
+    ? data.filter(item => item.cod.includes(searchId))
+    : data;
 
     return (
         <View>
+            <TextInput
+            style={styles.input}
+            placeholder="🔍 Digite codigo"
+            value={searchId}
+            onChangeText={(text)=>setSearchId(text)}/>
             <FlatList
-                data={data}
+                data={filteredData}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
@@ -75,4 +86,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    input:{
+        borderRadius:5,
+        borderColor:"black",
+        borderWidth:1,
+        padding:10,
+        fontSize:15,
+    }
 });

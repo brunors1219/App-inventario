@@ -11,7 +11,6 @@ export default function Inventario() {
     const [cod, setCod] = useState("");
     const [quant, setQuant] = useState("");
     const [pos, setPos] = useState("");
-    const [datahora, setData] = useState("");
     const [numbercontacao, setNumbercontacao] = useState("");
 
     const [date, setDate] = useState(new Date());
@@ -176,6 +175,8 @@ styles = StyleSheet.create({
         alignItems: 'center',
         alignContent: 'center',
         borderRadius: 10,
+        margin:15,
+        
 
     }
 });

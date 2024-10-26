@@ -1,14 +1,16 @@
 import { React, useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./src/service/firebase";
 
 export default function Consulta() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchId, setSearchId] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
+
             try {
                 const querySnapshot = await getDocs(collection(db, 'produto'));
                 const dataList = querySnapshot.docs.map(doc => ({
@@ -29,16 +31,25 @@ export default function Consulta() {
             return <Text>Carregando dados...</Text>
         }
 
+        const filteredData = searchId
+        ? data.filter(item => item.id.includes(searchId))
+        : data;
+
         return(
             <View>
+                <TextInput
+                style={styles.input}
+                placeholder="🔍 Digite o código do produto"
+                value={searchId}
+                onChangeText={(text)=>setSearchId(text)}/>
                 <FlatList
-                data={data}
+                data={filteredData}
                 keyExtractor={item => item.id}
                 renderItem={({item}) =>(
                     <View style={styles.item}>
                         <Text style={styles.title}>Condigo do produto:{item.id}</Text>
-                        <Text>Quantidade: {item.quantidade}</Text>
-                        <Text>Posição: {item.posicao}</Text>
+                        <Text style={styles.text}>Quantidade: {item.quantidade}</Text>
+                        <Text style={styles.text}>Posição: {item.posicao}</Text>
                         <Text>
               Data: {
                 item.date && item.date.toDate
@@ -67,9 +78,19 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 2,
+      
     },
     title: {
       fontSize: 18,
       fontWeight: 'bold',
     },
+    input:{
+        borderRadius:5,
+        borderColor:"black",
+        borderWidth:1,
+        padding:10,
+        fontSize:15,
+        margin:10,
+        
+    }
   });
