@@ -1,23 +1,28 @@
 import { React, useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "./src/service/firebase";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+// import { collection, getDocs } from "firebase/firestore";
+// import { db } from "./src/service/firebase";
 
-export default function Consulta() {
+export default function Posicao({navigation}) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchId, setSearchId] = useState('')
+    const [searchId, setSearchId] = useState('');
+    
+
 
     useEffect(() => {
         const fetchData = async () => {
 
             try {
-                const querySnapshot = await getDocs(collection(db, 'Inventario'));
-                const dataList = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setData(dataList);
+                // const querySnapshot = await getDocs(collection(db, 'produto'));
+                // const dataList = querySnapshot.docs.map(doc => ({
+                //     id: doc.id,
+                //     ...doc.data(),
+                // }));
+                const res = await fetch('https://receiver-sand.vercel.app/api/invproducts?selection=position')
+                const data = await res.json()
+                setData(data)
+                //setData(dataList);
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
             } finally {
@@ -35,23 +40,34 @@ export default function Consulta() {
         ? data.filter(item => item.id.includes(searchId))
         : data;
 
+
+
+    const handlerSelectItem = (item) => {
+        navigation.navigate("ListPn", { Position: item });
+    }
+
     return (
         <View>
             <TextInput
                 style={styles.input}
-                placeholder="🔍 Digite o código do produto"
+                placeholder="🔍 Digite a posição"
                 value={searchId}
                 onChangeText={(text) => setSearchId(text)} />
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
+                
+            
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <Text style={styles.title}>Código do produto: {item.cod}</Text>
-                        <Text>Nome Usuário: {item.nomeus}</Text>
-                        <Text>Posição: {item.posicao}</Text>
-                        <Text>Quantidade: {item.quantidade}</Text>
-                        <Text>Número de Contagem: {item.numbercontacao}</Text>
+                        {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
+                        <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
+                        <TouchableOpacity onPress={() => handlerSelectItem(item)}>
+                            <View >
+                                <Text style={styles.text}>{item.Position}</Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </View>
                 )}
             />
@@ -85,5 +101,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         margin: 10,
 
-    }
+    },
+    column: {
+        justifyContent: 'center',
+      },
 });

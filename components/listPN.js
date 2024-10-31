@@ -3,25 +3,30 @@ import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
 // import { collection, getDocs } from "firebase/firestore";
 // import { db } from "./src/service/firebase";
 
-export default function Consulta() {
+export default function ListPn({Position}) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('')
+   
+    
 
     useEffect(() => {
         const fetchData = async () => {
 
             try {
-                // const querySnapshot = await getDocs(collection(db, 'produto'));
+                const res = await fetch(`https://receiver-sand.vercel.app/api/invproducts?position=${Position}`)
+                const data = await res.json()
+                console.log(data)
+                setData(data)
+                setRows(data)
+                // const querySnapshot = await getDocs(collection(db, 'Inventario'));
                 // const dataList = querySnapshot.docs.map(doc => ({
                 //     id: doc.id,
                 //     ...doc.data(),
                 // }));
-                const res = await fetch('https://receiver-sand.vercel.app/api/invproducts?selection=position')
-                const data = await res.json()
-                setData(data)
                 //setData(dataList);
             } catch (error) {
+                
                 console.error("Erro ao buscar dados:", error);
             } finally {
                 setLoading(false);
@@ -38,22 +43,25 @@ export default function Consulta() {
         ? data.filter(item => item.id.includes(searchId))
         : data;
 
+
     return (
         <View>
             <TextInput
                 style={styles.input}
-                placeholder="🔍 Digite a posição"
+                placeholder="🔍 Digite o código do produto"
                 value={searchId}
                 onChangeText={(text) => setSearchId(text)} />
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
+                numColumns={2}
+                columnWrapperStyle={styles.column}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
-                        <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
-                        <Text style={styles.text}>Posição: {item.Position}</Text>
-                   
+                        <Text style={styles.title}>PN: {item.PN}</Text>
+                        <Text>Descrição: {item.Description}</Text>
+                        <Text>Posição: {item.Position}</Text>
+                        <Text>{item.action}</Text>
                     </View>
                 )}
             />
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     input: {
@@ -87,5 +95,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         margin: 10,
 
-    }
+    },
+    column: {
+        flex: 1,
+        justifyContent: 'space-between',
+        marginVertical: 8,
+      },
 });

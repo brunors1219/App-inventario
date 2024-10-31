@@ -1,13 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Cadprod from "./components/cadProd";
+//import Cadprod from "./components/cadProd";
 import Inventario from "./components/invetario";
 import { Ionicons } from '@expo/vector-icons';
-import Consulta from "./components/consulta";
-import ConsultIn from "./components/consutIn";
-
-
-
+import ListPn from "./components/listPN";
+import Position from "./components/listposicao";
 
 const Tab = createBottomTabNavigator();
 export default function Tabs(){
@@ -17,14 +14,15 @@ export default function Tabs(){
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
     
-              if (route.name === 'Cadastro_produto') {
-                iconName = focused ? 'home' : 'home-outline';
-              } else if (route.name === 'Inventario') {
-                iconName = focused ? 'duplicate' : 'duplicate-outline';
-              } else if (route.name === 'Consulta') {
+              
+              if (route.name === 'Posição') {
                 iconName = focused ? 'construct' : 'construct-outline';
-              } else if (route.name === 'Consulta2') {
+              }else if (route.name === 'ListPn') {
                 iconName = focused ? 'clipboard' : 'clipboard-outline';
+              // }else if (route.name === 'Cadastro_produto') {
+              //   iconName = focused ? 'home' : 'home-outline';
+              } else if (route.name === 'Cadastro') {
+                iconName = focused ? 'duplicate' : 'duplicate-outline';
               }
     
               return <Ionicons name={iconName} size={size} color={color}/>;
@@ -33,10 +31,11 @@ export default function Tabs(){
             tabBarActiveTintColor: 'blue',
             tabBarInactiveTintColor: 'gray',
           })}>
-            <Tab.Screen name="Cadastro_produto" component={Cadprod}/>
-            <Tab.Screen name="Inventario" component={Inventario}/>
-            <Tab.Screen name="Consulta" component={Consulta}/>
-            <Tab.Screen name="Consulta2" component={ConsultIn}/>
+            <Tab.Screen name="Posição" component={Position}/>
+            <Tab.Screen name="ListPn" component={ListPn}/>
+            <Tab.Screen name="Cadastro" component={Inventario}/>
+            
+            
         </Tab.Navigator>
     );
     

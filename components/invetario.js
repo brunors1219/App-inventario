@@ -5,35 +5,14 @@ import { collection, addDoc } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 
-export default function Inventario() {
+export default function Inventario(idReferency, setValue) {
 
-    const [nomeus, setNomeus] = useState("");
-    const [cod, setCod] = useState("");
-    const [quant, setQuant] = useState("");
-    const [pos, setPos] = useState("");
-    const [numbercontacao, setNumbercontacao] = useState("");
+    const [position, setPositon] = useState(idReferency.idReferency ? idReferency.idReferency.Position : '')
+    const [pn, setPN] = useState(idReferency.idReferency ? idReferency.idReferency.PN : '')
+    const [description, setDescription] = useState(idReferency.idReferency ? idReferency.idReferency.Description : '')
+    const [qty, setQty] = useState()
+    
 
-    const [date, setDate] = useState(new Date());
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
-
-    const onChange = (event, selectedDate) => {
-
-        if (event.type === "set") {
-            const currentDate = selectedDate || date;
-            setDate(currentDate);
-        }
-        setShow(false);
-    };
-
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
-
-    const showDatepicker = () => {
-        showMode('date');
-    };
 
     const handleRegister = async () => {
         try {
@@ -69,30 +48,30 @@ export default function Inventario() {
         <ScrollView style={styles.scroll}>
             <View style={styles.container}>
                 <View style={styles.title}>
-                    <Text style={styles.text}>Inventario</Text>
+                    <Text style={styles.text}>Cadastrado/Edição</Text>
                 </View>
-                <Text style={styles.label}>Código do produto: </Text>
-                <TextInput placeholder="Digite código" style={styles.input} value={cod}
-                    onChangeText={setCod}
+                <Text style={styles.label}>PN: </Text>
+                <TextInput placeholder="PN" style={styles.input} value={pn}
+                    onChangeText={setPN}
                     keyboardType="numeric"
                 />
           
 
-                <Text style={styles.label}>Posição: </Text>
-                <TextInput placeholder="Digite posição" style={styles.input}
-                    value={pos}
-                    onChangeText={setPos} />
+                <Text style={styles.label}>Descrição: </Text>
+                <TextInput placeholder="Descrição" style={styles.input}
+                    value={description}
+                    onChangeText={setDescription} />
 
-                <Text style={styles.label}>Quantidade: </Text>
-                <TextInput placeholder="Digite quantidade" style={styles.input}
-                    value={quant}
-                    onChangeText={setQuant}
-                    keyboardType="numeric" />
+                <Text style={styles.label}>Posição: </Text>
+                <TextInput placeholder="Posicao" style={styles.input}
+                    value={position}
+                    onChangeText={setPositon}
+                     />
                 
-                <Text style={styles.label}>Nome do usuario: </Text>
-                <TextInput placeholder="Digite nome do usuario" style={styles.input}
-                    value={nomeus}
-                    onChangeText={setNomeus} />
+                <Text style={styles.label}>Quantidade</Text>
+                <TextInput placeholder="Quantidade" style={styles.input}
+                    value={qty}
+                    onChangeText={setQty} />
 
                 <Text style={styles.label}>Numero Cont.: </Text>
                 <Text>*</Text>
@@ -102,9 +81,14 @@ export default function Inventario() {
 
 
 
+            <View>
             <Pressable onPress={handleRegister} style={styles.button}>
-                <Text style={styles.text}>Enviar</Text>
-            </Pressable>
+                    <Text style={styles.text}>Registrar</Text>
+                </Pressable>
+                <Pressable onPress={handleRegister} style={styles.button}>
+                    <Text style={styles.text}>Cancelar</Text>
+                </Pressable>
+            </View>
 
         
         </ScrollView >
