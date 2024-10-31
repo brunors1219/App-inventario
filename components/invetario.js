@@ -76,48 +76,27 @@ export default function Inventario() {
                     onChangeText={setCod}
                     keyboardType="numeric"
                 />
+          
+
+                <Text style={styles.label}>Posição: </Text>
+                <TextInput placeholder="Digite posição" style={styles.input}
+                    value={pos}
+                    onChangeText={setPos} />
+
                 <Text style={styles.label}>Quantidade: </Text>
                 <TextInput placeholder="Digite quantidade" style={styles.input}
                     value={quant}
                     onChangeText={setQuant}
                     keyboardType="numeric" />
-                <Text style={styles.label}>Posição: </Text>
-                <TextInput placeholder="Digite posição" style={styles.input}
-                    value={pos}
-                    onChangeText={setPos} />
+                
                 <Text style={styles.label}>Nome do usuario: </Text>
                 <TextInput placeholder="Digite nome do usuario" style={styles.input}
                     value={nomeus}
                     onChangeText={setNomeus} />
 
                 <Text style={styles.label}>Numero Cont.: </Text>
-                <TextInput placeholder="Digite número de contagem:" style={styles.input}
-                    value={numbercontacao}
-                    onChangeText={setNumbercontacao}
-                    keyboardType="numeric" />
+                <Text>*</Text>
 
-
-                <Text style={styles.label}>Data: </Text>
-
-                <View>
-                    <Button onPress={showDatepicker} title="Escolher Data" />
-                </View>
-
-                {
-                    show && (
-                        <DateTimePicker
-                            value={date}
-                            mode={mode}
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChange}
-                        />
-                    )
-                }
-
-                <Text style={{ marginVertical: 20, fontSize: 18 }}>
-                    Data selecionada: {date ? date.toLocaleDateString() : 'Nenhuma data selecionada'}
-                </Text>
             </View>
 
 

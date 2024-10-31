@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { Text, View, TextInput, StyleSheet, Pressable, Button } from "react-native";
+import { Text, View, TextInput, StyleSheet, Pressable, Button, ScrollView } from "react-native";
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -59,66 +59,61 @@ export default function Cadprod() {
 
     return (
 
-        <View style={styles.container}>
-            <View style={styles.title}>
-                <Text style={styles.text}>Cadastro de Produto</Text>
-            </View>
-
-
-
-            <Text style={styles.label}>Código do produto: </Text>
-            <TextInput placeholder="Digite código" style={styles.input} value={id} onChangeText={setId}
-            />
-
-
-
-
-            <Text style={styles.label}>Quantidade: </Text>
-            <TextInput placeholder="Digite quantidade" style={styles.input}
-                value={quant}
-                onChangeText={setQuant} />
-
-
-            <Text style={styles.label}>Posição: </Text>
-            <TextInput placeholder="Digite posição" style={styles.input}
-                value={pos}
-                onChangeText={setPos} />
-            <View>
-                <View>
-                    <Button onPress={showDatepicker} title="Escolher Data" />
+        <ScrollView style={styles.scroll}>
+            <View style={styles.container}>
+                <View style={styles.title}>
+                    <Text style={styles.text}>Cadastro de Produto</Text>
                 </View>
-
-                {
-                    show && (
-                        <DateTimePicker
-                            value={date}
-                            mode={mode}
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChange}
-                        />
-                    )
-                }
-
-                <Text style={{ marginVertical: 20, fontSize: 18 }}>
-                    Data selecionada: {date ? date.toLocaleDateString(): 'Nenhuma data selecionada'}
-                </Text>
+                <Text style={styles.label}>Código do produto: </Text>
+                <TextInput placeholder="Digite código" style={styles.input} value={id} onChangeText={setId}
+                />
+                <Text style={styles.label}>Posição: </Text>
+                <TextInput placeholder="Digite posição" style={styles.input}
+                    value={pos}
+                    onChangeText={setPos} />
+                <Text style={styles.label}>Quantidade: </Text>
+                <TextInput placeholder="Digite quantidade" style={styles.input}
+                    value={quant}
+                    onChangeText={setQuant} />
+                
+                {/* <View>
+                    <View>
+                        <Button onPress={showDatepicker} title="Escolher Data" />
+                    </View>
+                    {
+                        show && (
+                            <DateTimePicker
+                                value={date}
+                                mode={mode}
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChange}
+                            />
+                        )
+                    }
+                    <Text style={{ marginVertical: 20, fontSize: 18 }}>
+                        Data selecionada: {date ? date.toLocaleDateString(): 'Nenhuma data selecionada'}
+                    </Text>
+                </View> */}
+                <Pressable onPress={handleRegister} style={styles.button}>
+                    <Text style={styles.text}>Enviar</Text>
+                </Pressable>
             </View>
 
-            <Pressable onPress={handleRegister} style={styles.button}>
-                <Text style={styles.text}>Enviar</Text>
-            </Pressable>
 
-
-        </View>
+        </ScrollView>
     )
 }
 
 styles = StyleSheet.create({
+    
+    scroll:{
+        flex: 1,
+        backgroundColor: "#FFF"
+    },
     container: {
         flex: 1,
         padding: 20,
-        justifyContent: 'center'
     },
 
     text: {

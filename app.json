@@ -2,17 +2,14 @@
   "expo": {
     "name": "appin",
     "slug": "appin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/splash.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#313131",
-      "width":200,
-      "height":200
-      
+      "backgroundColor": "#313131"
     },
     "ios": {
       "supportsTablet": true
@@ -21,10 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.brunors1532.appin"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ace27e92-2101-471e-b283-bf3a0e3a681a"
+      }
     }
   }
 }

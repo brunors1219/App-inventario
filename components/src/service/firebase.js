@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore'; // para Firestore
 import { getDatabase } from 'firebase/database'; // para Realtime Database
+
 const firebaseConfig = {
   apiKey: "AIzaSyDiq2gWqDwv0oMS76BcdVIobdaijoWww0g",
   authDomain: "inventario-3f7c3.firebaseapp.com",

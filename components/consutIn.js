@@ -3,13 +3,14 @@ import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./src/service/firebase";
 
-export default function ConsultIn() {
+export default function Consulta() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchId, setSearchId] = useState('');
+    const [searchId, setSearchId] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
+
             try {
                 const querySnapshot = await getDocs(collection(db, 'Inventario'));
                 const dataList = querySnapshot.docs.map(doc => ({
@@ -26,40 +27,31 @@ export default function ConsultIn() {
         fetchData();
     }, []);
 
-   
-
-
     if (loading) {
         return <Text>Carregando dados...</Text>
     }
+
     const filteredData = searchId
-    ? data.filter(item => item.cod.includes(searchId))
-    : data;
+        ? data.filter(item => item.id.includes(searchId))
+        : data;
 
     return (
         <View>
             <TextInput
-            style={styles.input}
-            placeholder="🔍 Digite codigo"
-            value={searchId}
-            onChangeText={(text)=>setSearchId(text)}/>
+                style={styles.input}
+                placeholder="🔍 Digite o código do produto"
+                value={searchId}
+                onChangeText={(text) => setSearchId(text)} />
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <Text style={styles.title}>Condigo do produto:{item.cod}</Text>
-                        <Text>Nome Usuario: {item.nomeus}</Text>
-                        <Text>Quantidade: {item.quantidade}</Text>
-                        <Text>Numero de Contagem: {item.numbercontacao}</Text>
+                        <Text style={styles.title}>Código do produto: {item.cod}</Text>
+                        <Text>Nome Usuário: {item.nomeus}</Text>
                         <Text>Posição: {item.posicao}</Text>
-                        <Text>
-                            Data: {
-                                item.date && item.date.toDate
-                                    ? item.date.toDate().toLocaleDateString()
-                                    : 'Data inválida'
-                            }
-                        </Text>
+                        <Text>Quantidade: {item.quantidade}</Text>
+                        <Text>Número de Contagem: {item.numbercontacao}</Text>
                     </View>
                 )}
             />
@@ -68,12 +60,10 @@ export default function ConsultIn() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-    },
     item: {
         backgroundColor: '#f9f9f9',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
         padding: 15,
         marginVertical: 8,
         borderRadius: 8,
@@ -81,16 +71,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
+        margin: 20
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
     },
-    input:{
-        borderRadius:5,
-        borderColor:"black",
-        borderWidth:1,
-        padding:10,
-        fontSize:15,
+    input: {
+        borderRadius: 5,
+        borderColor: "black",
+        borderWidth: 1,
+        padding: 10,
+        fontSize: 15,
+        margin: 10,
+
     }
 });

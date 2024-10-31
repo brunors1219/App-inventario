@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "./src/service/firebase";
+// import { collection, getDocs } from "firebase/firestore";
+// import { db } from "./src/service/firebase";
 
 export default function Consulta() {
     const [data, setData] = useState([]);
@@ -12,85 +12,80 @@ export default function Consulta() {
         const fetchData = async () => {
 
             try {
-                const querySnapshot = await getDocs(collection(db, 'produto'));
-                const dataList = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setData(dataList);
+                // const querySnapshot = await getDocs(collection(db, 'produto'));
+                // const dataList = querySnapshot.docs.map(doc => ({
+                //     id: doc.id,
+                //     ...doc.data(),
+                // }));
+                const res = await fetch('https://receiver-sand.vercel.app/api/invproducts?selection=position')
+                const data = await res.json()
+                setData(data)
+                //setData(dataList);
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
             } finally {
                 setLoading(false);
             };
         }
-            fetchData();
-        }, []);
+        fetchData();
+    }, []);
 
-        if(loading) {
-            return <Text>Carregando dados...</Text>
-        }
+    if (loading) {
+        return <Text>Carregando dados...</Text>
+    }
 
-        const filteredData = searchId
+    const filteredData = searchId
         ? data.filter(item => item.id.includes(searchId))
         : data;
 
-        return(
-            <View>
-                <TextInput
+    return (
+        <View>
+            <TextInput
                 style={styles.input}
-                placeholder="🔍 Digite o código do produto"
+                placeholder="🔍 Digite a posição"
                 value={searchId}
-                onChangeText={(text)=>setSearchId(text)}/>
-                <FlatList
+                onChangeText={(text) => setSearchId(text)} />
+            <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
-                renderItem={({item}) =>(
+                renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <Text style={styles.title}>Condigo do produto:{item.id}</Text>
-                        <Text style={styles.text}>Quantidade: {item.quantidade}</Text>
-                        <Text style={styles.text}>Posição: {item.posicao}</Text>
-                        <Text>
-              Data: {
-                item.date && item.date.toDate
-                ? item.date.toDate().toLocaleDateString()
-                : 'Data inválida'
-              }
-            </Text>
+                        {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
+                        <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
+                        <Text style={styles.text}>Posição: {item.Position}</Text>
+                   
                     </View>
                 )}
-                />
-            </View>
-        )
+            />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-    },
     item: {
-      backgroundColor: '#f9f9f9',
-      padding: 15,
-      marginVertical: 8,
-      borderRadius: 8,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 2,
-      
+        backgroundColor: '#f9f9f9',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        margin: 20
     },
     title: {
-      fontSize: 18,
-      fontWeight: 'bold',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
-    input:{
-        borderRadius:5,
-        borderColor:"black",
-        borderWidth:1,
-        padding:10,
-        fontSize:15,
-        margin:10,
-        
+    input: {
+        borderRadius: 5,
+        borderColor: "black",
+        borderWidth: 1,
+        padding: 10,
+        fontSize: 15,
+        margin: 10,
+
     }
-  });
+});
