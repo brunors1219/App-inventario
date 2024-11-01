@@ -30,7 +30,7 @@ export default function InventarioS({navigation}) {
                 const result = [];
                 data.forEach(item => {
                     // Adiciona a posição principal ao resultado
-                    result.push(item.Position.toLowerCase);
+                    result.push(item.Position);
                     
                     // Verifica se há posições auxiliares e as adiciona ao resultado
                     if (item.PositionAux) {
@@ -65,7 +65,7 @@ export default function InventarioS({navigation}) {
         body.User_Id = user
     
         const res = await 
-          fetch(process.env.NEXT_PUBLIC_HOST+ '/api/invproducts',
+          fetch(`${URL}/api/invproducts`,
             {
               method: "post" ,
               headers: {
