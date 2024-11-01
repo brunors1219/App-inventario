@@ -2,6 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //import Cadprod from "./components/cadProd";
 import Inventario from "./components/invetario";
+import InventarioS from "./components/invetarios";
 import { Ionicons } from '@expo/vector-icons';
 import ListPn from "./components/listPN";
 import Position from "./components/listposicao";
@@ -23,6 +24,10 @@ export default function Tabs(){
               //   iconName = focused ? 'home' : 'home-outline';
               } else if (route.name === 'Cadastro') {
                 iconName = focused ? 'duplicate' : 'duplicate-outline';
+              } else if (route.name === 'Inventário') {
+                iconName = focused ? 'archive-outline' : 'archive-outline';
+              } else if (route.name === 'Digitação') {
+                iconName = focused ? 'calculator-outline' : 'calculator-outline';
               }
     
               return <Ionicons name={iconName} size={size} color={color}/>;
@@ -34,7 +39,8 @@ export default function Tabs(){
             <Tab.Screen name="Posição" component={Position}/>
             <Tab.Screen name="ListPn" component={ListPn}/>
             <Tab.Screen name="Cadastro" component={Inventario}/>
-            
+            <Tab.Screen name="Inventário" component={Inventario}/>
+            <Tab.Screen name="Digitação" component={InventarioS}/>            
             
         </Tab.Navigator>
     );

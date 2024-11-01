@@ -1,24 +1,27 @@
-import { React, useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
+import { React, useEffect, useState, useContext } from "react";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { AppContext } from "./src/context/AppContext";
 // import { collection, getDocs } from "firebase/firestore";
 // import { db } from "./src/service/firebase";
 
-export default function ListPn({Position}) {
+export default function ListPn({navigation}) {
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('')
-   
     
+    const { position, URL, setItem} = useContext(AppContext)
 
     useEffect(() => {
         const fetchData = async () => {
 
+            console.log(position)
             try {
-                const res = await fetch(`https://receiver-sand.vercel.app/api/invproducts?position=${Position}`)
+
+                const res = await fetch(`${URL}/api/invproducts?position=${position.Position}`)
                 const data = await res.json()
                 console.log(data)
                 setData(data)
-                setRows(data)
                 // const querySnapshot = await getDocs(collection(db, 'Inventario'));
                 // const dataList = querySnapshot.docs.map(doc => ({
                 //     id: doc.id,
@@ -43,7 +46,12 @@ export default function ListPn({Position}) {
         ? data.filter(item => item.id.includes(searchId))
         : data;
 
-
+    const handlerSelectItem = (item) => {
+        console.log("teste")
+        setItem(item)
+        navigation.navigate("Inventario");
+    }
+    
     return (
         <View>
             <TextInput
@@ -57,12 +65,14 @@ export default function ListPn({Position}) {
                 numColumns={2}
                 columnWrapperStyle={styles.column}
                 renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Text style={styles.title}>PN: {item.PN}</Text>
-                        <Text>Descrição: {item.Description}</Text>
-                        <Text>Posição: {item.Position}</Text>
-                        <Text>{item.action}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => handlerSelectItem(item)}>
+                        <View style={styles.item} >
+                            <Text style={styles.title}>PN: {item.PN}</Text>
+                            <Text>Descrição: {item.Description}</Text>
+                            <Text>Posição: {item.Position}</Text>
+                            <Text>{item.action}</Text>
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>

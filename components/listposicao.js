@@ -1,5 +1,9 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+
+
+import { AppContext } from "./src/context/AppContext";
+
 // import { collection, getDocs } from "firebase/firestore";
 // import { db } from "./src/service/firebase";
 
@@ -8,8 +12,9 @@ export default function Posicao({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('');
     
+    const { setPosition, URL } = useContext(AppContext)
 
-
+    
     useEffect(() => {
         const fetchData = async () => {
 
@@ -19,7 +24,8 @@ export default function Posicao({navigation}) {
                 //     id: doc.id,
                 //     ...doc.data(),
                 // }));
-                const res = await fetch('https://receiver-sand.vercel.app/api/invproducts?selection=position')
+                console.log(`${URL}/api/invproducts?selection=position`);
+                const res = await fetch(`${URL}/api/invproducts?selection=position`)
                 const data = await res.json()
                 setData(data)
                 //setData(dataList);
@@ -40,10 +46,9 @@ export default function Posicao({navigation}) {
         ? data.filter(item => item.id.includes(searchId))
         : data;
 
-
-
     const handlerSelectItem = (item) => {
-        navigation.navigate("ListPn", { Position: item });
+        setPosition(item)
+        navigation.navigate("ListPn");
     }
 
     return (
@@ -59,16 +64,16 @@ export default function Posicao({navigation}) {
                 
             
                 renderItem={({ item }) => (
-                    <View style={styles.item}>
+                    <TouchableOpacity onPress={() => handlerSelectItem(item)}>
+                        <View style={styles.item}>
                         {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
                         <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
-                        <TouchableOpacity onPress={() => handlerSelectItem(item)}>
                             <View >
                                 <Text style={styles.text}>{item.Position}</Text>
                             </View>
-                        </TouchableOpacity>
 
-                    </View>
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>

@@ -1,19 +1,22 @@
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button } from "react-native";
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { AppContext } from "./src/context/AppContext";
 
 
-export default function Inventario(idReferency, setValue) {
+export default function Inventario({navigation}) {
 
-    const [position, setPositon] = useState(idReferency.idReferency ? idReferency.idReferency.Position : '')
-    const [pn, setPN] = useState(idReferency.idReferency ? idReferency.idReferency.PN : '')
-    const [description, setDescription] = useState(idReferency.idReferency ? idReferency.idReferency.Description : '')
+    const { item } = useContext(AppContext)
+
+    console.log(item)
+
+    const [position, setPositon] = useState(item.Position)
+    const [pn, setPN] = useState(item.PN)
+    const [description, setDescription] = useState(item.Description)
     const [qty, setQty] = useState()
     
-
-
     const handleRegister = async () => {
         try {
             // Adiciona o documento ao Firestore
@@ -50,6 +53,7 @@ export default function Inventario(idReferency, setValue) {
                 <View style={styles.title}>
                     <Text style={styles.text}>Cadastrado/Edição</Text>
                 </View>
+                
                 <Text style={styles.label}>PN: </Text>
                 <TextInput placeholder="PN" style={styles.input} value={pn}
                     onChangeText={setPN}
@@ -69,27 +73,19 @@ export default function Inventario(idReferency, setValue) {
                      />
                 
                 <Text style={styles.label}>Quantidade</Text>
-                <TextInput placeholder="Quantidade" style={styles.input}
+                <TextInput placeholder="Quantidade" 
                     value={qty}
                     onChangeText={setQty} />
-
-                <Text style={styles.label}>Numero Cont.: </Text>
-                <Text>*</Text>
-
             </View>
 
-
-
-
             <View>
-            <Pressable onPress={handleRegister} style={styles.button}>
+                <Pressable onPress={handleRegister} style={styles.button}>
                     <Text style={styles.text}>Registrar</Text>
                 </Pressable>
                 <Pressable onPress={handleRegister} style={styles.button}>
                     <Text style={styles.text}>Cancelar</Text>
                 </Pressable>
             </View>
-
         
         </ScrollView >
     )

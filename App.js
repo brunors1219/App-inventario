@@ -8,18 +8,22 @@ import Login from './components/login';
 
 import Tabs from './router';
 
+import { AppProvider } from './components/src/context/AppContext';
+
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Cadastro" component={Cadastro} />
-        <Stack.Screen name="Main" component={Tabs}/>
-        
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AppProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Welcome">
+          <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Login" component={Login}/>
+          <Stack.Screen name="Cadastro" component={Cadastro} />
+          <Stack.Screen name="Main" component={Tabs}/>
+          
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
 }
