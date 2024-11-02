@@ -1,8 +1,6 @@
 import { React, useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { AppContext } from "./src/context/AppContext";
-// import { collection, getDocs } from "firebase/firestore";
-// import { db } from "./src/service/firebase";
 
 export default function ListPn({navigation}) {
 
@@ -10,15 +8,14 @@ export default function ListPn({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('')
     
-    const { position, URL, setItem} = useContext(AppContext)
+    const { URL, setGPN, gPosition, setGPosition, setGDescription} = useContext(AppContext)
 
     useEffect(() => {
         const fetchData = async () => {
 
-            console.log(position)
             try {
 
-                const res = await fetch(`${URL}/api/invproducts?position=${position.Position}`)
+                const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`)
                 const data = await res.json()
                 console.log(data)
                 setData(data)
@@ -36,7 +33,7 @@ export default function ListPn({navigation}) {
             };
         }
         fetchData();
-    }, []);
+    }, [gPosition]);
 
     if (loading) {
         return <Text>Carregando dados...</Text>
@@ -47,9 +44,14 @@ export default function ListPn({navigation}) {
         : data;
 
     const handlerSelectItem = (item) => {
-        console.log("teste")
-        setItem(item)
-        navigation.navigate("Inventario");
+        return;
+
+        //Anselmo - Comentei aqui pois não consegui fazer funcionar
+        
+        setGPN(item.PN)
+        setGPosition(item.Position)
+        setGDescription(item.Description)
+        navigation.navigate("Digitação");
     }
     
     return (
@@ -59,18 +61,37 @@ export default function ListPn({navigation}) {
                 placeholder="🔍 Digite o código do produto"
                 value={searchId}
                 onChangeText={(text) => setSearchId(text)} />
-            <FlatList
+            
+            <FlatList                
                 data={filteredData}
                 keyExtractor={item => item.id}
-                numColumns={2}
-                columnWrapperStyle={styles.column}
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
                         <View  key={item.PN} style={styles.item} >
-                            <Text style={styles.title}>PN: {item.PN}</Text>
-                            <Text>Descrição: {item.Description}</Text>
-                            <Text>Posição: {item.Position}</Text>
-                            <Text>{item.action}</Text>
+                            <View style={{display:'flex', flexDirection:'row'}}>
+                                <View  style={{width:'80%'}} >
+                                    <Text style={styles.title}>PN: {item.PN}</Text>
+                                    <Text>Descrição: {item.Description}</Text>
+                                    <Text>Posição: {item.Position}</Text>
+                                    <Text>Contagem: {item.Score}</Text>
+                                </View>
+                                {item.Qty
+                                    ?
+                                        <View  
+                                                style={{alignItems:'center', 
+                                                        justifyContent:'center', 
+                                                        backgroundColor:'#D3D3D3', 
+                                                        padding:3,
+                                                        width: '20%'}} >
+                                            <Text>Contado</Text>
+                                            <Text style={{fontSize:25}} >{item.Qty}</Text>
+                                            <Text style={{fontSize:8}} >{item.name}</Text>
+                                        </View>
+
+                                    : null
+                                }
+
+                            </View>
                         </View>
                     </TouchableOpacity>
                 )}
@@ -91,7 +112,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
-        margin: 20
+        width: '95%',
+        marginLeft: 10
     },
     title: {
         fontSize: 20,

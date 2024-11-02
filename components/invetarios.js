@@ -1,9 +1,10 @@
-import { React, useState, useContext, useEffect } from "react";
+import { React, useState, useContext, useEffect, useRef, useCallback } from "react";
 import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button, Modal } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function InventarioS({ navigation }) {
 
@@ -13,13 +14,17 @@ export default function InventarioS({ navigation }) {
     const [qty, setQty] = useState("")
     const [positions, setPositions] = useState("")
     const [pns, setPNs] = useState("")
+    const [score, setScore] = useState("")
 
-    const { URL, user } = useContext(AppContext)
+    const { URL, user, setGPosition, gPosition, setGPN, gPN, gDescription } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
     const [modalTitle, setModalTitle] = useState("");
     const [modalType, setModalType] = useState("");
+    const [qtyKey, setQtyKey] = useState(0)
+    const [PNKey, setPNKey] = useState("")
+    const [visibleBarCodePN, setVisibleBarCodePN] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,11 +56,45 @@ export default function InventarioS({ navigation }) {
 
     }, [])
 
+    useFocusEffect(
+        useCallback(() => {
+            console.log("carregando...." + gPN +" - " + gPosition)
+            loadData()
+
+            return () => {
+                // Código a ser executado quando a tela perder foco, se necessário
+                setGPN("");
+                setGPosition("");        
+            };
+        }, [])
+    );    
+
+
+    const loadData = () => {
+        if (gPosition) {
+            setPosition(gPosition);
+            // setTimeout(handleBlurPosition, 1000);
+        }
+        if (gPN) {
+            setPN(gPN);
+            setDescription(gDescription);
+            // setTimeout(handleBlurPN, 1000);
+            focusTextInputQty()
+        } 
+        setGPN("");
+        setGPosition("");        
+    }
+
+    useEffect(()=>{
+        if (pn=="") setScore(0)
+    },[pn])
+
     const register = async () => {
 
         if (!qty) {
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
+            focusTextInputQty();
             return
         }
 
@@ -87,20 +126,21 @@ export default function InventarioS({ navigation }) {
         }
 
         const data = await res.json();
-        setModalVisible(true)
+        setModalVisible(true);
         
-        setModalMsg(data.message)
-        setQty('')
+        setModalMsg(data.message);
+        setQty('');
+        setPN('');
+        setDescription('');
+        focusTextInputPN();
     }
 
     const handleBlurPosition = () => {
         // Verifica se a posição existe no vetor
-        console.log('Position' + position.toUpperCase());
-        console.log('Recover' + recoverCamera.toUpperCase());
         if (position === "" && recoverCamera == "") return;
 
         if (positions.includes(position.toUpperCase()) || positions.includes(recoverCamera.toUpperCase())) {
-
+            focusTextInputPN();
         }else {
             setModalTitle('Posição inválida');
             setModalMsg('A posição não existe no armazém.');
@@ -112,26 +152,36 @@ export default function InventarioS({ navigation }) {
     };
 
     const handleBlurPN = () => {
+
+        if (position === "") {
+            setModalTitle('Ação');
+            setModalMsg('Digite primeiro a POSIÇÃO');
+            setModalVisible(true);            
+            cancel();
+            return;
+        }
+
         if (pn === "" && recoverCamera == "") return;
 
-        console.log('Position ' + position.toUpperCase());
-        console.log('PN ' + pn.toUpperCase());
-        console.log('Recover ' + recoverCamera.toUpperCase());
-
         // Verifica se a PN existe no cadastro
-        _pn = pns.filter(f => f.PN == pn.toUpperCase() || f.PN == recoverCamera.toUpperCase())
-
+        _pn = pns.filter(f => f.PN          == pn.toUpperCase() 
+                            || f.PN         == recoverCamera.toUpperCase()
+                            || f.PNSimple   == pn.toUpperCase()
+                            || f.PNSimple   == recoverCamera.toUpperCase())
+        console.log(_pn)
         _pnExist = _pn.length > 0
         if (!_pnExist) {
             setModalTitle('PN inválido');
             setModalMsg('A PN não existe no cadastro. Acione o time de suporte!');
             setModalVisible(true);
             setPN("");
+            focusTextInputPN();
             return;
         }
 
+        setPN(_pn[0].PN)
+
         if (recoverCamera!="") {
-            console.log('asdasd')
             _pnExistPosition = pns.filter(f => f.PN == recoverCamera.toUpperCase() && f.Position == position.toUpperCase()).length > 0
         } else {
             _pnExistPosition = pns.filter(f => f.PN == pn.toUpperCase() && f.Position == position.toUpperCase()).length > 0
@@ -140,16 +190,50 @@ export default function InventarioS({ navigation }) {
         recoverCamera = ""
         
         if (!_pnExistPosition) {
-            setModalTitle('PN fora locação');
-            setModalMsg('A PN existe, mas não é dessa possição. Atenção!');
-            setModalVisible(true);
+            if (qtyKey==0 || PNKey != _pn[0].PN){
+                setModalTitle('PN fora locação');
+                setModalMsg('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!');
+                setModalVisible(true);
+                setQtyKey(1);
+                setPNKey(_pn[0].PN)
+                setPN("");
+                setDescription("");
+                focusTextInputPN();
+            }
         }
 
         console.log(_pn);
         setDescription(_pn[0].Description)
+        setScore(_pn[0].Score)
+        focusTextInputQty();
 
     };
 
+    const textInputRefPN = useRef(null);
+    const textInputRefPosition = useRef(null);
+    const textInputRefQty = useRef(null);
+
+    const focusTextInputPN = () => {
+      if (textInputRefPN.current) {
+        textInputRefPN.current.focus();
+      }
+    };    
+    const focusTextInputPosition = () => {
+        if (textInputRefPosition.current) {
+            textInputRefPosition.current.focus();
+        }
+      };    
+    const focusTextInputQty = () => {
+        if (textInputRefQty.current) {
+            textInputRefQty.current.focus();
+        }
+    };    
+
+    const onFocusPN = () => {
+        setPN("")
+        setDescription("")
+    }
+  
     const hideMessage = () => {
         setModalVisible(false);
     };
@@ -193,20 +277,40 @@ export default function InventarioS({ navigation }) {
     }
 
     const cancel = () => {
-        setPN("")
-        setPosition("")
-        setDescription("")
-        setQty("")
+        setPN("");
+        setPosition("");
+        setDescription("");
+        setQty("");
+        setQtyKey(0);
+        setPNKey("");
+        setScore(0);
+        setGPN("");
+        setGPosition("");
+        focusTextInputPosition();
     }
     return (
 
         <ScrollView style={styles.scroll}>
             <View style={styles.container}>
-                <View style={styles.title}>
-                    <Text style={styles.text}>Inventário - Contagem</Text>
+                <View style={{justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: 'white',
+                                shadowColor: 'black',
+                                borderRadius: 5
+                            }}>
+                    <Text style={{ fontSize: 25,
+                                    color: 'blue',
+                                    fontWeight: 900,
+                                    marginTop: -40,
+                                    padding: 15}}>
+                        Contagem/Digitação
+                    </Text>
                 </View>
 
-                <Text style={styles.label}>Posição/Locação </Text>
+                <Text style={{fontSize: 16,
+                                marginBottom: 5,
+                                color: '#333',
+                                fontWeight: 600}}>Posição/Locação </Text>
                 <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                     <TextInput placeholder="Posição/Locação"
                         style={{width:'80%',        
@@ -217,6 +321,7 @@ export default function InventarioS({ navigation }) {
                             padding: 10,
                             borderRadius: 5
                         }} 
+                        ref={textInputRefPosition}
                         value={position}
                         onChangeText={setPosition}
                         onBlur={handleBlurPosition}
@@ -236,10 +341,13 @@ export default function InventarioS({ navigation }) {
                         </View>
                 }
 
-                <Text style={styles.label}>PN: </Text>
+                <Text style={{fontSize: 16,
+                                marginBottom: 5,
+                                color: '#333',
+                                fontWeight: 600}}>PN </Text>
                 <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                     <TextInput placeholder="PN"
-                        style={{width:'80%',        
+                        style={{width:qtyKey===0 ? '80%' : '100%',        
                             margin: 0,
                             backgroundColor: 'white',
                             boderColor: "black",
@@ -247,13 +355,20 @@ export default function InventarioS({ navigation }) {
                             padding: 10,
                             borderRadius: 5
                         }}
+                        ref={textInputRefPN}
                         value={pn}
                         onChangeText={setPN}
+                        onFocus={onFocusPN}
                         onBlur={handleBlurPN}
                     />
-                    <Pressable onPress={()=>setScannedShow(!scannedShow)} >
-                        <Ionicons name='barcode-outline' size={50} color='green'/>
-                    </Pressable>
+                    {qtyKey===0 
+                        ?
+                            <Pressable onPress={()=>setScannedShow(!scannedShow)} >
+                                <Ionicons name='barcode-outline' size={50} color='green'/>
+                            </Pressable>
+                        :
+                            null
+                    }
                 </View>
 
                 {!scannedShow 
@@ -266,23 +381,93 @@ export default function InventarioS({ navigation }) {
                             />
                         </View>
                 }
-                <Text style={styles.label}>Descrição: {description}</Text>
+
+                <View style={{fontSize: 16,
+                                marginBottom: 5,
+                                color: '#333',
+                                display: 'flex',
+                                flexDirection:'row'}}>
+
+                    <View style={{fontSize: 16,
+                                    marginBottom: 5,
+                                    color: '#333',
+                                    display: 'flex',
+                                    flexDirection:'column',
+                                    width: '85%'}}>
+                        <Text style={{fontSize: 12,
+                                    marginBottom: 5,
+                                    marginTop: 15,
+                                    color: '#333'}}>
+                            Descrição 
+                        </Text>
+                        <Text style={{fontSize: 20,
+                                    marginBottom: 5,
+                                    color: '#333',
+                                    fontWeight: 900}}>
+                            {description}
+                        </Text>
+                    </View>
+                    {score>0 && pn
+                        ?
+                        <View style={{backgroundColor: score==1 ? 'blue' : score==2 ? '#FFD700' : 'red',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            borderRadius: 10,
+                            marginLeft: 5,
+                            marginTop: 10,
+                            paddingLeft: 5,
+                            paddingRight: 5}}>
+                            <Text style={{fontSize: 10,
+                                        marginBottom: 5,
+                                        marginTop: 15,
+                                        color: score==1 ? 'white' : score==2 ? 'white' : 'yellow'}}>
+                                Contagem
+                            </Text>
+                            <Text style={{fontSize: 30,
+                                        marginBottom: 5,
+                                        color: score==1 ? 'white' : score==2 ? 'white' : 'yellow',
+                                        fontWeight: 900}}>
+                                {score}º
+                            </Text>
+                        </View>
+
+                        : null
+                    }
+
+                </View>
 
 
-                <Text style={styles.label}>Quantidade:</Text>
+                <Text style={{fontSize: 16,
+                                marginBottom: 5,
+                                color: '#333',
+                                fontWeight: 600}}>Quantidade:</Text>
                 <TextInput placeholder="Quantidade"
                     style={styles.input}
+                    ref={textInputRefQty}
                     value={qty}
                     keyboardType="numeric"
                     onChangeText={setQty} />
             </View>
 
-            <View>
-                <Pressable onPress={register} style={styles.button}>
-                    <Text style={styles.text}>Registrar</Text>
+            <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Pressable onPress={register} 
+                    style={{backgroundColor: '#006400',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            borderRadius: 10,
+                            margin: 15}}>
+                    <Text style={{fontSize: 15,
+                                    color: 'white',
+                                    fontWeight: 900,
+                                    padding: 15}}>Registrar</Text>
                 </Pressable>
                 <Pressable onPress={cancel} style={styles.button}>
-                    <Text style={styles.text}>Cancelar</Text>
+                    <Text style={{fontSize: 15,
+                                    color: 'white',
+                                    fontWeight: 900,
+                                    padding: 15}}>Cancelar</Text>
                 </Pressable>
             </View>
 
@@ -317,15 +502,9 @@ styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    text: {
-        fontSize: 25,
-        color: 'white',
-        padding: 15
-    },
-
     label: {
         fontSize: 16,
-        marginBottom: 15,
+        marginBottom: 5,
         color: '#333'
     },
     input: {
@@ -336,14 +515,6 @@ styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5
 
-    },
-    title: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'blue',
-        marginBottom: 20,
-        shadowColor: 'black',
-        borderRadius: 5
     },
     button: {
         backgroundColor: 'gray',

@@ -6,17 +6,20 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState("light");
 
-  const [position, setPosition] = useState("");
-  const [item, setItem] = useState("");
+  const [gPosition, setGPosition] = useState("");
+  const [gPN, setGPN] = useState("");
+  const [gDescription, setGDescription] = useState("");
 
-  const [URL, setURL] = useState(API_URL_PROD)
+  const [URL, setURL] = useState(ENVIROMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
+  console.log("URL "+ URL + "ENVIROMMENT " + ENVIROMENT)
   return (
     <AppContext.Provider 
       value={{ user, setUser, 
-                theme, setTheme, 
-                position, setPosition, 
                 URL, 
-                item, setItem}}>
+                theme, setTheme, 
+                gPosition, setGPosition, 
+                gDescription, setGDescription,
+                gPN, setGPN}}>
       {children}
     </AppContext.Provider>
   );

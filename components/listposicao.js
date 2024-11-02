@@ -12,7 +12,7 @@ export default function Posicao({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('');
     
-    const { setPosition, URL } = useContext(AppContext)
+    const { setGPosition, URL } = useContext(AppContext)
 
     
     useEffect(() => {
@@ -47,7 +47,7 @@ export default function Posicao({navigation}) {
         : data;
 
     const handlerSelectItem = (item) => {
-        setPosition(item)
+        setGPosition(item.Position)
         navigation.navigate("ListPn");
     }
 
