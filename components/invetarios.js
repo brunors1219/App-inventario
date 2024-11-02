@@ -188,10 +188,10 @@ export default function InventarioS({ navigation }) {
         if (pn === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
-        _pn = pns.filter(f => f.PN          == pn.toUpperCase() 
-                            || f.PN         == recoverCamera.toUpperCase()
-                            || f.PNSimple   == pn.toUpperCase()
-                            || f.PNSimple   == recoverCamera.toUpperCase())
+        _pn = pns.filter(f => f.PN.toUpperCase()          == pn.toUpperCase() 
+                            || f.PN.toUpperCase()         == recoverCamera.toUpperCase()
+                            || f.PNSimple.toUpperCase()   == pn.toUpperCase()
+                            || f.PNSimple.toUpperCase()   == recoverCamera.toUpperCase())
         console.log(_pn)
         _pnExist = _pn.length > 0
         if (!_pnExist) {
@@ -206,9 +206,9 @@ export default function InventarioS({ navigation }) {
         setPN(_pn[0].PN)
 
         if (recoverCamera!="") {
-            _pnExistPosition = pns.filter(f => f.PN == recoverCamera.toUpperCase() && f.Position == position.toUpperCase()).length > 0
+            _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == recoverCamera.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         } else {
-            _pnExistPosition = pns.filter(f => f.PN == pn.toUpperCase() && f.Position == position.toUpperCase()).length > 0
+            _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         }
         
         recoverCamera = ""
