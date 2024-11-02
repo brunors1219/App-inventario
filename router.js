@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //import Cadprod from "./components/cadProd";
-import Inventario from "./components/invetario";
 import InventarioS from "./components/invetarios";
 import { Ionicons } from '@expo/vector-icons';
 import ListPn from "./components/listPN";
@@ -11,7 +10,7 @@ const Tab = createBottomTabNavigator();
 export default function Tabs(){
     return(
         <Tab.Navigator
-        screenOptions={({ route }) => ({
+            screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
     
@@ -36,11 +35,9 @@ export default function Tabs(){
             tabBarActiveTintColor: 'blue',
             tabBarInactiveTintColor: 'gray',
           })}>
+            <Tab.Screen name="Digitação" component={InventarioS}/>            
             <Tab.Screen name="Posição" component={Position}/>
             <Tab.Screen name="ListPn" component={ListPn}/>
-            <Tab.Screen name="Cadastro" component={Inventario}/>
-            <Tab.Screen name="Inventário" component={Inventario}/>
-            <Tab.Screen name="Digitação" component={InventarioS}/>            
             
         </Tab.Navigator>
     );

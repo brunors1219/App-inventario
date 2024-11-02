@@ -65,7 +65,7 @@ export default function Posicao({navigation}) {
             
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        <View style={styles.item}>
+                        <View  key={item.Posicao} style={styles.item}>
                         {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
                         <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
                             <View >

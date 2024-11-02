@@ -66,7 +66,7 @@ export default function ListPn({navigation}) {
                 columnWrapperStyle={styles.column}
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        <View style={styles.item} >
+                        <View  key={item.PN} style={styles.item} >
                             <Text style={styles.title}>PN: {item.PN}</Text>
                             <Text>Descrição: {item.Description}</Text>
                             <Text>Posição: {item.Position}</Text>

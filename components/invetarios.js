@@ -2,7 +2,8 @@ import { React, useState, useContext, useEffect } from "react";
 import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button, Modal } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
-import { ExecutionEnvironment } from "expo-constants";
+import { Ionicons } from '@expo/vector-icons';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function InventarioS({ navigation }) {
 
@@ -63,7 +64,7 @@ export default function InventarioS({ navigation }) {
         body.PN = pn
         body.Position = position
         body.Qty = qty
-        //body.User_Id = user
+        body.User_Id = 'teste'
 
         const res = await
             fetch(`${URL}/api/invproducts`,
@@ -77,34 +78,48 @@ export default function InventarioS({ navigation }) {
                     body: JSON.stringify(body)
                 });
 
-        // if (!res.ok) {
-        //   setMessageType('error')
-        // } else {
-        //   setMessageType('success')
-        // }
+        if (!res.ok) {
+          setModalTitle('Alerta')
+          setModalType('error')
+        } else {
+          setModalTitle('Informação')
+          setModalType('success')
+        }
 
         const data = await res.json();
         setModalVisible(true)
+        
         setModalMsg(data.message)
         setQty('')
     }
 
     const handleBlurPosition = () => {
         // Verifica se a posição existe no vetor
-        console.log(position.toUpperCase());
-        if (!positions.includes(position.toUpperCase())) {
+        console.log('Position' + position.toUpperCase());
+        console.log('Recover' + recoverCamera.toUpperCase());
+        if (position === "" && recoverCamera == "") return;
+
+        if (positions.includes(position.toUpperCase()) || positions.includes(recoverCamera.toUpperCase())) {
+
+        }else {
             setModalTitle('Posição inválida');
             setModalMsg('A posição não existe no armazém.');
             setModalVisible(true);
             setPosition("");
         }
+
+        recoverCamera = ""
     };
 
     const handleBlurPN = () => {
-        if (pn === "") return;
+        if (pn === "" && recoverCamera == "") return;
+
+        console.log('Position ' + position.toUpperCase());
+        console.log('PN ' + pn.toUpperCase());
+        console.log('Recover ' + recoverCamera.toUpperCase());
 
         // Verifica se a PN existe no cadastro
-        _pn = pns.filter(f => f.PN == pn.toUpperCase())
+        _pn = pns.filter(f => f.PN == pn.toUpperCase() || f.PN == recoverCamera.toUpperCase())
 
         _pnExist = _pn.length > 0
         if (!_pnExist) {
@@ -115,7 +130,15 @@ export default function InventarioS({ navigation }) {
             return;
         }
 
-        _pnExistPosition = pns.filter(f => f.PN == pn.toUpperCase() && f.Position == position.toUpperCase()).length > 0
+        if (recoverCamera!="") {
+            console.log('asdasd')
+            _pnExistPosition = pns.filter(f => f.PN == recoverCamera.toUpperCase() && f.Position == position.toUpperCase()).length > 0
+        } else {
+            _pnExistPosition = pns.filter(f => f.PN == pn.toUpperCase() && f.Position == position.toUpperCase()).length > 0
+        }
+        
+        recoverCamera = ""
+        
         if (!_pnExistPosition) {
             setModalTitle('PN fora locação');
             setModalMsg('A PN existe, mas não é dessa possição. Atenção!');
@@ -130,6 +153,51 @@ export default function InventarioS({ navigation }) {
     const hideMessage = () => {
         setModalVisible(false);
     };
+
+    const [hasPermission, setHasPermission] = useState(null);
+    const [scanned, setScanned] = useState(false);
+    const [scannedData, setScannedData] = useState('');
+    const [scannedShow, setScannedShow] = useState(false);
+    const [scannedShowPosition, setScannedShowPosition] = useState(false);
+
+    let recoverCamera = ""
+
+    useEffect(() => {
+      (async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === 'granted');
+      })();
+    }, []);
+    
+    const handleBarCodeScanned = ({ type, data }) => {
+      setScannedData(data);
+      setScannedShow(false);
+      setPN(data);
+      recoverCamera = data;
+      handleBlurPN();
+    };
+
+    const handleBarCodeScannedPosition = ({ type, data }) => {
+        setScannedData(data);
+        setScannedShowPosition(false);
+        setPosition(data);
+        recoverCamera = data;
+        handleBlurPosition();
+    };
+    
+    if (hasPermission === null) {
+      return <Text>Solicitando permissão para usar a câmera</Text>;
+    }
+    if (hasPermission === false) {
+      return <Text>Permissão para acessar a câmera negada</Text>;
+    }
+
+    const cancel = () => {
+        setPN("")
+        setPosition("")
+        setDescription("")
+        setQty("")
+    }
     return (
 
         <ScrollView style={styles.scroll}>
@@ -139,30 +207,73 @@ export default function InventarioS({ navigation }) {
                 </View>
 
                 <Text style={styles.label}>Posição/Locação </Text>
-                <TextInput placeholder="Posição/Locação"
-                    style={styles.input} value={position}
-                    onChangeText={setPosition}
-                    onBlur={handleBlurPosition}
-                />
+                <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                    <TextInput placeholder="Posição/Locação"
+                        style={{width:'80%',        
+                            margin: 0,
+                            backgroundColor: 'white',
+                            boderColor: "black",
+                            borderWidth: 1,
+                            padding: 10,
+                            borderRadius: 5
+                        }} 
+                        value={position}
+                        onChangeText={setPosition}
+                        onBlur={handleBlurPosition}
+                    />
+                    <Pressable onPress={()=>setScannedShowPosition(!scannedShowPosition)} >
+                        <Ionicons name='barcode-outline' size={50} color='green'/>
+                    </Pressable>
+                </View>
+                {!scannedShowPosition 
+                    ? null
+                    :
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <BarCodeScanner
+                                onBarCodeScanned={scanned ? undefined : handleBarCodeScannedPosition}
+                                style={{ height: 300, width: 300 }}
+                            />
+                        </View>
+                }
 
                 <Text style={styles.label}>PN: </Text>
-                <TextInput placeholder="PN"
-                    style={styles.input}
-                    value={pn}
-                    onChangeText={setPN}
-                    onBlur={handleBlurPN}
-                />
+                <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                    <TextInput placeholder="PN"
+                        style={{width:'80%',        
+                            margin: 0,
+                            backgroundColor: 'white',
+                            boderColor: "black",
+                            borderWidth: 1,
+                            padding: 10,
+                            borderRadius: 5
+                        }}
+                        value={pn}
+                        onChangeText={setPN}
+                        onBlur={handleBlurPN}
+                    />
+                    <Pressable onPress={()=>setScannedShow(!scannedShow)} >
+                        <Ionicons name='barcode-outline' size={50} color='green'/>
+                    </Pressable>
+                </View>
 
-                <Text style={styles.label}>Descrição: </Text>
-                <TextInput placeholder="Descrição" style={styles.input}
-                    value={description}
-                    onChangeText={setDescription} />
+                {!scannedShow 
+                    ? null
+                    :
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <BarCodeScanner
+                                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                                style={{ height: 400, width: 400 }}
+                            />
+                        </View>
+                }
+                <Text style={styles.label}>Descrição: {description}</Text>
 
 
                 <Text style={styles.label}>Quantidade:</Text>
                 <TextInput placeholder="Quantidade"
                     style={styles.input}
                     value={qty}
+                    keyboardType="numeric"
                     onChangeText={setQty} />
             </View>
 
@@ -170,7 +281,7 @@ export default function InventarioS({ navigation }) {
                 <Pressable onPress={register} style={styles.button}>
                     <Text style={styles.text}>Registrar</Text>
                 </Pressable>
-                <Pressable onPress={() => (console.log('Cancelei'))} style={styles.button}>
+                <Pressable onPress={cancel} style={styles.button}>
                     <Text style={styles.text}>Cancelar</Text>
                 </Pressable>
             </View>
@@ -179,7 +290,9 @@ export default function InventarioS({ navigation }) {
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={hideMessage}>
+                onRequestClose={hideMessage}
+                style={{justifyContent: 'center', // Centraliza verticalmente
+                        alignItems: 'center',  }}>
                 <BlurView intensity={150} style={StyleSheet.absoluteFill}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalContent}>
