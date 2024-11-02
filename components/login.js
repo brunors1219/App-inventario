@@ -5,8 +5,8 @@ import { auth } from "./src/service/firebase"; // Importa o auth do Firebase con
 import { AppContext } from "./src/context/AppContext";
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("ichihara7l@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { setUserId, userId, URL } = useContext(AppContext)
 
