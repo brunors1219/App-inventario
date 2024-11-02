@@ -4,8 +4,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
 
-
-
 export default function Cadastro({ navigation }) {
 
   const [email, setEmail] = useState("");
@@ -45,7 +43,7 @@ export default function Cadastro({ navigation }) {
 
   const handlerRegister = async () => {
     try{
-      const data ={ name };
+      const data ={ name, email };
       const result = await usersApp(data);
       setResponse(result);
       setError(null);
@@ -53,9 +51,6 @@ export default function Cadastro({ navigation }) {
       setError(err.message);
     }
   }
-
-
-
 
 
 async function createUser() {

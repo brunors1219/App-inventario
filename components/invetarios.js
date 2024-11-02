@@ -16,7 +16,7 @@ export default function InventarioS({ navigation }) {
     const [pns, setPNs] = useState("")
     const [score, setScore] = useState("")
 
-    const { URL, user, setGPosition, gPosition, setGPN, gPN, gDescription } = useContext(AppContext)
+    const { URL, userId, setGPosition, gPosition, setGPN, gPN, gDescription } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -27,6 +27,9 @@ export default function InventarioS({ navigation }) {
     const [visibleBarCodePN, setVisibleBarCodePN] = useState(true)
 
     useEffect(() => {
+
+        console.log(userId);
+
         const fetchData = async () => {
 
             try {
@@ -97,16 +100,30 @@ export default function InventarioS({ navigation }) {
             focusTextInputQty();
             return
         }
+        if (!position) {
+            setModalVisible(true)
+            setModalMsg("Informe a Posição!")
+            focusTextInputPosition();
+            return
+        }
+        if (!pn) {
+            setModalVisible(true)
+            setModalMsg("Informe o PN!")
+            focusTextInputPN();
+            return
+        }
 
         const body = {}
 
         body.PN = pn
         body.Position = position
         body.Qty = qty
-        body.User_Id = 'teste'
+        body.User_Id = userId
+
+        console.log(body)
 
         const res = await
-            fetch(`${URL}/api/invproducts`,
+            fetch(`${URL}/api/invproducts?counter=true`,
                 {
                     method: "POST",
                     headers: {

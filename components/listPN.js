@@ -14,17 +14,10 @@ export default function ListPn({navigation}) {
         const fetchData = async () => {
 
             try {
-
                 const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`)
                 const data = await res.json()
                 console.log(data)
                 setData(data)
-                // const querySnapshot = await getDocs(collection(db, 'Inventario'));
-                // const dataList = querySnapshot.docs.map(doc => ({
-                //     id: doc.id,
-                //     ...doc.data(),
-                // }));
-                //setData(dataList);
             } catch (error) {
                 
                 console.error("Erro ao buscar dados:", error);
@@ -47,11 +40,11 @@ export default function ListPn({navigation}) {
         return;
 
         //Anselmo - Comentei aqui pois não consegui fazer funcionar
-        
-        setGPN(item.PN)
-        setGPosition(item.Position)
-        setGDescription(item.Description)
-        navigation.navigate("Digitação");
+
+        // setGPN(item.PN)
+        // setGPosition(item.Position)
+        // setGDescription(item.Description)
+        // navigation.navigate("Digitação");
     }
     
     return (

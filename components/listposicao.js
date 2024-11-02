@@ -12,8 +12,7 @@ export default function Posicao({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('');
     
-    const { setGPosition, URL } = useContext(AppContext)
-
+    const { URL, setGPosition } = useContext(AppContext)
     
     useEffect(() => {
         const fetchData = async () => {

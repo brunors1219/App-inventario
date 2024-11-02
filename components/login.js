@@ -1,11 +1,14 @@
-import {React, useState} from "react";
+import {React, useState, useContext} from "react";
 import { View, Text, Button, StyleSheet, TextInput, Alert, Image } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
+import { AppContext } from "./src/context/AppContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("ichihara7l@gmail.com");
   const [password, setPassword] = useState("123456");
+
+  const { setUserId, userId, URL } = useContext(AppContext)
 
   async function handleLogin() {
     if (email === "" || password === "") {
@@ -16,7 +19,21 @@ export default function Login({ navigation }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("Login realizado com sucesso! ID: " + user.uid);
+
+      try {
+        console.log(`${URL}/api/usersApp?email=${user.email}`)
+        const res = await fetch(`${URL}/api/usersApp?email=${user.email}`)
+        const data = await res.json()
+        console.log(data[0].id)
+        setUserId(data[0].id);
+      } catch (error) {  
+        setUserId('');      
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        
+      };
+      
+      console.log("Login realizado com sucesso! ID: " + user.uid + " Banco ID: " + userId);
 
       navigation.navigate("Main");
       
