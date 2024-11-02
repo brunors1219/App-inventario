@@ -4,6 +4,7 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [theme, setTheme] = useState("light");
 
   const [gPosition, setGPosition] = useState("");
@@ -15,6 +16,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider 
       value={{ userId, setUserId, 
+                userProfile, setUserProfile,
                 URL, 
                 theme, setTheme, 
                 gPosition, setGPosition, 

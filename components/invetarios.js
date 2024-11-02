@@ -1,4 +1,4 @@
-import { React, useState, useContext, useEffect, useRef, useCallback } from "react";
+import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
 import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button, Modal } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
@@ -30,6 +30,14 @@ export default function InventarioS({ navigation }) {
 
         console.log(userId);
 
+        loadDataDB();
+
+    }, [])
+
+    const loadDataDB = () => {
+
+        console.log("Updating/Sincronizing DataBase...")
+        
         const fetchData = async () => {
 
             try {
@@ -56,14 +64,13 @@ export default function InventarioS({ navigation }) {
             };
         }
         fetchData();
-
-    }, [])
+    }
 
     useFocusEffect(
         useCallback(() => {
             // console.log("carregando...." + gPN +" - " + gPosition)
             // loadData()
-
+            loadDataDB();
             return () => {
                 // Código a ser executado quando a tela perder foco, se necessário
                 setGPN("");

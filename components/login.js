@@ -5,10 +5,10 @@ import { auth } from "./src/service/firebase"; // Importa o auth do Firebase con
 import { AppContext } from "./src/context/AppContext";
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("ichihara7l@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const { setUserId, userId, URL } = useContext(AppContext)
+  const { setUserId, userId, setUserProfile, URL } = useContext(AppContext)
 
   async function handleLogin() {
     if (email === "" || password === "") {
@@ -24,8 +24,9 @@ export default function Login({ navigation }) {
         console.log(`${URL}/api/usersApp?email=${user.email}`)
         const res = await fetch(`${URL}/api/usersApp?email=${user.email}`)
         const data = await res.json()
-        console.log(data[0].id)
+        console.log(data)
         setUserId(data[0].id);
+        setUserProfile(data[0].permissions)
       } catch (error) {  
         setUserId('');      
         console.error("Erro ao buscar dados:", error);

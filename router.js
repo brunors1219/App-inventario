@@ -13,7 +13,6 @@ export default function Tabs(){
             screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
-    
               
               if (route.name === 'Posição') {
                 iconName = focused ? 'construct' : 'construct-outline';
