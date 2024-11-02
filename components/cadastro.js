@@ -1,57 +1,118 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput, Image, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from './src/service/firebase'
+import { auth } from './src/service/firebase';
+import { AppContext } from "./src/context/AppContext";
 
 
 
 export default function Cadastro({ navigation }) {
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  async function createUser() {
-    await createUserWithEmailAndPassword(auth, email, password)
+  const[response, setResponse] = useState(null);
+  const[error, setError] = useState(null)
+
+
+  const { URL } = useContext(AppContext)
+
+  const usersApp = async (data) => {
+    try {
+      const response = await fetch(`${URL}/api/usersApp`, {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        //make sure to serialize your JSON body
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao inserir os dados');
+      }
+
+      const res = await response.json();
+      return res;
+    } catch (error) {
+      console.error('Erro:', error);
+      throw error;
+    }
+
+  };
+
+  const handlerRegister = async () => {
+    try{
+      const data ={ name };
+      const result = await usersApp(data);
+      setResponse(result);
+      setError(null);
+    }catch(err){
+      setError(err.message);
+    }
+  }
+
+
+
+
+
+async function createUser() {
+  await createUserWithEmailAndPassword(auth, email, password)
     .then(value => {
-        console.log('Cadastrado com sucesso! \n ' + value.user.uid);
-        
-        // Mostra o alerta de sucesso para o usuário
-        Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
-            {
-                text: "OK",
-                onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
-            }
-        ]);
-    })
-    .catch(erro => {
-        console.log(erro);
-        Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
-    });
-};
+      handlerRegister();
+      console.log('Cadastrado com sucesso! \n ' + value.user.uid);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.box}>
-        <Image source={require('../assets/adaptive-icon.png')} style={styles.image} />
-        <Text style={styles.title}>Cadastro</Text>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="#313131"
-          value={email}
-          onChangeText={value => setEmail(value)}
-          style={styles.input} />
-        <TextInput
-          placeholder="Senha"
-          placeholderTextColor="#313131"
-          value={password}
-          onChangeText={value => setPassword(value)}
-          style={styles.input} />
-        <Button
-          title="Cadastrar"
-          onPress={() => createUser()} />
-      </View>
+      // Mostra o alerta de sucesso para o usuário
+      Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
+        }
+      ]);
+    })
+
+    .catch(erro => {
+      console.log(erro);
+      Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
+    });
+
+
+
+  }
+
+return (
+  <View style={styles.container}>
+    <View style={styles.box}>
+      <Image source={require('../assets/adaptive-icon.png')} style={styles.image} />
+      <Text style={styles.title}>Cadastro</Text>
+      <TextInput
+        placeholder="Usuario"
+        placeholderTextColor="#313131"
+        value={name}
+        onChangeText={value => setName(value)}
+        style={styles.input} />
+
+      <TextInput
+        placeholder="Email"
+        placeholderTextColor="#313131"
+        value={email}
+        onChangeText={value => setEmail(value)}
+        style={styles.input} />
+
+      <TextInput
+        placeholder="Senha"
+        placeholderTextColor="#313131"
+        value={password}
+        onChangeText={value => setPassword(value)}
+        style={styles.input} />
+      <Button
+        title="Cadastrar"
+        onPress={() => createUser()} />
     </View>
-  );
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
