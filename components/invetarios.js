@@ -58,8 +58,8 @@ export default function InventarioS({ navigation }) {
 
     useFocusEffect(
         useCallback(() => {
-            console.log("carregando...." + gPN +" - " + gPosition)
-            loadData()
+            // console.log("carregando...." + gPN +" - " + gPosition)
+            // loadData()
 
             return () => {
                 // Código a ser executado quando a tela perder foco, se necessário
