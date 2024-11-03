@@ -80,7 +80,7 @@ async function createUser() {
 return (
   <View style={styles.container}>
     <View style={styles.box}>
-      <Image source={require('../assets/adaptive-icon.png')} style={styles.image} />
+      <Image source={require('../assets/logo.png')} style={styles.image} />
       <Text style={styles.title}>Cadastro</Text>
       <TextInput
         placeholder="Usuario"

@@ -23,7 +23,7 @@ export default function ListPn({navigation}) {
     const [scannedData, setScannedData] = useState('');
     const [scannedShow, setScannedShow] = useState(false);
 
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(true);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -147,7 +147,7 @@ export default function ListPn({navigation}) {
                                                                 padding:3,
                                                                 width: '20%'}} >
                                                     <Text>Contado</Text>
-                                                    <Text style={{fontSize:25}} >{item.Qty}</Text>
+                                                    <Text style={{fontSize:15}} >{parseFloat(item.Qty)}</Text>
                                                     <Text style={{fontSize:8}} >{item.name}</Text>
                                                 </View>
 

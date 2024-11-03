@@ -331,7 +331,7 @@ export default function InventarioS({ navigation }) {
                     <Text style={{ fontSize: 25,
                                     color: 'blue',
                                     fontWeight: 900,
-                                    marginTop: -40,
+                                    marginTop: -20,
                                     padding: 15}}>
                         Contagem/Digitação
                     </Text>
@@ -482,11 +482,12 @@ export default function InventarioS({ navigation }) {
 
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Pressable onPress={register} 
-                    style={{backgroundColor: '#006400',
+                    style={{backgroundColor: '#76bc21',
                             justifyContent: 'center',
                             alignItems: 'center',
                             alignContent: 'center',
                             borderRadius: 10,
+                            width: '50%',
                             margin: 15}}>
                     <Text style={{fontSize: 15,
                                     color: 'white',

@@ -17,11 +17,17 @@ export default function App() {
     <AppProvider>
       <LayoutComRodape>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Welcome">
-            <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Navigator initialRouteName="Welcome"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#76bc21', // Cor verde
+              },
+              headerTintColor: '#fff', // Cor do texto
+            }}>
+            <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }}/>
             <Stack.Screen name="Login" component={Login}/>
             <Stack.Screen name="Cadastro" component={Cadastro} />
-            <Stack.Screen name="Main" component={Tabs}/>          
+            <Stack.Screen name="Inventário" component={Tabs}/>          
           </Stack.Navigator>
         </NavigationContainer>
       </LayoutComRodape>

@@ -1,5 +1,5 @@
 import {React, useState, useContext} from "react";
-import { View, Text, Button, StyleSheet, TextInput, Alert, Image } from "react-native";
+import { View, Text, Button, StyleSheet, TextInput, Alert, Image, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
@@ -7,8 +7,8 @@ import { ENVIROMENT, USER_DEFAULT, PWD_DEFAUT } from '@env';
 
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState(ENVIROMENT='DEV' ? USER_DEFAULT : "");
-  const [password, setPassword] = useState(ENVIROMENT='DEV' ? PWD_DEFAUT : "");
+  const [email, setEmail] = useState(ENVIROMENT==='DEV' ? USER_DEFAULT : "");
+  const [password, setPassword] = useState(ENVIROMENT==='DEV' ? PWD_DEFAUT : "");
 
   const { setUserId, userId, setUserProfile, URL } = useContext(AppContext)
 
@@ -38,7 +38,7 @@ export default function Login({ navigation }) {
       
       console.log("Login realizado com sucesso! ID: " + user.uid + " Banco ID: " + userId);
 
-      navigation.navigate("Main");
+      navigation.navigate("Inventário");
       
     } catch (error) {
       console.log(error);
@@ -49,7 +49,7 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
     <View style={styles.box}>
-        <Image source={require('../assets/adaptive-icon.png')} style={styles.image}/>
+        <Image source={require('../assets/logo.png')} style={styles.image}/>
           <Text style={styles.title}>Login</Text>
           <TextInput
             style={styles.input}
@@ -67,7 +67,19 @@ export default function Login({ navigation }) {
             onChangeText={setPassword}
             secureTextEntry={true} // Oculta a senha enquanto o usuário digita
           />
-          <Button title="Entrar" onPress={handleLogin} />
+          <Pressable onPress={handleLogin} 
+              style={{backgroundColor: '#76bc21',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      borderRadius: 10,                      
+                      margin: 15}}>
+              <Text style={{fontSize: 20,
+                              color: 'white',
+                              fontWeight: 900,
+                              padding: 15}}>Acessar</Text>
+          </Pressable>
+
     </View>
     </View>
   );
@@ -78,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "white",
   },
   title: {
     fontSize: 24,
@@ -98,11 +110,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image:{
-    width:120,
-    height:120,
+    width:150,
+    height:150,
   },
   box:{
-    width:350,
+    width:'90%',
     justifyContent:'center',
     alignItems:"center",
     backgroundColor: '#fff', // Cor de fundo do container
@@ -113,6 +125,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25, // Opacidade da sombra
     shadowRadius: 3.84, // Raio da sombra
     elevation: 5, // Elevação (necessário para Android)
-    height: 500, 
+    height: '90%', 
   }
 });
