@@ -3,10 +3,12 @@ import { View, Text, Button, StyleSheet, TextInput, Alert, Image } from "react-n
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
+import { ENVIROMENT, USER_DEFAULT, PWD_DEFAUT } from '@env';
+
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(ENVIROMENT='DEV' ? USER_DEFAULT : "");
+  const [password, setPassword] = useState(ENVIROMENT='DEV' ? PWD_DEFAUT : "");
 
   const { setUserId, userId, setUserProfile, URL } = useContext(AppContext)
 

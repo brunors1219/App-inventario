@@ -16,7 +16,15 @@ export default function InventarioS({ navigation }) {
     const [pns, setPNs] = useState("")
     const [score, setScore] = useState("")
 
-    const { URL, userId, setGPosition, gPosition, setGPN, gPN, gDescription } = useContext(AppContext)
+    const { URL, 
+            userId, 
+            setGPosition, 
+            gPosition, 
+            setGPN,
+            gPN,
+            gDescription, 
+            gScore,
+            clearContextItem } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -28,15 +36,13 @@ export default function InventarioS({ navigation }) {
 
     useEffect(() => {
 
-        console.log(userId);
+        // console.log(userId);
 
         loadDataDB();
 
     }, [])
 
     const loadDataDB = () => {
-
-        console.log("Updating/Sincronizing DataBase...")
         
         const fetchData = async () => {
 
@@ -66,34 +72,34 @@ export default function InventarioS({ navigation }) {
         fetchData();
     }
 
-    useFocusEffect(
-        useCallback(() => {
-            // console.log("carregando...." + gPN +" - " + gPosition)
-            // loadData()
-            loadDataDB();
-            return () => {
-                // Código a ser executado quando a tela perder foco, se necessário
-                setGPN("");
-                setGPosition("");        
-            };
-        }, [])
-    );    
-
-
-    const loadData = () => {
+    useEffect (()=>{        
         if (gPosition) {
             setPosition(gPosition);
-            // setTimeout(handleBlurPosition, 1000);
         }
         if (gPN) {
             setPN(gPN);
             setDescription(gDescription);
+            setScore(gScore)
             // setTimeout(handleBlurPN, 1000);
-            focusTextInputQty()
-        } 
-        setGPN("");
-        setGPosition("");        
-    }
+            focusTextInputQty();
+            clearContextItem();
+        }
+
+    },[gPosition, gPN]);
+
+    useFocusEffect(
+        useCallback(() => {
+            // Código a ser executado quando a tela ganha o foco
+            loadDataDB();
+
+            //loadData();           
+
+            return () => {
+                // Código a ser executado quando a tela perder foco, se necessário
+                clearContextItem();
+            };
+        }, [])
+    );    
 
     useEffect(()=>{
         if (pn=="") setScore(0)
@@ -127,7 +133,7 @@ export default function InventarioS({ navigation }) {
         body.Qty = qty
         body.User_Id = userId
 
-        console.log(body)
+        // console.log(body)
 
         const res = await
             fetch(`${URL}/api/invproducts?counter=true`,
@@ -192,7 +198,7 @@ export default function InventarioS({ navigation }) {
                             || f.PN.toUpperCase()         == recoverCamera.toUpperCase()
                             || f.PNSimple.toUpperCase()   == pn.toUpperCase()
                             || f.PNSimple.toUpperCase()   == recoverCamera.toUpperCase())
-        console.log(_pn)
+        // console.log(_pn)
         _pnExist = _pn.length > 0
         if (!_pnExist) {
             setModalTitle('PN inválido');
@@ -226,7 +232,7 @@ export default function InventarioS({ navigation }) {
             }
         }
 
-        console.log(_pn);
+        // console.log(_pn);
         setDescription(_pn[0].Description)
         setScore(_pn[0].Score)
         focusTextInputQty();

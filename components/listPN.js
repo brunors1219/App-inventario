@@ -1,5 +1,6 @@
-import { React, useEffect, useState, useContext, useRef } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Pressable } from "react-native";
+import { React, useEffect, useState, useContext } from "react";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ScrollView, Pressable, Button, Modal } from "react-native";
+import { BlurView } from 'expo-blur';
 import { AppContext } from "./src/context/AppContext";
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -10,24 +11,37 @@ export default function ListPn({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('')
     
-    const { URL, gPosition, userProfile} = useContext(AppContext)
+    const { URL, 
+            gPosition, 
+            setGPosition, 
+            setGPN, 
+            setGDescription,
+            setGScore,
+            userProfile} = useContext(AppContext)
+
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
     const [scannedShow, setScannedShow] = useState(false);
 
     const [isChecked, setIsChecked] = useState(false);
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMsg, setModalMsg] = useState("");
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalType, setModalType] = useState("");
+
     useEffect(() => {
         const fetchData = async () => {
+            
+            if (!gPosition) return;
 
-            try {
+            try {                
                 const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`)
                 const data = await res.json()
-                console.log(data)
+                // console.log(data)
                 setData(data)
-            } catch (error) {
-                
-                console.error("Erro ao buscar dados:", error);
+            } catch (error) {                
+                console.error("listPN-Erro ao buscar dados:", error);
             } finally {
                 setLoading(false);
             };
@@ -43,16 +57,24 @@ export default function ListPn({navigation}) {
         ? data.filter(item => item.PN.includes(searchId))
         : data;
 
-    const handlerSelectItem = (item) => {
-        return;
-
-        //Anselmo - Comentei aqui pois não consegui fazer funcionar
-
-        // setGPN(item.PN)
-        // setGPosition(item.Position)
-        // setGDescription(item.Description)
-        // navigation.navigate("Digitação");
+    const handlerSelectItem = (item) => {        
+        
+        if (!item.Qty || userProfile==='ADMINISTRATOR') {  
+            setGPN(item.PN);
+            setGPosition(item.Position);
+            setGDescription(item.Description);
+            setGScore(item.Score);
+            navigation.navigate("Digitação");
+        } else {
+            setModalVisible(true)
+            setModalTitle("Bloqueio")
+            setModalMsg("PN já foi digitado, você não tem permissão para alterar!")
+        }
     }
+
+    const hideMessage = () => {
+        setModalVisible(false);
+    };
     
     const handleBarCodeScanned = ({ type, data }) => {
         setScannedData(data);
@@ -61,7 +83,7 @@ export default function ListPn({navigation}) {
       };
   
     return (
-        <View>
+        <ScrollView>
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
@@ -139,7 +161,26 @@ export default function ListPn({navigation}) {
                     </TouchableOpacity>
                 )}
             />
-        </View>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={hideMessage}
+                style={{justifyContent: 'center', // Centraliza verticalmente
+                        alignItems: 'center',  }}>
+                <BlurView intensity={150} style={StyleSheet.absoluteFill}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.message}>{modalTitle}</Text>
+                            <Text style={styles.message}>{modalMsg}</Text>
+                            <Button title="Fechar" onPress={hideMessage} />
+                        </View>
+                    </View>
+                </BlurView>
+            </Modal>
+
+        </ScrollView>
     )
 }
 
@@ -189,5 +230,31 @@ const styles = StyleSheet.create({
         width: 12,
         height: 12,
         backgroundColor: '#4CAF50',
-    },      
+    },
+
+    modalContent: {
+        justifyContent: 'center',
+        alignItems:'center',
+        alignContent:'center',
+        width:'80%',
+        backgroundColor:'white',
+        padding:20,
+        shadowColor: "#000",
+        shadowOffset: { width: 5, height: 10 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        borderRadius: 10,
+    }, 
+    modalContainer:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:"center",
+    },
+    message:{
+        margin:5,
+        fontSize:18,
+
+    }
+
 });

@@ -10,9 +10,17 @@ export const AppProvider = ({ children }) => {
   const [gPosition, setGPosition] = useState("");
   const [gPN, setGPN] = useState("");
   const [gDescription, setGDescription] = useState("");
+  const [gScore, setGScore] = useState("");
 
   const [URL, setURL] = useState(ENVIROMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
-  console.log("URL "+ URL + "ENVIROMMENT " + ENVIROMENT)
+
+  const clearContextItem = () => {
+    setGPosition("");
+    setGPN("");
+    setGDescription("")
+    setGScore("")
+  }
+
   return (
     <AppContext.Provider 
       value={{ userId, setUserId, 
@@ -21,7 +29,9 @@ export const AppProvider = ({ children }) => {
                 theme, setTheme, 
                 gPosition, setGPosition, 
                 gDescription, setGDescription,
-                gPN, setGPN}}>
+                gPN, setGPN,
+                gScore, setGScore,
+                clearContextItem}}>
       {children}
     </AppContext.Provider>
   );

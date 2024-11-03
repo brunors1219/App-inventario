@@ -46,13 +46,13 @@ export default function Posicao({navigation}) {
                 //     id: doc.id,
                 //     ...doc.data(),
                 // }));
-                console.log(`${URL}/api/invproducts?selection=position`);
+                //console.log(`${URL}/api/invproducts?selection=position`);
                 const res = await fetch(`${URL}/api/invproducts?selection=position`)
                 const data = await res.json()
                 setData(data)
                 //setData(dataList);
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
+                console.error("lisposicao-Erro ao buscar dados:", error);
             } finally {
                 setLoading(false);
             };
