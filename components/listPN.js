@@ -89,7 +89,8 @@ export default function ListPn({navigation}) {
                     style={styles.input}
                     placeholder="🔍 Digite o código do produto"
                     value={searchId}
-                    onChangeText={(text) => setSearchId(text)} />
+                    onChangeText={(text) => setSearchId(text.toUpperCase())} 
+                    autoCapitalize="characters"/>
                 <Pressable onPress={()=>setScannedShow(!scannedShow)} >
                     <Ionicons name='barcode-outline' size={50} color='green'/>
                 </Pressable>

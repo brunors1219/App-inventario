@@ -100,17 +100,6 @@ export default function Cadastro({ navigation }) {
           onChangeText={value => setEmail(value)}
           style={styles.input} />
 
-<<<<<<< HEAD
-      <TextInput
-        placeholder="Senha"
-        placeholderTextColor="#313131"
-        value={password}
-        onChangeText={value => setPassword(value)}
-        style={styles.input} /> 
-      <Button
-        title="Cadastrar"
-        onPress={() => createUser()} />
-=======
         <TextInput
           placeholder="Senha"
           placeholderTextColor="#313131"
@@ -135,9 +124,7 @@ export default function Cadastro({ navigation }) {
               }}>Cadastrar</Text>
             )}
         </Pressable>
-      </View>
-      
->>>>>>> 6fea21619681e6dc793cc91acbb12dfa2dde3bb0
+      </View>      
     </View>
   );
 }

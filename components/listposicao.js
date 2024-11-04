@@ -86,7 +86,8 @@ export default function Posicao({navigation}) {
                     style={styles.input}
                     placeholder="🔍 Digite a posição"
                     value={searchId}
-                    onChangeText={(text) => setSearchId(text)} />
+                    onChangeText={(text) => setSearchId(text.toUpperCase())} 
+                    autoCapitalize="characters"/>
                 <Pressable onPress={()=>setScannedShow(!scannedShow)} >
                     <Ionicons name='barcode-outline' size={50} color='green'/>
                 </Pressable>
