@@ -1,5 +1,5 @@
 import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
-import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Button, Modal } from "react-native";
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Modal, ActivityIndicator } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +15,7 @@ export default function InventarioS({ navigation }) {
     const [positions, setPositions] = useState("")
     const [pns, setPNs] = useState("")
     const [score, setScore] = useState("")
+    const [isLoading, setIsLoading] = useState(false);
 
     const { URL,
         userId,
@@ -118,23 +119,26 @@ export default function InventarioS({ navigation }) {
     }, [pn])
 
     const register = async () => {
-
+        setIsLoading(true);
         if (!qty) {
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
             focusTextInputQty();
+            setIsLoading(false);
             return
         }
         if (!position) {
             setModalVisible(true)
             setModalMsg("Informe a Posição!")
             focusTextInputPosition();
+            setIsLoading(false);
             return
         }
         if (!pn) {
             setModalVisible(true)
             setModalMsg("Informe o PN!")
             focusTextInputPN();
+            setIsLoading(false);
             return
         }
 
@@ -142,7 +146,8 @@ export default function InventarioS({ navigation }) {
             if (!chkIncrease && !chkUpdate) {
                 setModalVisible(true)
                 setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
-                return    
+                setIsLoading(false);
+                return
             }
         }
 
@@ -152,54 +157,42 @@ export default function InventarioS({ navigation }) {
         body.Position = position
         body.Qty = qty
         body.User_Id = userId
-        
+
         if (isUpdate) {
             body.kindUpdate = chkIncrease ? "increase" : "update"
         }
 
         const res = await fetch(`${URL}/api/invproducts?counter=true`,
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    //make sure to serialize your JSON body
-                                    body: JSON.stringify(body)
-                                });
-        const data = await res.json();        
-          
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                //make sure to serialize your JSON body
+                body: JSON.stringify(body)
+            });
+        const data = await res.json();
+        setIsLoading(true);
         console.log(data);
-        
-        setModalMsg(data.message);
-        
-        if (!res.ok) {
-<<<<<<< HEAD
-          setModalTitle('Alerta')
-          setModalType('error')
-          setIsUpdate(true)
-          setModalVisible(true);
-          return
-        } else {
-          setModalTitle('Informação')
-          setModalType('success')
-          setIsUpdate(false)
-          setModalVisible(true);
-        }
 
-=======
+        setModalMsg(data.message);
+
+        if (!res.ok) {
             setModalTitle('Alerta')
             setModalType('error')
+            setIsUpdate(true)
+            setModalVisible(true);
+            setIsLoading(false);
+            return
         } else {
             setModalTitle('Informação')
             setModalType('success')
+            setIsUpdate(false)
+            setModalVisible(true);
+            setIsLoading(true);
         }
 
-        const data = await res.json();
-        setModalVisible(true);
-
-        setModalMsg(data.message);
->>>>>>> 6fea21619681e6dc793cc91acbb12dfa2dde3bb0
         setQty('');
         setPN('');
         setDescription('');
@@ -360,9 +353,9 @@ export default function InventarioS({ navigation }) {
     const chkUpdateSet = () => {
         if (!chkUpdate) setChkIncrease(false);
         setChkUpdate(!chkUpdate);
-        
+
     }
-    const chkIncreaseSet = () => {        
+    const chkIncreaseSet = () => {
         if (!chkIncrease) setChkUpdate(false)
         setChkIncrease(!chkIncrease)
     }
@@ -555,59 +548,44 @@ export default function InventarioS({ navigation }) {
                     onChangeText={setQty} />
             </View>
 
-<<<<<<< HEAD
-            {isUpdate 
+            {isUpdate
                 ?
-                    <View style={{alignItems:'stretch', justifyContent:'space-between', paddingRight:20, display:'flex', flexDirection:'row', padding: 20}}>
-                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
-                            <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
-                                {chkIncrease && <View style={styles.checkmark} />}
-                            </TouchableOpacity>
-                            <Text>ADICIONAR Cont.</Text>
-                        </View>
-                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
-                            <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
-                                {chkUpdate && <View style={styles.checkmark} />}
-                            </TouchableOpacity>
-                            <Text>ALTERAR Cont.</Text>
-                        </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', paddingRight: 20, display: 'flex', flexDirection: 'row', padding: 20 }}>
+                    <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
+                            {chkIncrease && <View style={styles.checkmark} />}
+                        </TouchableOpacity>
+                        <Text>ADICIONAR Cont.</Text>
                     </View>
+                    <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
+                            {chkUpdate && <View style={styles.checkmark} />}
+                        </TouchableOpacity>
+                        <Text>ALTERAR Cont.</Text>
+                    </View>
+                </View>
 
                 : null
             }
 
-            <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
-                <Pressable onPress={register} 
-                    style={{backgroundColor: '#76bc21',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            alignContent: 'center',
-                            borderRadius: 10,
-                            width: '50%',
-                            margin: 15}}>
-                    <Text style={{fontSize: 15,
-                                    color: 'white',
-                                    fontWeight: 900,
-                                    padding: 15}}>Registrar</Text>
-=======
             <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Pressable onPress={register}
-                    style={{
-                        backgroundColor: '#76bc21',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignContent: 'center',
-                        borderRadius: 10,
-                        width: '50%',
-                        margin: 15
-                    }}>
-                    <Text style={{
-                        fontSize: 15,
-                        color: 'white',
-                        fontWeight: 900,
-                        padding: 15
-                    }}>Registrar</Text>
->>>>>>> 6fea21619681e6dc793cc91acbb12dfa2dde3bb0
+                    style={({ pressed }) => [
+                        styles.buttonReg,
+                        pressed ? styles.buttonPressed : null,
+                    ]}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator size={45} color="#fff" />
+                    ) : (
+                        <Text style={{
+                            fontSize: 20,
+                            color: 'white',
+                            fontWeight: 900,
+                            padding: 15
+                        }}>Registrar</Text>
+                    )}
                 </Pressable>
                 <Pressable onPress={cancel} style={styles.button}>
                     <Text style={{
@@ -624,24 +602,14 @@ export default function InventarioS({ navigation }) {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={hideMessage}
-                style={{
-                    justifyContent: 'center', // Centraliza verticalmente
-                    alignItems: 'center',
-                }}>
+            >
                 <BlurView intensity={150} style={StyleSheet.absoluteFill}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalContent}>
                             <Text style={styles.title}>{modalTitle}</Text>
                             <Text style={styles.message}>{modalMsg}</Text>
                             <Pressable onPress={hideMessage}
-                                style={{
-                                    backgroundColor: '#76bc21',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    alignContent: 'center',
-                                    borderRadius: 10,
-                                    margin: 15
-                                }}>
+                                style={styles.buttonReg}>
                                 <Text style={{
                                     fontSize: 20,
                                     color: 'white',
@@ -681,16 +649,27 @@ styles = StyleSheet.create({
         borderRadius: 5
 
     },
+    buttonReg: {
+        backgroundColor: '#76bc21',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        borderRadius: 10,
+        width: '50%',
+        margin: 15
+    },
+
     button: {
         backgroundColor: 'gray',
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
         borderRadius: 10,
-        margin: 15,
+        margin: 15
     },
 
     modalContent: {
+
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
@@ -704,11 +683,20 @@ styles = StyleSheet.create({
         elevation: 5,
         borderRadius: 10,
     },
-<<<<<<< HEAD
-    message:{
-        margin:5,
-        fontSize:18,
-
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    message: {
+        margin: 5,
+        fontSize: 18,
+        color: 'green'
+    },
+    title: {
+        fontWeight: "bold",
+        fontSize: 20,
+        color: 'green',
     },
     checkbox: {
         width: 24,
@@ -725,21 +713,4 @@ styles = StyleSheet.create({
         backgroundColor: '#4CAF50',
     },
 
-=======
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: "center",
-    },
-    message: {
-        margin: 5,
-        fontSize: 17,
-        color: "green"
-    },
-    title:{
-        fontSize:25,
-        fontWeight:"bold",
-        color:"green"
-    }
->>>>>>> 6fea21619681e6dc793cc91acbb12dfa2dde3bb0
 });

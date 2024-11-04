@@ -83,7 +83,7 @@ export default function ListPn({navigation}) {
       };
   
     return (
-        <ScrollView>
+        <View>
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
@@ -180,7 +180,7 @@ export default function ListPn({navigation}) {
                 </BlurView>
             </Modal>
 
-        </ScrollView>
+        </View>
     )
 }
 
