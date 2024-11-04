@@ -56,11 +56,11 @@ export default function Cadastro({ navigation }) {
   async function createUser() {
 
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    setIsLoading(false);
+
     await createUserWithEmailAndPassword(auth, email, password)
       .then(value => {
         handlerRegister();
+        setIsLoading(false);
         console.log('Cadastrado com sucesso! \n ' + value.user.uid);
 
         // Mostra o alerta de sucesso para o usuário
@@ -74,6 +74,7 @@ export default function Cadastro({ navigation }) {
 
       .catch(erro => {
         console.log(erro);
+        setIsLoading(false);
         Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
       });
 
@@ -106,23 +107,24 @@ export default function Cadastro({ navigation }) {
           value={password}
           onChangeText={value => setPassword(value)}
           style={styles.input} />
+
         <Pressable onPress={() => createUser()}
-          style={({pressed})=>[
+          style={({ pressed }) => [
             styles.button,
             pressed ? styles.buttonPressed : null,
           ]}
           disabled={isLoading}
-          >
-            {isLoading? (
-              <ActivityIndicator color="#fff"/>
-            ):(
-              <Text style={{
-                fontSize: 20,
-                color: 'white',
-                fontWeight: 900,
-                padding: 15
-              }}>Cadastrar</Text>
-            )}
+        >
+        {isLoading ? (
+            <ActivityIndicator size={45} color="#fff" />
+          ) : (
+            <Text style={{
+              fontSize: 20,
+              color: 'white',
+              fontWeight: 900,
+              padding: 15
+            }}>Cadastrar</Text>
+          )}
         </Pressable>
       </View>      
     </View>
@@ -163,13 +165,17 @@ const styles = StyleSheet.create({
     height: 120,
   },
 
-  button:{
+  button: {
     backgroundColor: '#76bc21',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
     borderRadius: 10,
     margin: 15
+  },
+
+  buttonPressed:{
+    opacity:0.7,
   },
 
   box: {

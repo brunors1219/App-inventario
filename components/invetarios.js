@@ -1,5 +1,5 @@
 import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
-import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Button, Modal } from "react-native";
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Modal, ActivityIndicator } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +15,7 @@ export default function InventarioS({ navigation }) {
     const [positions, setPositions] = useState("")
     const [pns, setPNs] = useState("")
     const [score, setScore] = useState("")
+    const [isLoading, setIsLoading] = useState(false);
 
     const { URL, 
             userId, 
@@ -118,23 +119,26 @@ export default function InventarioS({ navigation }) {
     },[pn])
 
     const register = async () => {
-
+        setIsLoading(true);
         if (!qty) {
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
             focusTextInputQty();
+            setIsLoading(false);
             return
         }
         if (!position) {
             setModalVisible(true)
             setModalMsg("Informe a Posição!")
             focusTextInputPosition();
+            setIsLoading(false);
             return
         }
         if (!pn) {
             setModalVisible(true)
             setModalMsg("Informe o PN!")
             focusTextInputPN();
+            setIsLoading(false);
             return
         }
 
@@ -142,7 +146,8 @@ export default function InventarioS({ navigation }) {
             if (!chkIncrease && !chkUpdate) {
                 setModalVisible(true)
                 setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
-                return    
+                setIsLoading(false);
+                return
             }
         }
 
@@ -152,23 +157,23 @@ export default function InventarioS({ navigation }) {
         body.Position = position
         body.Qty = qty
         body.User_Id = userId
-        
+
         if (isUpdate) {
             body.kindUpdate = chkIncrease ? "increase" : "update"
         }
 
         const res = await fetch(`${URL}/api/invproducts?counter=true`,
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    //make sure to serialize your JSON body
-                                    body: JSON.stringify(body)
-                                });
-        const data = await res.json();        
-          
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                //make sure to serialize your JSON body
+                body: JSON.stringify(body)
+            });
+        const data = await res.json();
+        setIsLoading(true);
         console.log(data);
         
         setModalMsg(data.message);
@@ -204,6 +209,7 @@ export default function InventarioS({ navigation }) {
             setModalMsg('A posição não existe no armazém.');
             setModalVisible(true);
             setPosition("");
+            focusTextInputPosition();
         }
 
         recoverCamera = ""
@@ -346,9 +352,9 @@ export default function InventarioS({ navigation }) {
     const chkUpdateSet = () => {
         if (!chkUpdate) setChkIncrease(false);
         setChkUpdate(!chkUpdate);
-        
+
     }
-    const chkIncreaseSet = () => {        
+    const chkIncreaseSet = () => {
         if (!chkIncrease) setChkUpdate(false)
         setChkIncrease(!chkIncrease)
     }
@@ -519,20 +525,20 @@ export default function InventarioS({ navigation }) {
 
             {isUpdate 
                 ?
-                    <View style={{alignItems:'stretch', justifyContent:'space-between', paddingRight:20, display:'flex', flexDirection:'row', padding: 20}}>
-                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
-                            <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
-                                {chkIncrease && <View style={styles.checkmark} />}
-                            </TouchableOpacity>
-                            <Text>ADICIONAR Cont.</Text>
-                        </View>
-                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
-                            <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
-                                {chkUpdate && <View style={styles.checkmark} />}
-                            </TouchableOpacity>
-                            <Text>ALTERAR Cont.</Text>
-                        </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', paddingRight: 20, display: 'flex', flexDirection: 'row', padding: 20 }}>
+                    <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
+                            {chkIncrease && <View style={styles.checkmark} />}
+                        </TouchableOpacity>
+                        <Text>ADICIONAR Cont.</Text>
                     </View>
+                    <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
+                            {chkUpdate && <View style={styles.checkmark} />}
+                        </TouchableOpacity>
+                        <Text>ALTERAR Cont.</Text>
+                    </View>
+                </View>
 
                 : null
             }
@@ -571,7 +577,15 @@ export default function InventarioS({ navigation }) {
                         <View style={styles.modalContent}>
                             <Text style={styles.message}>{modalTitle}</Text>
                             <Text style={styles.message}>{modalMsg}</Text>
-                            <Button title="Fechar" onPress={hideMessage} />
+                            <Pressable onPress={hideMessage}
+                                style={styles.buttonReg}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    color: 'white',
+                                    fontWeight: 900,
+                                    padding: 15
+                                }}>Fechar</Text>
+                            </Pressable>
                         </View>
                     </View>
                 </BlurView>
@@ -604,16 +618,27 @@ styles = StyleSheet.create({
         borderRadius: 5
 
     },
+    buttonReg: {
+        backgroundColor: '#76bc21',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        borderRadius: 10,
+        width: '50%',
+        margin: 15
+    },
+
     button: {
         backgroundColor: 'gray',
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
         borderRadius: 10,
-        margin: 15,
+        margin: 15
     },
 
     modalContent: {
+
         justifyContent: 'center',
         alignItems:'center',
         alignContent:'center',
@@ -632,10 +657,20 @@ styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:"center",
     },
-    message:{
-        margin:5,
-        fontSize:18,
-
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    message: {
+        margin: 5,
+        fontSize: 18,
+        color: 'green'
+    },
+    title: {
+        fontWeight: "bold",
+        fontSize: 20,
+        color: 'green',
     },
     checkbox: {
         width: 24,

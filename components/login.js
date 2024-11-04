@@ -1,5 +1,5 @@
 import { React, useState, useContext } from "react";
-import { View, Text, Button, StyleSheet, TextInput, Alert, Image, Pressable } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, TextInput, Alert, Image, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
@@ -9,7 +9,7 @@ import { ENVIROMENT, USER_DEFAULT, PWD_DEFAUT } from '@env';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState(ENVIROMENT === 'DEV' ? USER_DEFAULT : "");
   const [password, setPassword] = useState(ENVIROMENT === 'DEV' ? PWD_DEFAUT : "");
-
+  const [isLoading, setIsLoading] = useState(false);
   const { setUserId, userId, setUserProfile, URL } = useContext(AppContext)
 
   async function handleLogin() {
@@ -21,11 +21,13 @@ export default function Login({ navigation }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      setIsLoading(true);
 
       try {
         console.log(`${URL}/api/usersApp?email=${user.email}`)
         const res = await fetch(`${URL}/api/usersApp?email=${user.email}`)
         const data = await res.json()
+        
         console.log(data)
         setUserId(data[0].id);
         setUserProfile(data[0].permissions)
@@ -33,11 +35,11 @@ export default function Login({ navigation }) {
         setUserId('');
         console.error("Erro ao buscar dados:", error);
       } finally {
-
+        setIsLoading(false);
       };
 
       console.log("Login realizado com sucesso! ID: " + user.uid + " Banco ID: " + userId);
-
+      setIsLoading(false);
       navigation.navigate("Inventário");
 
     } catch (error) {
@@ -69,20 +71,22 @@ export default function Login({ navigation }) {
         />
 
         <Pressable onPress={handleLogin}
-          style={{
-            backgroundColor: '#76bc21',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignContent: 'center',
-            borderRadius: 10,
-            margin: 15
-          }}>
-          <Text style={{
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 900,
-            padding: 15
-          }}>Acessar</Text>
+          style={({ pressed }) => [
+            styles.button,
+            pressed ? styles.buttonPressed : null,
+          ]}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator size={45} color="#fff" />
+          ) : (
+            <Text style={{
+              fontSize: 20,
+              color: 'white',
+              fontWeight: 900,
+              padding: 15
+            }}>Acessar</Text>
+          )}
         </Pressable>
         <Text style={styles.link} onPress={() => navigation.navigate('Resert_password')}>Esqueceu a senha</Text>
       </View>
@@ -135,9 +139,16 @@ const styles = StyleSheet.create({
   link: {
     fontSize: 17,
     textDecorationLine: "underline",
-    color:"green",
-    fontStyle:"bold"
+    color: "green",
+    fontStyle: "bold"
+  },
 
-
+  button: {
+    backgroundColor: '#76bc21',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    borderRadius: 10,
+    margin: 15
   }
 });
