@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput, Image, Alert } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TextInput, Image, Alert, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
@@ -9,7 +9,7 @@ export default function Cadastro({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null)
 
@@ -54,6 +54,10 @@ export default function Cadastro({ navigation }) {
 
 
   async function createUser() {
+
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    setIsLoading(false);
     await createUserWithEmailAndPassword(auth, email, password)
       .then(value => {
         handlerRegister();
@@ -103,20 +107,22 @@ export default function Cadastro({ navigation }) {
           onChangeText={value => setPassword(value)}
           style={styles.input} />
         <Pressable onPress={() => createUser()}
-          style={{
-            backgroundColor: '#76bc21',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignContent: 'center',
-            borderRadius: 10,
-            margin: 15
-          }}>
-          <Text style={{
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 900,
-            padding: 15
-          }}>Acessar</Text>
+          style={({pressed})=>[
+            styles.button,
+            pressed ? styles.buttonPressed : null,
+          ]}
+          disabled={isLoading}
+          >
+            {isLoading? (
+              <ActivityIndicator color="#fff"/>
+            ):(
+              <Text style={{
+                fontSize: 20,
+                color: 'white',
+                fontWeight: 900,
+                padding: 15
+              }}>Cadastrar</Text>
+            )}
         </Pressable>
       </View>
       
@@ -157,6 +163,16 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
   },
+
+  button:{
+    backgroundColor: '#76bc21',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    borderRadius: 10,
+    margin: 15
+  },
+
   box: {
     width: 350,
     justifyContent: 'center',
