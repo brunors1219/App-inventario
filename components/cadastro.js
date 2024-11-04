@@ -43,7 +43,7 @@ export default function Cadastro({ navigation }) {
 
   const handlerRegister = async () => {
     try{
-      const data ={ name, email };
+      const data ={ name, email, 'permissions' : 'WAREHOUSEOPERATOR' };
       const result = await usersApp(data);
       setResponse(result);
       setError(null);
