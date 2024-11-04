@@ -101,7 +101,7 @@ return (
         placeholderTextColor="#313131"
         value={password}
         onChangeText={value => setPassword(value)}
-        style={styles.input} />
+        style={styles.input} /> 
       <Button
         title="Cadastrar"
         onPress={() => createUser()} />

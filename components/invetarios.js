@@ -1,5 +1,5 @@
 import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
-import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button, Modal } from "react-native";
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Button, Modal } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,6 +34,16 @@ export default function InventarioS({ navigation }) {
     const [PNKey, setPNKey] = useState("")
     const [visibleBarCodePN, setVisibleBarCodePN] = useState(true)
 
+    const [hasPermission, setHasPermission] = useState(null);
+    const [scanned, setScanned] = useState(false);
+    const [scannedData, setScannedData] = useState('');
+    const [scannedShow, setScannedShow] = useState(false);
+    const [scannedShowPosition, setScannedShowPosition] = useState(false);
+
+    const [chkIncrease, setChkIncrease] = useState(false);
+    const [chkUpdate, setChkUpdate] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+
     useEffect(() => {
 
         // console.log(userId);
@@ -50,7 +60,9 @@ export default function InventarioS({ navigation }) {
                 const res = await fetch(`${URL}/api/invproducts?selection=products`)
                 const data = await res.json()
                 setPNs(data)
-
+                setIsUpdate(false)
+                setChkIncrease(false)
+                setChkUpdate(false)
                 const result = [];
                 data.forEach(item => {
                     // Adiciona a posição principal ao resultado
@@ -126,43 +138,59 @@ export default function InventarioS({ navigation }) {
             return
         }
 
+        if (isUpdate) {
+            if (!chkIncrease && !chkUpdate) {
+                setModalVisible(true)
+                setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
+                return    
+            }
+        }
+
         const body = {}
 
         body.PN = pn
         body.Position = position
         body.Qty = qty
         body.User_Id = userId
+        
+        if (isUpdate) {
+            body.kindUpdate = chkIncrease ? "increase" : "update"
+        }
 
-        // console.log(body)
-
-        const res = await
-            fetch(`${URL}/api/invproducts?counter=true`,
-                {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    //make sure to serialize your JSON body
-                    body: JSON.stringify(body)
-                });
-
+        const res = await fetch(`${URL}/api/invproducts?counter=true`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    //make sure to serialize your JSON body
+                                    body: JSON.stringify(body)
+                                });
+        const data = await res.json();        
+          
+        console.log(data);
+        
+        setModalMsg(data.message);
+        
         if (!res.ok) {
           setModalTitle('Alerta')
           setModalType('error')
+          setIsUpdate(true)
+          setModalVisible(true);
+          return
         } else {
           setModalTitle('Informação')
           setModalType('success')
+          setIsUpdate(false)
+          setModalVisible(true);
         }
 
-        const data = await res.json();
-        setModalVisible(true);
-        
-        setModalMsg(data.message);
         setQty('');
         setPN('');
         setDescription('');
         focusTextInputPN();
+        setIsUpdate(false);
     }
 
     const handleBlurPosition = () => {
@@ -268,11 +296,6 @@ export default function InventarioS({ navigation }) {
         setModalVisible(false);
     };
 
-    const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(false);
-    const [scannedData, setScannedData] = useState('');
-    const [scannedShow, setScannedShow] = useState(false);
-    const [scannedShowPosition, setScannedShowPosition] = useState(false);
 
     let recoverCamera = ""
 
@@ -316,8 +339,20 @@ export default function InventarioS({ navigation }) {
         setScore(0);
         setGPN("");
         setGPosition("");
+        setIsUpdate(false);
         focusTextInputPosition();
     }
+
+    const chkUpdateSet = () => {
+        if (!chkUpdate) setChkIncrease(false);
+        setChkUpdate(!chkUpdate);
+        
+    }
+    const chkIncreaseSet = () => {        
+        if (!chkIncrease) setChkUpdate(false)
+        setChkIncrease(!chkIncrease)
+    }
+
     return (
 
         <ScrollView style={styles.scroll}>
@@ -355,6 +390,7 @@ export default function InventarioS({ navigation }) {
                         value={position}
                         onChangeText={setPosition}
                         onBlur={handleBlurPosition}
+                        autoCapitalize="characters"
                     />
                     <Pressable onPress={()=>setScannedShowPosition(!scannedShowPosition)} >
                         <Ionicons name='barcode-outline' size={50} color='green'/>
@@ -480,6 +516,26 @@ export default function InventarioS({ navigation }) {
                     onChangeText={setQty} />
             </View>
 
+            {isUpdate 
+                ?
+                    <View style={{alignItems:'stretch', justifyContent:'space-between', paddingRight:20, display:'flex', flexDirection:'row', padding: 20}}>
+                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
+                            <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
+                                {chkIncrease && <View style={styles.checkmark} />}
+                            </TouchableOpacity>
+                            <Text>ADICIONAR Cont.</Text>
+                        </View>
+                        <View style={{alignItems:'flex-start', justifyContent:'flex-end', display:'flex', flexDirection:'row'}}>
+                            <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
+                                {chkUpdate && <View style={styles.checkmark} />}
+                            </TouchableOpacity>
+                            <Text>ALTERAR Cont.</Text>
+                        </View>
+                    </View>
+
+                : null
+            }
+
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Pressable onPress={register} 
                     style={{backgroundColor: '#76bc21',
@@ -579,5 +635,20 @@ styles = StyleSheet.create({
         margin:5,
         fontSize:18,
 
-    }
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: '#4CAF50',
+        marginRight: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checkmark: {
+        width: 12,
+        height: 12,
+        backgroundColor: '#4CAF50',
+    },
+
 });
