@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput, Image, Alert } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TextInput, Image, Alert, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
@@ -9,9 +9,9 @@ export default function Cadastro({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
-  const[response, setResponse] = useState(null);
-  const[error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null)
 
 
   const { URL } = useContext(AppContext)
@@ -42,60 +42,65 @@ export default function Cadastro({ navigation }) {
   };
 
   const handlerRegister = async () => {
-    try{
-      const data ={ name, email, 'permissions' : 'WAREHOUSEOPERATOR' };
+    try {
+      const data = { name, email, 'permissions': 'WAREHOUSEOPERATOR' };
       const result = await usersApp(data);
       setResponse(result);
       setError(null);
-    }catch(err){
+    } catch (err) {
       setError(err.message);
     }
   }
 
 
-async function createUser() {
-  await createUserWithEmailAndPassword(auth, email, password)
-    .then(value => {
-      handlerRegister();
-      console.log('Cadastrado com sucesso! \n ' + value.user.uid);
+  async function createUser() {
 
-      // Mostra o alerta de sucesso para o usuário
-      Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
-        }
-      ]);
-    })
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    setIsLoading(false);
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then(value => {
+        handlerRegister();
+        console.log('Cadastrado com sucesso! \n ' + value.user.uid);
 
-    .catch(erro => {
-      console.log(erro);
-      Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
-    });
+        // Mostra o alerta de sucesso para o usuário
+        Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
+          }
+        ]);
+      })
+
+      .catch(erro => {
+        console.log(erro);
+        Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
+      });
 
 
 
   }
 
-return (
-  <View style={styles.container}>
-    <View style={styles.box}>
-      <Image source={require('../assets/logo.png')} style={styles.image} />
-      <Text style={styles.title}>Cadastro</Text>
-      <TextInput
-        placeholder="Usuario"
-        placeholderTextColor="#313131"
-        value={name}
-        onChangeText={value => setName(value)}
-        style={styles.input} />
+  return (
+    <View style={styles.container}>
+      <View style={styles.box}>
+        <Image source={require('../assets/logo.png')} style={styles.image} />
+        <Text style={styles.title}>Cadastro</Text>
+        <TextInput
+          placeholder="Usuario"
+          placeholderTextColor="#313131"
+          value={name}
+          onChangeText={value => setName(value)}
+          style={styles.input} />
 
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="#313131"
-        value={email}
-        onChangeText={value => setEmail(value)}
-        style={styles.input} />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#313131"
+          value={email}
+          onChangeText={value => setEmail(value)}
+          style={styles.input} />
 
+<<<<<<< HEAD
       <TextInput
         placeholder="Senha"
         placeholderTextColor="#313131"
@@ -105,9 +110,36 @@ return (
       <Button
         title="Cadastrar"
         onPress={() => createUser()} />
+=======
+        <TextInput
+          placeholder="Senha"
+          placeholderTextColor="#313131"
+          value={password}
+          onChangeText={value => setPassword(value)}
+          style={styles.input} />
+        <Pressable onPress={() => createUser()}
+          style={({pressed})=>[
+            styles.button,
+            pressed ? styles.buttonPressed : null,
+          ]}
+          disabled={isLoading}
+          >
+            {isLoading? (
+              <ActivityIndicator color="#fff"/>
+            ):(
+              <Text style={{
+                fontSize: 20,
+                color: 'white',
+                fontWeight: 900,
+                padding: 15
+              }}>Cadastrar</Text>
+            )}
+        </Pressable>
+      </View>
+      
+>>>>>>> 6fea21619681e6dc793cc91acbb12dfa2dde3bb0
     </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
@@ -143,6 +175,16 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
   },
+
+  button:{
+    backgroundColor: '#76bc21',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    borderRadius: 10,
+    margin: 15
+  },
+
   box: {
     width: 350,
     justifyContent: 'center',
