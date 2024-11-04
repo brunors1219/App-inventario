@@ -4,6 +4,7 @@ import { BlurView } from 'expo-blur';
 import { AppContext } from "./src/context/AppContext";
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import MyModal from "./myModal";
 
 export default function ListPn({navigation}) {
 
@@ -162,24 +163,13 @@ export default function ListPn({navigation}) {
                     </TouchableOpacity>
                 )}
             />
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={hideMessage}
-                style={{justifyContent: 'center', // Centraliza verticalmente
-                        alignItems: 'center',  }}>
-                <BlurView intensity={150} style={StyleSheet.absoluteFill}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.message}>{modalTitle}</Text>
-                            <Text style={styles.message}>{modalMsg}</Text>
-                            <Button title="Fechar" onPress={hideMessage} />
-                        </View>
-                    </View>
-                </BlurView>
-            </Modal>
+            <MyModal
+                modalVisible = {modalVisible}
+                modalTitle = {modalTitle}
+                modalMsg = {modalMsg}
+                setModalVisible = {setModalVisible}
+                >
+            </MyModal>
 
         </View>
     )

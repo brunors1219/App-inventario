@@ -1,13 +1,13 @@
 import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
 import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Modal, ActivityIndicator } from "react-native";
 import { AppContext } from "./src/context/AppContext";
-import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect } from '@react-navigation/native';
+import MyModal from "../components/myModal";
 
 export default function InventarioS({ navigation }) {
-
+    
     const [position, setPosition] = useState("")
     const [description, setDescription] = useState("")
     const [pn, setPN] = useState("")
@@ -565,31 +565,14 @@ export default function InventarioS({ navigation }) {
                 </Pressable>
             </View>
 
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={hideMessage}
-                style={{justifyContent: 'center', // Centraliza verticalmente
-                        alignItems: 'center',  }}>
-                <BlurView intensity={150} style={StyleSheet.absoluteFill}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.message}>{modalTitle}</Text>
-                            <Text style={styles.message}>{modalMsg}</Text>
-                            <Pressable onPress={hideMessage}
-                                style={styles.buttonReg}>
-                                <Text style={{
-                                    fontSize: 20,
-                                    color: 'white',
-                                    fontWeight: 900,
-                                    padding: 15
-                                }}>Fechar</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </BlurView>
-            </Modal>
+            <MyModal
+                modalVisible = {modalVisible}
+                modalTitle = {modalTitle}
+                modalMsg = {modalMsg}
+                setModalVisible = {setModalVisible}
+                >
+            </MyModal>
+
         </ScrollView >
     )
 }
@@ -617,15 +600,6 @@ styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5
 
-    },
-    buttonReg: {
-        backgroundColor: '#76bc21',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignContent: 'center',
-        borderRadius: 10,
-        width: '50%',
-        margin: 15
     },
 
     button: {
@@ -666,11 +640,6 @@ styles = StyleSheet.create({
         margin: 5,
         fontSize: 18,
         color: 'green'
-    },
-    title: {
-        fontWeight: "bold",
-        fontSize: 20,
-        color: 'green',
     },
     checkbox: {
         width: 24,
