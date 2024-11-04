@@ -10,8 +10,8 @@ export default function Cadastro({ navigation }) {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const[response, setResponse] = useState(null);
-  const[error, setError] = useState(null)
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null)
 
 
   const { URL } = useContext(AppContext)
@@ -42,72 +42,86 @@ export default function Cadastro({ navigation }) {
   };
 
   const handlerRegister = async () => {
-    try{
-      const data ={ name, email, 'permissions' : 'WAREHOUSEOPERATOR' };
+    try {
+      const data = { name, email, 'permissions': 'WAREHOUSEOPERATOR' };
       const result = await usersApp(data);
       setResponse(result);
       setError(null);
-    }catch(err){
+    } catch (err) {
       setError(err.message);
     }
   }
 
 
-async function createUser() {
-  await createUserWithEmailAndPassword(auth, email, password)
-    .then(value => {
-      handlerRegister();
-      console.log('Cadastrado com sucesso! \n ' + value.user.uid);
+  async function createUser() {
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then(value => {
+        handlerRegister();
+        console.log('Cadastrado com sucesso! \n ' + value.user.uid);
 
-      // Mostra o alerta de sucesso para o usuário
-      Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
-        }
-      ]);
-    })
+        // Mostra o alerta de sucesso para o usuário
+        Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
+          }
+        ]);
+      })
 
-    .catch(erro => {
-      console.log(erro);
-      Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
-    });
+      .catch(erro => {
+        console.log(erro);
+        Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
+      });
 
 
 
   }
 
-return (
-  <View style={styles.container}>
-    <View style={styles.box}>
-      <Image source={require('../assets/logo.png')} style={styles.image} />
-      <Text style={styles.title}>Cadastro</Text>
-      <TextInput
-        placeholder="Usuario"
-        placeholderTextColor="#313131"
-        value={name}
-        onChangeText={value => setName(value)}
-        style={styles.input} />
+  return (
+    <View style={styles.container}>
+      <View style={styles.box}>
+        <Image source={require('../assets/logo.png')} style={styles.image} />
+        <Text style={styles.title}>Cadastro</Text>
+        <TextInput
+          placeholder="Usuario"
+          placeholderTextColor="#313131"
+          value={name}
+          onChangeText={value => setName(value)}
+          style={styles.input} />
 
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="#313131"
-        value={email}
-        onChangeText={value => setEmail(value)}
-        style={styles.input} />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#313131"
+          value={email}
+          onChangeText={value => setEmail(value)}
+          style={styles.input} />
 
-      <TextInput
-        placeholder="Senha"
-        placeholderTextColor="#313131"
-        value={password}
-        onChangeText={value => setPassword(value)}
-        style={styles.input} />
-      <Button
-        title="Cadastrar"
-        onPress={() => createUser()} />
+        <TextInput
+          placeholder="Senha"
+          placeholderTextColor="#313131"
+          value={password}
+          onChangeText={value => setPassword(value)}
+          style={styles.input} />
+        <Pressable onPress={() => createUser()}
+          style={{
+            backgroundColor: '#76bc21',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignContent: 'center',
+            borderRadius: 10,
+            margin: 15
+          }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 900,
+            padding: 15
+          }}>Acessar</Text>
+        </Pressable>
+      </View>
+      
     </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({

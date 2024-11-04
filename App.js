@@ -9,6 +9,7 @@ import LayoutComRodape from './components/rodape';
 import Tabs from './router';
 
 import { AppProvider } from './components/src/context/AppContext';
+import ResetPasswordScreen from './components/password';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +28,8 @@ export default function App() {
             <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }}/>
             <Stack.Screen name="Login" component={Login}/>
             <Stack.Screen name="Cadastro" component={Cadastro} />
-            <Stack.Screen name="Inventário" component={Tabs}/>          
+            <Stack.Screen name="Inventário" component={Tabs}/>
+            <Stack.Screen name="Resert_password" component={ResetPasswordScreen}/>
           </Stack.Navigator>
         </NavigationContainer>
       </LayoutComRodape>
