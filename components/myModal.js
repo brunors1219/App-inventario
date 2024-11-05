@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-const MyModal = ({modalVisible, setModalVisible, modalTitle, modalMsg}) => {
+const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg }) => {
 
     const hideMessage = () => {
         setModalVisible(false);
@@ -14,8 +14,7 @@ const MyModal = ({modalVisible, setModalVisible, modalTitle, modalMsg}) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={hideMessage}
-            style={{justifyContent: 'center', // Centraliza verticalmente
-                    alignItems: 'center',  }}>
+        >
             <BlurView intensity={150} style={StyleSheet.absoluteFill}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -23,12 +22,7 @@ const MyModal = ({modalVisible, setModalVisible, modalTitle, modalMsg}) => {
                         <Text style={styles.message}>{modalMsg}</Text>
                         <Pressable onPress={hideMessage}
                             style={styles.buttonReg}>
-                            <Text style={{
-                                fontSize: 20,
-                                color: 'white',
-                                fontWeight: 900,
-                                padding: 15
-                            }}>Fechar</Text>
+                            <Text style={styles.buttonText}>Fechar</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -38,39 +32,29 @@ const MyModal = ({modalVisible, setModalVisible, modalTitle, modalMsg}) => {
 }
 
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
     modalContent: {
         justifyContent: 'center',
-        alignItems:'center',
-        alignContent:'center',
-        width:'80%',
-        backgroundColor:'white',
+        alignItems: 'center',
+        alignContent: 'center',
+        width: '80%',
+        backgroundColor: 'white',
         shadowColor: "#000",
         shadowOffset: { width: 5, height: 10 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
         borderRadius: 10,
-    }, 
-    modalContainer:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:"center",
     },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: "center",
     },
     message: {
         margin: 5,
         fontSize: 18,
         color: 'green'
-    },
-    title: {
-        fontWeight: "bold",
-        fontSize: 20,
-        color: 'green',
     },
     buttonReg: {
         backgroundColor: '#76bc21',
@@ -95,6 +79,13 @@ styles = StyleSheet.create({
         borderTopRightRadius: 10, // Arredonda o canto superior direito
         textAlignVertical: 'center'
     },
+
+    buttonText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 900,
+        padding: 15
+    }
 
 });
 

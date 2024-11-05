@@ -3,6 +3,8 @@ import { View, Text, Pressable, StyleSheet, TextInput, Image, Alert, ActivityInd
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
+import MyModal from "./myModal";
+
 
 export default function Cadastro({ navigation }) {
 
@@ -11,7 +13,13 @@ export default function Cadastro({ navigation }) {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalType, setModalType] = useState("");
+
+
 
 
   const { URL } = useContext(AppContext)
@@ -55,6 +63,30 @@ export default function Cadastro({ navigation }) {
 
   async function createUser() {
 
+    if (!name) {
+      setModalTitle('Erro Usuario');
+      setModalVisible(true)
+      setModalMsg("Informe nome de usuário!")
+      setIsLoading(false);
+      return
+    }
+
+    if (!email) {
+      setModalTitle('Erro Email');
+      setModalVisible(true)
+      setModalMsg("Informe um email!")
+      setIsLoading(false);
+      return
+    }
+
+    if (!password) {
+      setModalTitle('Erro Senha');
+      setModalVisible(true)
+      setModalMsg("Informe uma senha de 6 números!")
+      setIsLoading(false);
+      return
+    }
+
     setIsLoading(true);
 
     await createUserWithEmailAndPassword(auth, email, password)
@@ -62,20 +94,23 @@ export default function Cadastro({ navigation }) {
         handlerRegister();
         setIsLoading(false);
         console.log('Cadastrado com sucesso! \n ' + value.user.uid);
-
-        // Mostra o alerta de sucesso para o usuário
-        Alert.alert("Sucesso", "Usuário cadastrado com sucesso!", [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Login"), // Navega para a próxima tela após fechar o alerta
-          }
-        ]);
+        setModalTitle('Sucesso');
+        setModalVisible(true)
+        setModalMsg("Usuário cadastrado com sucesso!")
+        setIsLoading(false);
+        navigation.navigate("Login")
+        return
       })
 
       .catch(erro => {
         console.log(erro);
         setIsLoading(false);
-        Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
+        setModalTitle('Erro');
+        setModalVisible(true)
+        setModalMsg("Não foi possível realizar o cadastro. Tente novamente.")
+        setIsLoading(false);
+        return
+
       });
 
 
@@ -115,7 +150,7 @@ export default function Cadastro({ navigation }) {
           ]}
           disabled={isLoading}
         >
-        {isLoading ? (
+          {isLoading ? (
             <ActivityIndicator size={45} color="#fff" />
           ) : (
             <Text style={{
@@ -126,7 +161,14 @@ export default function Cadastro({ navigation }) {
             }}>Cadastrar</Text>
           )}
         </Pressable>
-      </View>      
+      </View>
+      <MyModal
+        modalVisible={modalVisible}
+        modalTitle={modalTitle}
+        modalMsg={modalMsg}
+        setModalVisible={setModalVisible}
+      >
+      </MyModal>
     </View>
   );
 }
@@ -174,8 +216,8 @@ const styles = StyleSheet.create({
     margin: 15
   },
 
-  buttonPressed:{
-    opacity:0.7,
+  buttonPressed: {
+    opacity: 0.7,
   },
 
   box: {

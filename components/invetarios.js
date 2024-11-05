@@ -577,7 +577,7 @@ export default function InventarioS({ navigation }) {
     )
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
     scroll: {
         flex: 1,
         backgroundColor: "#FFF"
@@ -631,11 +631,7 @@ styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:"center",
     },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
     message: {
         margin: 5,
         fontSize: 18,

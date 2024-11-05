@@ -1,49 +1,67 @@
+import { React, useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import React, { useState } from 'react';
-import { View, TextInput, Pressable, Text, StyleSheet, Image } from 'react-native';
+import { View, TextInput, Pressable, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import MyModal from "./myModal";
 
 
-async function resetPassword(email) {
-    const auth = getAuth();
 
-    try {
-        await sendPasswordResetEmail(auth, email);
-        console.log("E-mail de redefinição de senha enviado com sucesso.");
-        alert("Um e-mail de redefinição de senha foi enviado para o endereço informado.");
-        
-    } catch (error) {
-        console.error("Erro ao enviar e-mail de redefinição de senha:", error);
-        switch (error.code) {
-            case 'auth/user-not-found':
-                alert("Usuário não encontrado.");
-                break;
-            case 'auth/invalid-email':
-                alert("O e-mail fornecido é inválido.");
-                break;
-            default:
-                alert("Ocorreu um erro. Tente novamente.");
+
+export default function ResetPasswordScreen({ navigation }) {
+    const [email, setEmail] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [modalMsg, setModalMsg] = useState("");
+    const [modalTitle, setModalTitle] = useState("");
+
+    async function resetPassword(email) {
+        const auth = getAuth();
+    
+    
+        try {
+            await sendPasswordResetEmail(auth, email);
+            setIsLoading(true);
+            console.log("E-mail de redefinição de senha enviado com sucesso.");
+            setModalTitle('Sucesso');
+            setModalVisible(true)
+            setModalMsg("Um e-mail de redefinição de senha foi enviado para o endereço informado.")
+            
+    
+        } catch (error) {
+            console.error("Erro ao enviar e-mail de redefinição de senha:", error);
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    alert("Usuário não encontrado.");
+                    
+                    break;
+                case 'auth/invalid-email':
+                    alert("O e-mail fornecido é inválido.");
+                    break;
+                default:
+                    alert("Ocorreu um erro. Tente novamente.");
+            }
         }
     }
-}
 
-
-export default function ResetPasswordScreen({navigation}) {
-    const [email, setEmail] = useState('');
-    
 
     const handleResetPassword = () => {
-        if (email) {
+        setIsLoading(true);
+        if (!email) {
+            setModalTitle('Erro Email');
+            setModalVisible(true)
+            setModalMsg("Por favor, insira um endereço de e-mail!")
+            setIsLoading(false);
+            return
+        } else {
+            setIsLoading(false);
             resetPassword(email);
             navigation.navigate("Login");
-        } else {
-            alert("Por favor, insira um endereço de e-mail.");
         }
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.box}>
-            <Image source={require('../assets/logo.png')} style={styles.image} />
+                <Image source={require('../assets/logo.png')} style={styles.image} />
                 <Text style={styles.title}>Digite email para redefinição da senha: </Text>
                 <TextInput
                     placeholder="Digite seu e-mail"
@@ -54,22 +72,31 @@ export default function ResetPasswordScreen({navigation}) {
                     style={styles.input}
                 />
                 <Pressable onPress={handleResetPassword}
-                    style={{
-                        backgroundColor: '#76bc21',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignContent: 'center',
-                        borderRadius: 10,
-                        margin: 15
-                    }}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'white',
-                        fontWeight: 900,
-                        padding: 15
-                    }}>Enviar</Text>
+                    style={({ pressed }) => [
+                        styles.button,
+                        pressed ? styles.buttonPressed : null,
+                    ]}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator size={45} color="#fff" />
+                    ) : (
+                        <Text style={{
+                            fontSize: 20,
+                            color: 'white',
+                            fontWeight: 900,
+                            padding: 15
+                        }}>Enviar</Text>
+                    )}
                 </Pressable>
             </View>
+            <MyModal
+                modalVisible={modalVisible}
+                modalTitle={modalTitle}
+                modalMsg={modalMsg}
+                setModalVisible={setModalVisible}
+            >
+            </MyModal>
         </View>
     );
 }
@@ -114,12 +141,20 @@ const styles = StyleSheet.create({
     image: {
         width: 150,
         height: 150,
-      },
+    },
 
-    title:{
-        fontSize:17,
-        margin:10,
+    title: {
+        fontSize: 17,
+        margin: 10,
 
+    },
+    button: {
+        backgroundColor: '#76bc21',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        borderRadius: 10,
+        margin: 15
     }
 
 })

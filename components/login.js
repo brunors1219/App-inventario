@@ -4,18 +4,34 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
 import { ENVIROMENT, USER_DEFAULT, PWD_DEFAUT } from '@env';
+import MyModal from "./myModal";
 
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState(ENVIROMENT === 'DEV' ? USER_DEFAULT : "");
   const [password, setPassword] = useState(ENVIROMENT === 'DEV' ? PWD_DEFAUT : "");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserId, userId, setUserProfile, URL } = useContext(AppContext)
+  const { setUserId, userId, setUserProfile, URL } = useContext(AppContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalType, setModalType] = useState("");
 
   async function handleLogin() {
-    if (email === "" || password === "") {
-      Alert.alert("Erro", "Preencha todos os campos");
-      return;
+    if (!email) {
+      setModalTitle('Erro Email');
+      setModalVisible(true)
+      setModalMsg("Informe um email!")
+      setIsLoading(false);
+      return
+    }
+
+    if (!password) {
+      setModalTitle('Erro Senha');
+      setModalVisible(true)
+      setModalMsg("Informe uma senha de 6 números!")
+      setIsLoading(false);
+      return
     }
 
     try {
@@ -27,7 +43,7 @@ export default function Login({ navigation }) {
         console.log(`${URL}/api/usersApp?email=${user.email}`)
         const res = await fetch(`${URL}/api/usersApp?email=${user.email}`)
         const data = await res.json()
-        
+
         console.log(data)
         setUserId(data[0].id);
         setUserProfile(data[0].permissions)
@@ -90,6 +106,13 @@ export default function Login({ navigation }) {
         </Pressable>
         <Text style={styles.link} onPress={() => navigation.navigate('Resert_password')}>Esqueceu a senha</Text>
       </View>
+      <MyModal
+        modalVisible={modalVisible}
+        modalTitle={modalTitle}
+        modalMsg={modalMsg}
+        setModalVisible={setModalVisible}
+      >
+      </MyModal>
     </View>
   );
 }
