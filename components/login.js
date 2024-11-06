@@ -1,5 +1,5 @@
 import { React, useState, useContext } from "react";
-import { View, Text, ActivityIndicator, StyleSheet, TextInput, Alert, Image, Pressable } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, TextInput, Image, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
@@ -18,11 +18,12 @@ export default function Login({ navigation }) {
   const [modalType, setModalType] = useState("");
 
   async function handleLogin() {
+    
     if (!email) {
       setModalTitle('Erro Email');
       setModalVisible(true)
       setModalMsg("Informe um email!")
-      setIsLoading(false);
+    
       return
     }
 
@@ -30,14 +31,13 @@ export default function Login({ navigation }) {
       setModalTitle('Erro Senha');
       setModalVisible(true)
       setModalMsg("Informe uma senha de 6 números!")
-      setIsLoading(false);
       return
     }
-
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      setIsLoading(true);
+     
 
       try {
         console.log(`${URL}/api/usersApp?email=${user.email}`)
@@ -55,12 +55,23 @@ export default function Login({ navigation }) {
       };
 
       console.log("Login realizado com sucesso! ID: " + user.uid + " Banco ID: " + userId);
-      setIsLoading(false);
+      
       navigation.navigate("Inventário");
 
     } catch (error) {
-      console.log(error);
-      Alert.alert("Erro de login", error.message);
+      setIsLoading(false);
+      if (error.code === 'auth/invalid-credential') {
+        setModalTitle("Erro");
+        setModalMsg("Credencial inválida. Por favor, verifique suas informações.");
+        setModalVisible(true);
+    
+        
+      } else {
+        // Pode adicionar mais verificações ou mensagens de erro para outros códigos
+        setModalMsg("Erro de autenticação. Tente novamente.");
+        setModalVisible(true);
+       
+      }
     }
   }
 
@@ -87,10 +98,7 @@ export default function Login({ navigation }) {
         />
 
         <Pressable onPress={handleLogin}
-          style={({ pressed }) => [
-            styles.button,
-            pressed ? styles.buttonPressed : null,
-          ]}
+          style={styles.button}
           disabled={isLoading}
         >
           {isLoading ? (
@@ -99,7 +107,7 @@ export default function Login({ navigation }) {
             <Text style={{
               fontSize: 20,
               color: 'white',
-              fontWeight: 900,
+              fontWeight: "900",
               padding: 15
             }}>Acessar</Text>
           )}

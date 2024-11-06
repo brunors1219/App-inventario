@@ -171,10 +171,20 @@ export default function ListPn({navigation}) {
                 >
             </MyModal>
             <View style={{justifyContent:'center', 
-                            paddingRight:20, 
-                            display:'flex', 
-                            flexDirection:'row'}}>
-                <Text>Resumo: Total de PNs</Text>
+                            paddingRight:20,
+                            alignItems:"center"
+                            }}>
+                <View style={styles.box}>
+                    <Text style={{fontSize:20,
+                        fontWeight:"bold",
+                    }}>Resumo: </Text>
+                </View>
+                <View style={styles.boxItems}>
+                    <Text style={styles.text}>Total: </Text>
+                    <Text style={styles.text}>Pendente: </Text>
+                    <Text style={styles.text}>Zerado: </Text>
+                </View>
+
             </View>
 
         </View>
@@ -252,6 +262,19 @@ const styles = StyleSheet.create({
         margin:5,
         fontSize:18,
 
+    },
+    box:{
+        justifyContent:"center",
+        marginBottom:10,
+        fontSize:35,
+    },
+    boxItems:{
+        flexDirection:"row",
+        marginBottom:10,
+        justifyContent: "space-between",
+    },
+    text:{
+        fontSize:17,
     }
 
 });
