@@ -22,10 +22,8 @@ export default function Welcome({ navigation }){
             Para acessar o sistema, você precisará de seu e-mail e senha
           </Text>
         </View>
-        
-        
 
-        <View style={{marginTop:80, alignItems:'center'}}>
+        <View style={{marginTop:30, alignItems:'center'}}>
           
           <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
             <Text style={styles.logintext}>Registrar</Text>

@@ -24,7 +24,7 @@ export default function ListPn({navigation}) {
     const [scannedData, setScannedData] = useState('');
     const [scannedShow, setScannedShow] = useState(false);
 
-    const [isChecked, setIsChecked] = useState(true);
+    const [isChecked, setIsChecked] = useState(false);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -84,7 +84,7 @@ export default function ListPn({navigation}) {
       };
   
     return (
-        <View>
+        <View style={{height:'100%'}}>
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
@@ -170,6 +170,12 @@ export default function ListPn({navigation}) {
                 setModalVisible = {setModalVisible}
                 >
             </MyModal>
+            <View style={{justifyContent:'center', 
+                            paddingRight:20, 
+                            display:'flex', 
+                            flexDirection:'row'}}>
+                <Text>Resumo: Total de PNs</Text>
+            </View>
 
         </View>
     )
@@ -191,7 +197,7 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     title: {
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: 'bold',
     },
     input: {
