@@ -121,6 +121,51 @@ export default function InventarioS({ navigation }) {
     }, [pn])
    
 
+    const ZerarContagem = async () => {
+
+        setIsLoading(true);
+
+        if (!position) {
+            setModalVisible(true)
+            setModalMsg("Informe a Posição!")
+            focusTextInputPosition();
+            return
+        }
+
+        const body = {}
+
+        body.Position = position
+
+        const res = await fetch(`${URL}/api/invproducts?zerocounter=true`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                //make sure to serialize your JSON body
+                body: JSON.stringify(body)
+            });
+        const data = await res.json();
+        
+        console.log(data);
+
+        setModalMsg(data.message);
+
+        if (!res.ok) {
+            setModalTitle('Alerta')
+            setModalType('error')
+            setIsUpdate(true)
+            setModalVisible(true);
+            return
+        } else {
+            setModalTitle('Informação')
+            setModalType('success')
+            setIsUpdate(false)
+            setModalVisible(true);
+        }
+
+    }
     const register = async () => {
         
         setIsLoading(true);
@@ -227,6 +272,7 @@ export default function InventarioS({ navigation }) {
             setModalMsg('Digite primeiro a POSIÇÃO');
             setModalVisible(true);
             cancel();
+            setIsLoading(false);
             return;
         }
 
@@ -607,6 +653,25 @@ export default function InventarioS({ navigation }) {
                 </Pressable>
             </View>
 
+            <View style={{ margin: 20, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Pressable onPress={ZerarContagem}
+                    style={styles.buttonZerar}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator size={45} color="#fff" />
+                    ) : (
+                        <Text style={{
+                            fontSize: 12,
+                            color: 'white',
+                            fontWeight: "900",
+                            padding: 15
+                        }}>Encerrar Contagem Posição</Text>
+                    )}
+                </Pressable>
+            </View>
+
+
             <MyModal
                 modalVisible={modalVisible}
                 modalTitle={modalTitle}
@@ -682,6 +747,14 @@ const styles = StyleSheet.create({
     },
     buttonReg: {
         backgroundColor: '#76bc21',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        borderRadius: 10,
+        margin: 15
+    },
+    buttonZerar: {
+        backgroundColor: 'blue',        
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
