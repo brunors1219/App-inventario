@@ -199,6 +199,7 @@ export default function InventarioS({ navigation }) {
         }
 
         setQty('');
+        setQtyKey(0);
         setPN('');
         setDescription('');
         focusTextInputPN();
@@ -252,10 +253,14 @@ export default function InventarioS({ navigation }) {
 
         setPN(_pn[0].PN)
 
-        if (recoverCamera != "") {
-            _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == recoverCamera.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
+        if (recoverCamera!="") {
+            _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == recoverCamera.toUpperCase() 
+                                                || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase() )
+                                                && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         } else {
-            _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
+            _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == pn.toUpperCase() 
+                                                || f.PNSimple.toUpperCase() == pn.toUpperCase() )
+                                                && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         }
 
         recoverCamera = ""
