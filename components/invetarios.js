@@ -123,29 +123,26 @@ export default function InventarioS({ navigation }) {
 
     const register = async () => {
         
+        setIsLoading(true);
+
         if (!qty) {
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
             focusTextInputQty();
-            setIsLoading(false);
             return
         }
         if (!position) {
             setModalVisible(true)
             setModalMsg("Informe a Posição!")
             focusTextInputPosition();
-            setIsLoading(false);
             return
         }
         if (!pn) {
             setModalVisible(true)
             setModalMsg("Informe o PN!")
             focusTextInputPN();
-            setIsLoading(false);
             return
-        }
-
- 
+        } 
 
         if (isUpdate) {
            
@@ -239,12 +236,14 @@ export default function InventarioS({ navigation }) {
         _pn = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase()
             || f.PN.toUpperCase() == recoverCamera.toUpperCase()
             || f.PNSimple.toUpperCase() == pn.toUpperCase()
-            || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase())
+            || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
+            || f.PN.toUpperCase() == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/)
+        )
         // console.log(_pn)
         _pnExist = _pn.length > 0
         if (!_pnExist) {
             setModalTitle('PN inválido');
-            setModalMsg('A PN não existe no cadastro. Acione o time de suporte!');
+            setModalMsg('A PN não existe no cadastro. Acione o time de suporte!' + 'Rec:' + recoverCamera + " pn :" + pn);
             setModalVisible(true);
             setPN("");
             focusTextInputPN();
@@ -255,11 +254,13 @@ export default function InventarioS({ navigation }) {
 
         if (recoverCamera!="") {
             _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == recoverCamera.toUpperCase() 
-                                                || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase() )
+                                                || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
+                                                || f.PN.toUpperCase() == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
                                                 && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         } else {
             _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == pn.toUpperCase() 
-                                                || f.PNSimple.toUpperCase() == pn.toUpperCase() )
+                                                || f.PNSimple.toUpperCase() == pn.toUpperCase() 
+                                                || f.PN.toUpperCase() == pn.match(/\d{3}\.\d{4}-\d{2}/))
                                                 && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         }
 
@@ -611,6 +612,7 @@ export default function InventarioS({ navigation }) {
                 modalTitle={modalTitle}
                 modalMsg={modalMsg}
                 setModalVisible={setModalVisible}
+                setIsLoading={setIsLoading}
             >
             </MyModal>
 

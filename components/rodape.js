@@ -1,13 +1,14 @@
 // LayoutComRodape.js
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import Constants from 'expo-constants';
 
 const LayoutComRodape = ({ children }) => {
     return (
         <View style={styles.container}>
             <View style={styles.content}>{children}</View>
             <View style={styles.footer}>
-                <Text>© 2024 By Data Access - v1.0.6</Text>
+                <Text>© 2024 By Data Access - v{Constants.expoConfig?.version}</Text>
             </View>
         </View>
     );

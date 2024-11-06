@@ -2,10 +2,11 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg }) => {
+const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoading }) => {
 
     const hideMessage = () => {
         setModalVisible(false);
+        setIsLoading(false);
     };
 
     return (
