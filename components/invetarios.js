@@ -64,6 +64,7 @@ export default function InventarioS({ navigation }) {
                 setIsUpdate(false)
                 setChkIncrease(false)
                 setChkUpdate(false)
+                
                 const result = [];
                 data.forEach(item => {
                     // Adiciona a posição principal ao resultado
@@ -83,6 +84,7 @@ export default function InventarioS({ navigation }) {
             };
         }
         fetchData();
+      
     }
 
     useEffect(() => {
@@ -117,9 +119,10 @@ export default function InventarioS({ navigation }) {
     useEffect(() => {
         if (pn == "") setScore(0)
     }, [pn])
+   
 
     const register = async () => {
-        setIsLoading(true);
+        
         if (!qty) {
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
@@ -142,11 +145,15 @@ export default function InventarioS({ navigation }) {
             return
         }
 
+ 
+
         if (isUpdate) {
+           
             if (!chkIncrease && !chkUpdate) {
+                
                 setModalVisible(true)
                 setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
-                setIsLoading(false);
+                
                 return
             }
         }
@@ -173,7 +180,7 @@ export default function InventarioS({ navigation }) {
                 body: JSON.stringify(body)
             });
         const data = await res.json();
-        setIsLoading(true);
+        
         console.log(data);
 
         setModalMsg(data.message);
