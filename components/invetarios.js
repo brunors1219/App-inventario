@@ -1,5 +1,5 @@
 import { React, useState, useContext, useRef, useEffect, useCallback } from "react";
-import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, Modal, ActivityIndicator } from "react-native";
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, Pressable, ScrollView, ActivityIndicator } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -7,7 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import MyModal from "../components/myModal";
 
 export default function InventarioS({ navigation }) {
-    
+
     const [position, setPosition] = useState("")
     const [description, setDescription] = useState("")
     const [pn, setPN] = useState("")
@@ -17,15 +17,15 @@ export default function InventarioS({ navigation }) {
     const [score, setScore] = useState("")
     const [isLoading, setIsLoading] = useState(false);
 
-    const { URL, 
-            userId, 
-            setGPosition, 
-            gPosition, 
-            setGPN,
-            gPN,
-            gDescription, 
-            gScore,
-            clearContextItem } = useContext(AppContext)
+    const { URL,
+        userId,
+        setGPosition,
+        gPosition,
+        setGPN,
+        gPN,
+        gDescription,
+        gScore,
+        clearContextItem } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -54,7 +54,7 @@ export default function InventarioS({ navigation }) {
     }, [])
 
     const loadDataDB = () => {
-        
+
         const fetchData = async () => {
 
             try {
@@ -85,7 +85,7 @@ export default function InventarioS({ navigation }) {
         fetchData();
     }
 
-    useEffect (()=>{        
+    useEffect(() => {
         if (gPosition) {
             setPosition(gPosition);
         }
@@ -98,7 +98,7 @@ export default function InventarioS({ navigation }) {
             clearContextItem();
         }
 
-    },[gPosition, gPN]);
+    }, [gPosition, gPN]);
 
     useFocusEffect(
         useCallback(() => {
@@ -112,11 +112,11 @@ export default function InventarioS({ navigation }) {
                 clearContextItem();
             };
         }, [])
-    );    
+    );
 
-    useEffect(()=>{
-        if (pn=="") setScore(0)
-    },[pn])
+    useEffect(() => {
+        if (pn == "") setScore(0)
+    }, [pn])
 
     const register = async () => {
         setIsLoading(true);
@@ -175,20 +175,20 @@ export default function InventarioS({ navigation }) {
         const data = await res.json();
         setIsLoading(true);
         console.log(data);
-        
+
         setModalMsg(data.message);
-        
+
         if (!res.ok) {
-          setModalTitle('Alerta')
-          setModalType('error')
-          setIsUpdate(true)
-          setModalVisible(true);
-          return
+            setModalTitle('Alerta')
+            setModalType('error')
+            setIsUpdate(true)
+            setModalVisible(true);
+            return
         } else {
-          setModalTitle('Informação')
-          setModalType('success')
-          setIsUpdate(false)
-          setModalVisible(true);
+            setModalTitle('Informação')
+            setModalType('success')
+            setIsUpdate(false)
+            setModalVisible(true);
         }
 
         setQty('');
@@ -204,7 +204,7 @@ export default function InventarioS({ navigation }) {
 
         if (positions.includes(position.toUpperCase()) || positions.includes(recoverCamera.toUpperCase())) {
             focusTextInputPN();
-        }else {
+        } else {
             setModalTitle('Posição inválida');
             setModalMsg('A posição não existe no armazém.');
             setModalVisible(true);
@@ -220,7 +220,7 @@ export default function InventarioS({ navigation }) {
         if (position === "") {
             setModalTitle('Ação');
             setModalMsg('Digite primeiro a POSIÇÃO');
-            setModalVisible(true);            
+            setModalVisible(true);
             cancel();
             return;
         }
@@ -228,10 +228,10 @@ export default function InventarioS({ navigation }) {
         if (pn === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
-        _pn = pns.filter(f => f.PN.toUpperCase()          == pn.toUpperCase() 
-                            || f.PN.toUpperCase()         == recoverCamera.toUpperCase()
-                            || f.PNSimple.toUpperCase()   == pn.toUpperCase()
-                            || f.PNSimple.toUpperCase()   == recoverCamera.toUpperCase())
+        _pn = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase()
+            || f.PN.toUpperCase() == recoverCamera.toUpperCase()
+            || f.PNSimple.toUpperCase() == pn.toUpperCase()
+            || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase())
         // console.log(_pn)
         _pnExist = _pn.length > 0
         if (!_pnExist) {
@@ -245,16 +245,16 @@ export default function InventarioS({ navigation }) {
 
         setPN(_pn[0].PN)
 
-        if (recoverCamera!="") {
+        if (recoverCamera != "") {
             _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == recoverCamera.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         } else {
             _pnExistPosition = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase() && f.Position.toUpperCase() == position.toUpperCase()).length > 0
         }
-        
+
         recoverCamera = ""
-        
+
         if (!_pnExistPosition) {
-            if (qtyKey==0 || PNKey != _pn[0].PN){
+            if (qtyKey == 0 || PNKey != _pn[0].PN) {
                 setModalTitle('PN fora locação');
                 setModalMsg('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!');
                 setModalVisible(true);
@@ -278,26 +278,26 @@ export default function InventarioS({ navigation }) {
     const textInputRefQty = useRef(null);
 
     const focusTextInputPN = () => {
-      if (textInputRefPN.current) {
-        textInputRefPN.current.focus();
-      }
-    };    
+        if (textInputRefPN.current) {
+            textInputRefPN.current.focus();
+        }
+    };
     const focusTextInputPosition = () => {
         if (textInputRefPosition.current) {
             textInputRefPosition.current.focus();
         }
-      };    
+    };
     const focusTextInputQty = () => {
         if (textInputRefQty.current) {
             textInputRefQty.current.focus();
         }
-    };    
+    };
 
     const onFocusPN = () => {
         setPN("")
         setDescription("")
     }
-  
+
     const hideMessage = () => {
         setModalVisible(false);
     };
@@ -306,18 +306,18 @@ export default function InventarioS({ navigation }) {
     let recoverCamera = ""
 
     useEffect(() => {
-      (async () => {
-        const { status } = await BarCodeScanner.requestPermissionsAsync();
-        setHasPermission(status === 'granted');
-      })();
+        (async () => {
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
     }, []);
-    
+
     const handleBarCodeScanned = ({ type, data }) => {
-      setScannedData(data);
-      setScannedShow(false);
-      setPN(data);
-      recoverCamera = data;
-      handleBlurPN();
+        setScannedData(data);
+        setScannedShow(false);
+        setPN(data);
+        recoverCamera = data;
+        handleBlurPN();
     };
 
     const handleBarCodeScannedPosition = ({ type, data }) => {
@@ -327,12 +327,12 @@ export default function InventarioS({ navigation }) {
         recoverCamera = data;
         handleBlurPosition();
     };
-    
+
     if (hasPermission === null) {
-      return <Text>Solicitando permissão para usar a câmera</Text>;
+        return <Text>Solicitando permissão para usar a câmera</Text>;
     }
     if (hasPermission === false) {
-      return <Text>Permissão para acessar a câmera negada</Text>;
+        return <Text>Permissão para acessar a câmera negada</Text>;
     }
 
     const cancel = () => {
@@ -363,63 +363,72 @@ export default function InventarioS({ navigation }) {
 
         <ScrollView style={styles.scroll}>
             <View style={styles.container}>
-                <View style={{justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'white',
-                                shadowColor: 'black',
-                                borderRadius: 5
-                            }}>
-                    <Text style={{ fontSize: 25,
-                                    color: 'blue',
-                                    fontWeight: 900,
-                                    marginTop: -20,
-                                    padding: 15}}>
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    shadowColor: 'black',
+                    borderRadius: 5
+                }}>
+                    <Text style={{
+                        fontSize: 25,
+                        color: 'blue',
+                        fontWeight: "900",
+                        marginTop: -20,
+                        padding: 15
+                    }}>
                         Contagem/Digitação
                     </Text>
                 </View>
 
-                <Text style={{fontSize: 16,
-                                marginBottom: 5,
-                                color: '#333',
-                                fontWeight: 600}}>Posição/Locação </Text>
-                <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Text style={{
+                    fontSize: 16,
+                    marginBottom: 5,
+                    color: '#333',
+                    fontWeight: "600"
+                }}>Posição/Locação </Text>
+                <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                     <TextInput placeholder="Posição/Locação"
-                        style={{width:'80%',        
+                        style={{
+                            width: '80%',
                             margin: 0,
                             backgroundColor: 'white',
                             boderColor: "black",
                             borderWidth: 1,
                             padding: 10,
                             borderRadius: 5
-                        }} 
+                        }}
                         ref={textInputRefPosition}
                         value={position}
                         onChangeText={(text) => setPosition(text.toUpperCase())}
                         onBlur={handleBlurPosition}
                         autoCapitalize="characters"
                     />
-                    <Pressable onPress={()=>setScannedShowPosition(!scannedShowPosition)} >
-                        <Ionicons name='barcode-outline' size={50} color='green'/>
+                    <Pressable onPress={() => setScannedShowPosition(!scannedShowPosition)} >
+                        <Ionicons name='barcode-outline' size={50} color='green' />
                     </Pressable>
                 </View>
-                {!scannedShowPosition 
+                {!scannedShowPosition
                     ? null
                     :
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <BarCodeScanner
-                                onBarCodeScanned={scanned ? undefined : handleBarCodeScannedPosition}
-                                style={{ height: 300, width: 300 }}
-                            />
-                        </View>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <BarCodeScanner
+                            onBarCodeScanned={scanned ? undefined : handleBarCodeScannedPosition}
+                            style={{ height: 300, width: 300 }}
+                        />
+                    </View>
                 }
 
-                <Text style={{fontSize: 16,
-                                marginBottom: 5,
-                                color: '#333',
-                                fontWeight: 600}}>PN </Text>
-                <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Text style={{
+                    fontSize: 16,
+                    marginBottom: 5,
+                    color: '#333',
+                    fontWeight: "600"
+                }}>PN </Text>
+                <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                     <TextInput placeholder="PN"
-                        style={{width:qtyKey===0 ? '80%' : '100%',        
+                        style={{
+                            width: qtyKey === 0 ? '80%' : '100%',
                             margin: 0,
                             backgroundColor: 'white',
                             boderColor: "black",
@@ -434,55 +443,64 @@ export default function InventarioS({ navigation }) {
                         onBlur={handleBlurPN}
                         autoCapitalize="characters"
                     />
-                    {qtyKey===0 
+                    {qtyKey === 0
                         ?
-                            <Pressable onPress={()=>setScannedShow(!scannedShow)} >
-                                <Ionicons name='barcode-outline' size={50} color='green'/>
-                            </Pressable>
+                        <Pressable onPress={() => setScannedShow(!scannedShow)} >
+                            <Ionicons name='barcode-outline' size={50} color='green' />
+                        </Pressable>
                         :
-                            null
+                        null
                     }
                 </View>
 
-                {!scannedShow 
+                {!scannedShow
                     ? null
                     :
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <BarCodeScanner
-                                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                                style={{ height: 400, width: 400 }}
-                            />
-                        </View>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <BarCodeScanner
+                            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                            style={{ height: 400, width: 400 }}
+                        />
+                    </View>
                 }
 
-                <View style={{fontSize: 16,
-                                marginBottom: 5,
-                                color: '#333',
-                                display: 'flex',
-                                flexDirection:'row'}}>
+                <View style={{
+                    fontSize: 16,
+                    marginBottom: 5,
+                    color: '#333',
+                    display: 'flex',
+                    flexDirection: 'row'
+                }}>
 
-                    <View style={{fontSize: 16,
-                                    marginBottom: 5,
-                                    color: '#333',
-                                    display: 'flex',
-                                    flexDirection:'column',
-                                    width: '85%'}}>
-                        <Text style={{fontSize: 12,
-                                    marginBottom: 5,
-                                    marginTop: 15,
-                                    color: '#333'}}>
-                            Descrição 
+                    <View style={{
+                        fontSize: 16,
+                        marginBottom: 5,
+                        color: '#333',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '85%'
+                    }}>
+                        <Text style={{
+                            fontSize: 12,
+                            marginBottom: 5,
+                            marginTop: 15,
+                            color: '#333'
+                        }}>
+                            Descrição
                         </Text>
-                        <Text style={{fontSize: 20,
-                                    marginBottom: 5,
-                                    color: '#333',
-                                    fontWeight: 900}}>
+                        <Text style={{
+                            fontSize: 20,
+                            marginBottom: 5,
+                            color: '#333',
+                            fontWeight: "900"
+                        }}>
                             {description}
                         </Text>
                     </View>
-                    {score>0 && pn
+                    {score > 0 && pn
                         ?
-                        <View style={{backgroundColor: score==1 ? 'blue' : score==2 ? '#FFD700' : 'red',
+                        <View style={{
+                            backgroundColor: score == 1 ? 'blue' : score == 2 ? '#FFD700' : 'red',
                             justifyContent: 'center',
                             alignItems: 'center',
                             alignContent: 'center',
@@ -490,17 +508,22 @@ export default function InventarioS({ navigation }) {
                             marginLeft: 5,
                             marginTop: 10,
                             paddingLeft: 5,
-                            paddingRight: 5}}>
-                            <Text style={{fontSize: 10,
-                                        marginBottom: 5,
-                                        marginTop: 15,
-                                        color: score==1 ? 'white' : score==2 ? 'white' : 'yellow'}}>
+                            paddingRight: 5
+                        }}>
+                            <Text style={{
+                                fontSize: 10,
+                                marginBottom: 5,
+                                marginTop: 15,
+                                color: score == 1 ? 'white' : score == 2 ? 'white' : 'yellow'
+                            }}>
                                 Contagem
                             </Text>
-                            <Text style={{fontSize: 30,
-                                        marginBottom: 5,
-                                        color: score==1 ? 'white' : score==2 ? 'white' : 'yellow',
-                                        fontWeight: 900}}>
+                            <Text style={{
+                                fontSize: 30,
+                                marginBottom: 5,
+                                color: score == 1 ? 'white' : score == 2 ? 'white' : 'yellow',
+                                fontWeight: "900"
+                            }}>
                                 {score}º
                             </Text>
                         </View>
@@ -511,10 +534,12 @@ export default function InventarioS({ navigation }) {
                 </View>
 
 
-                <Text style={{fontSize: 16,
-                                marginBottom: 5,
-                                color: '#333',
-                                fontWeight: 600}}>Quantidade:</Text>
+                <Text style={{
+                    fontSize: 16,
+                    marginBottom: 5,
+                    color: '#333',
+                    fontWeight: "600"
+                }}>Quantidade:</Text>
                 <TextInput placeholder="Quantidade"
                     style={styles.input}
                     ref={textInputRefQty}
@@ -523,7 +548,7 @@ export default function InventarioS({ navigation }) {
                     onChangeText={setQty} />
             </View>
 
-            {isUpdate 
+            {isUpdate
                 ?
                 <View style={{ alignItems: 'stretch', justifyContent: 'space-between', paddingRight: 20, display: 'flex', flexDirection: 'row', padding: 20 }}>
                     <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
@@ -543,34 +568,38 @@ export default function InventarioS({ navigation }) {
                 : null
             }
 
-            <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
-                <Pressable onPress={register} 
-                    style={{backgroundColor: '#76bc21',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            alignContent: 'center',
-                            borderRadius: 10,
-                            width: '50%',
-                            margin: 15}}>
-                    <Text style={{fontSize: 15,
-                                    color: 'white',
-                                    fontWeight: 900,
-                                    padding: 15}}>Registrar</Text>
+            <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Pressable onPress={register}
+                    style={styles.buttonReg}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator size={45} color="#fff" />
+                    ) : (
+                        <Text style={{
+                            fontSize: 20,
+                            color: 'white',
+                            fontWeight: "900",
+                            padding: 15
+                        }}>Registrar</Text>
+                    )}
                 </Pressable>
                 <Pressable onPress={cancel} style={styles.button}>
-                    <Text style={{fontSize: 15,
-                                    color: 'white',
-                                    fontWeight: 900,
-                                    padding: 15}}>Cancelar</Text>
+                    <Text style={{
+                        fontSize: 15,
+                        color: 'white',
+                        fontWeight: "900",
+                        padding: 15
+                    }}>Cancelar</Text>
                 </Pressable>
             </View>
 
             <MyModal
-                modalVisible = {modalVisible}
-                modalTitle = {modalTitle}
-                modalMsg = {modalMsg}
-                setModalVisible = {setModalVisible}
-                >
+                modalVisible={modalVisible}
+                modalTitle={modalTitle}
+                modalMsg={modalMsg}
+                setModalVisible={setModalVisible}
+            >
             </MyModal>
 
         </ScrollView >
@@ -614,28 +643,36 @@ const styles = StyleSheet.create({
     modalContent: {
 
         justifyContent: 'center',
-        alignItems:'center',
-        alignContent:'center',
-        width:'80%',
-        backgroundColor:'white',
-        padding:20,
+        alignItems: 'center',
+        alignContent: 'center',
+        width: '80%',
+        backgroundColor: 'white',
+        padding: 20,
         shadowColor: "#000",
         shadowOffset: { width: 5, height: 10 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
         borderRadius: 10,
-    }, 
-    modalContainer:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:"center",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: "center",
     },
 
     message: {
         margin: 5,
         fontSize: 18,
         color: 'green'
+    },
+    buttonReg: {
+        backgroundColor: '#76bc21',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        borderRadius: 10,
+        margin: 15
     },
     checkbox: {
         width: 24,

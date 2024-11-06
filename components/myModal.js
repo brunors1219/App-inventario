@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 20,
         color: 'white',
-        fontWeight: 900,
+        fontWeight: "900",
         padding: 15
     }
 

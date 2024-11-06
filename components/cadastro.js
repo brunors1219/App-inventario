@@ -87,31 +87,34 @@ export default function Cadastro({ navigation }) {
       return
     }
 
+
     setIsLoading(true);
 
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then(value => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+
+      if (res) {
         handlerRegister();
         setIsLoading(false);
-        console.log('Cadastrado com sucesso! \n ' + value.user.uid);
+        console.log('Cadastrado com sucesso! \n ' + res.user.uid);
         setModalTitle('Sucesso');
-        setModalVisible(true)
-        setModalMsg("Usuário cadastrado com sucesso!")
-        setIsLoading(false);
-        navigation.navigate("Login")
-        return
-      })
+        setModalMsg("Usuário cadastrado com sucesso!");
+        setModalVisible(true);
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setModalTitle('Erro');
 
-      .catch(erro => {
-        console.log(erro);
-        setIsLoading(false);
-        setModalTitle('Erro');
-        setModalVisible(true)
-        setModalMsg("Não foi possível realizar o cadastro. Tente novamente.")
-        setIsLoading(false);
-        return
+      if (error.code === 'auth/email-already-in-use') {
+        setModalMsg("Este e-mail já está em uso. Tente outro e-mail.");
+      } else {
+        setModalMsg("Não foi possível realizar o cadastro. Tente novamente.");
+      }
 
-      });
+      setModalVisible(true);
+    }
+
 
 
 
@@ -156,7 +159,7 @@ export default function Cadastro({ navigation }) {
             <Text style={{
               fontSize: 20,
               color: 'white',
-              fontWeight: 900,
+              fontWeight: "900",
               padding: 15
             }}>Cadastrar</Text>
           )}
