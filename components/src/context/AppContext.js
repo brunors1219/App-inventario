@@ -14,6 +14,8 @@ export const AppProvider = ({ children }) => {
 
   const [URL, setURL] = useState(ENVIROMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
 
+  const [forceUpdate, setForceUpdate] = useState(false)
+
   const clearContextItem = () => {
     setGPosition("");
     setGPN("");
@@ -31,6 +33,7 @@ export const AppProvider = ({ children }) => {
                 gDescription, setGDescription,
                 gPN, setGPN,
                 gScore, setGScore,
+                forceUpdate, setForceUpdate,
                 clearContextItem}}>
       {children}
     </AppContext.Provider>

@@ -25,7 +25,8 @@ export default function InventarioS({ navigation }) {
         gPN,
         gDescription,
         gScore,
-        clearContextItem } = useContext(AppContext)
+        clearContextItem,
+        setForceUpdate } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -52,6 +53,10 @@ export default function InventarioS({ navigation }) {
         loadDataDB();
 
     }, [])
+
+    useEffect(() => {
+       setGPosition(position) 
+    },[position]);
 
     const loadDataDB = () => {
 
@@ -135,6 +140,7 @@ export default function InventarioS({ navigation }) {
         const body = {}
 
         body.Position = position
+        body.User_Id = userId
 
         const res = await fetch(`${URL}/api/invproducts?zerocounter=true`,
             {
@@ -246,6 +252,7 @@ export default function InventarioS({ navigation }) {
         setDescription('');
         focusTextInputPN();
         setIsUpdate(false);
+        setForceUpdate(true);
     }
 
     const handleBlurPosition = () => {

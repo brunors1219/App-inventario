@@ -6,7 +6,7 @@ const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoa
 
     const hideMessage = () => {
         setModalVisible(false);
-        setIsLoading(false);
+        setIsLoading ? setIsLoading(false) : null;
     };
 
     return (

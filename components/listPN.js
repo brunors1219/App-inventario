@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { React, useEffect, useState, useContext} from "react";
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ScrollView, Pressable, Button, Modal } from "react-native";
 import { BlurView } from 'expo-blur';
 import { AppContext } from "./src/context/AppContext";
@@ -18,7 +18,8 @@ export default function ListPn({navigation}) {
             setGPN, 
             setGDescription,
             setGScore,
-            userProfile} = useContext(AppContext)
+            userProfile,
+            forceUpdate, setForceUpdate} = useContext(AppContext)
 
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
@@ -30,8 +31,24 @@ export default function ListPn({navigation}) {
     const [modalMsg, setModalMsg] = useState("");
     const [modalTitle, setModalTitle] = useState("");
     const [modalType, setModalType] = useState("");
-
+    
     useEffect(() => {
+        setData([])
+        loadData();
+    }, [gPosition]);
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         // console.log("carregando...." + gPN +" - " + gPosition)
+    //         // loadData()
+    //         // loadData();
+    //         return () => {
+    //             // Código a ser executado quando a tela perder foco, se necessário
+    //         };
+    //     }, [])
+    // );    
+
+    const loadData = () => {
         const fetchData = async () => {
             
             if (!gPosition) return;
@@ -48,7 +65,7 @@ export default function ListPn({navigation}) {
             };
         }
         fetchData();
-    }, [gPosition]);
+    }
 
     if (loading) {
         return <Text>Carregando dados...</Text>
@@ -83,6 +100,19 @@ export default function ListPn({navigation}) {
         setSearchId(data);
       };
   
+    // const [refreshing, setRefreshing] = useState(false);
+
+    // Função de atualização ao puxar a lista para baixo
+    // const onRefresh = useCallback(() => {
+    //     setRefreshing(true);
+    //     // Simule uma atualização com um timeout (ou substitua com uma função async para buscar novos dados)
+    //     setTimeout(() => {
+    //         // Atualize os dados aqui (substitua por sua lógica de atualização)
+    //         loadData();
+    //         setRefreshing(false); // Pare o indicador de atualização
+    //     }, 2000);
+    // }, [data]);
+
     return (
         <View style={{height:'100%'}}>
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
@@ -118,7 +148,7 @@ export default function ListPn({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        {isChecked || (!isChecked && !item.Qty)
+                        {isChecked || (!isChecked && !item.Qty && item.QtyOrigin > 0)
                             ? 
                                 <View  key={item.PN} 
                                     style={{backgroundColor: item.Qty ? '#ccffcc' : '#f9f9f9',
@@ -162,6 +192,9 @@ export default function ListPn({navigation}) {
                         }
                     </TouchableOpacity>
                 )}
+                // refreshControl={
+                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                // }
             />
             <MyModal
                 modalVisible = {modalVisible}
@@ -179,10 +212,11 @@ export default function ListPn({navigation}) {
                         fontWeight:"bold",
                     }}>Resumo: </Text>
                 </View>
-                <View style={styles.boxItems}>
-                    <Text style={styles.text}>Total: </Text>
-                    <Text style={styles.text}>Pendente: </Text>
-                    <Text style={styles.text}>Zerado: </Text>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 20 }}>
+                    <Text style={styles.text}>Total: {data.length}</Text>
+                    <Text style={styles.text}>Pendente: {data.length - data.filter(f=>f.Qty || (!f.Qty && f.QtyOrigin==0)).length } </Text>
+                    <Text style={styles.text}>Zero: {data.filter(f=>f.QtyOrigin==0).length } </Text>
                 </View>
 
             </View>
@@ -269,12 +303,15 @@ const styles = StyleSheet.create({
         fontSize:35,
     },
     boxItems:{
+        display:"flex",
         flexDirection:"row",
         marginBottom:10,
         justifyContent: "space-between",
+        alignItems: "flex-end"
     },
     text:{
         fontSize:17,
+        marginRight: 2
     }
 
 });
