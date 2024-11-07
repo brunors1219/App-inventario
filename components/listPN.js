@@ -5,6 +5,9 @@ import { AppContext } from "./src/context/AppContext";
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import MyModal from "./myModal";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 export default function ListPn({navigation}) {
 
@@ -32,40 +35,35 @@ export default function ListPn({navigation}) {
     const [modalTitle, setModalTitle] = useState("");
     const [modalType, setModalType] = useState("");
     
-    useEffect(() => {
-        setData([])
-        loadData();
-    }, [gPosition]);
+    // useEffect(() => {
+    //     setData([])
+    //     loadData();
+    // }, [gPosition]);
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         // console.log("carregando...." + gPN +" - " + gPosition)
-    //         // loadData()
-    //         // loadData();
-    //         return () => {
-    //             // Código a ser executado quando a tela perder foco, se necessário
-    //         };
-    //     }, [])
-    // );    
+    useFocusEffect(
+        useCallback(() => {
+            if (gPosition) {
+                loadData();
+            } else {
+                console.warn("gPosition está indefinido.");
+            }
+        }, [gPosition])
+    );
 
-    const loadData = () => {
-        const fetchData = async () => {
-            
-            if (!gPosition) return;
+    const loadData = async () => {
+        if (!gPosition) return; // Condição extra de segurança
 
-            try {                
-                const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`)
-                const data = await res.json()
-                // console.log(data)
-                setData(data)
-            } catch (error) {                
-                console.error("listPN-Erro ao buscar dados:", error);
-            } finally {
-                setLoading(false);
-            };
+        try {
+            const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`);
+            const data = await res.json();
+            setData(data);
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+        } finally {
+            setLoading(false);
         }
-        fetchData();
-    }
+    };
+    
 
     if (loading) {
         return <Text>Carregando dados...</Text>

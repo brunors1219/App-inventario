@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { ENVIROMENT, API_URL_PROD, API_URL_DEV } from '@env';
+import { ENVIRONMENT, API_URL_PROD, API_URL_DEV } from '@env';
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -12,12 +12,12 @@ export const AppProvider = ({ children }) => {
   const [gDescription, setGDescription] = useState("");
   const [gScore, setGScore] = useState("");
 
-  const [URL, setURL] = useState(ENVIROMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
+  const [URL, setURL] = useState(ENVIRONMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
 
   const [forceUpdate, setForceUpdate] = useState(false)
 
   const clearContextItem = () => {
-    setGPosition("");
+    //setGPosition("");
     setGPN("");
     setGDescription("")
     setGScore("")
