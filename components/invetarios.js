@@ -237,7 +237,7 @@ export default function InventarioS({ navigation }) {
         if (!res.ok) {
             setModalTitle('Alerta')
             setModalType('error')
-            setIsUpdate(true)
+            if (res.status===500) setIsUpdate(true)
             setModalVisible(true);
             return
         } else {

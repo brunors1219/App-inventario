@@ -69,26 +69,24 @@ export default function ListPn({ navigation }) {
         return <Text>Carregando dados...</Text>
     }
 
-
-
     const filteredData = searchId
     ? data.filter(item => item.PN.includes(searchId) && item.QtyOrigin > 0)
     : data.filter(item => !isChecked || item.QtyOrigin > 0);
-
-    
+   
     const handlerSelectItem = (item) => {
 
-        if (!item.Qty || userProfile === 'ADMINISTRATOR') {
+        if (item.status==="Encerrado") {
+            setModalVisible(true)
+            setModalTitle("Bloqueio")
+            setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
+        } else {
             setGPN(item.PN);
             setGPosition(item.Position);
             setGDescription(item.Description);
             setGScore(item.Score);
             navigation.navigate("Digitação");
-        } else {
-            setModalVisible(true)
-            setModalTitle("Bloqueio")
-            setModalMsg("PN já foi digitado, você não tem permissão para alterar!")
         }
+
     }
 
     const hideMessage = () => {
