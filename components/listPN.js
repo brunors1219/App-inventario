@@ -21,8 +21,7 @@ export default function ListPn({ navigation }) {
         setGPN,
         setGDescription,
         setGScore,
-        userProfile,
-        forceUpdate, setForceUpdate } = useContext(AppContext)
+        gENVIRONMENT } = useContext(AppContext)
 
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
@@ -169,7 +168,7 @@ export default function ListPn({ navigation }) {
                                         <Text style={styles.title}>{index+1}-PN: {item.PN}</Text>
                                         <Text>Descrição: {item.Description}</Text>
                                         <Text>Posição: {item.Position}</Text>
-                                        <Text>Contagem: {item.Score} Qtd.Original: {item.QtyOrigin} </Text>
+                                        <Text>Contagem: {item.Score} {gENVIRONMENT==='DEV' ? 'Qtd.Original: '+item.QtyOrigin : null} </Text>
                                     </View>
                                     {item.Qty
                                         ?
@@ -181,7 +180,7 @@ export default function ListPn({ navigation }) {
                                                 padding: 3,
                                                 width: '20%'
                                             }} >
-                                            <Text>Contado</Text>
+                                            <Text>Quantidade</Text>
                                             <Text style={{ fontSize: 15 }} >{parseFloat(item.Qty)}</Text>
                                             <Text style={{ fontSize: 8 }} >{item.name}</Text>
                                         </View>

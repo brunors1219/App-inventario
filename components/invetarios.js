@@ -570,7 +570,7 @@ export default function InventarioS({ navigation }) {
                     {score > 0 && pn
                         ?
                         <View style={{
-                            backgroundColor: score == 1 ? 'blue' : score == 2 ? '#FFD700' : 'red',
+                            backgroundColor: score == 1 ? 'green' : score == 2 ? 'blue' : 'yellow',
                             justifyContent: 'center',
                             alignItems: 'center',
                             alignContent: 'center',
@@ -584,14 +584,14 @@ export default function InventarioS({ navigation }) {
                                 fontSize: 10,
                                 marginBottom: 5,
                                 marginTop: 15,
-                                color: score == 1 ? 'white' : score == 2 ? 'white' : 'yellow'
+                                color: score == 1 ? 'black' : score == 2 ? 'white' : 'black'
                             }}>
                                 Contagem
                             </Text>
                             <Text style={{
                                 fontSize: 30,
                                 marginBottom: 5,
-                                color: score == 1 ? 'white' : score == 2 ? 'white' : 'yellow',
+                                color: score == 1 ? 'black' : score == 2 ? 'white' : 'yellow',
                                 fontWeight: "900"
                             }}>
                                 {score}º
