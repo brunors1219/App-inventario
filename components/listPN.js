@@ -70,8 +70,8 @@ export default function ListPn({ navigation }) {
     }
 
     const filteredData = searchId
-    ? data.filter(item => item.PN.includes(searchId) && item.QtyOrigin > 0)
-    : data.filter(item => !isChecked || item.QtyOrigin > 0);
+                            ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && item.Qty) || (isChecked && (item.QtyOrigin > 0 && item.Qty))))
+                            : data.filter(item => (!isChecked && item.QtyOrigin > 0 && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin>0)));
    
     const handlerSelectItem = (item) => {
 
@@ -145,10 +145,10 @@ export default function ListPn({ navigation }) {
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        {isChecked || (!isChecked && !item.Qty && item.QtyOrigin > 0)
-                            ?
+                        {/* {isChecked || (!isChecked && !item.Qty && item.QtyOrigin > 0)
+                            ? */}
                             <View key={item.PN}
                                 style={{
                                     backgroundColor: item.Qty ? '#ccffcc' : '#f9f9f9',
@@ -166,10 +166,10 @@ export default function ListPn({ navigation }) {
                                 }} >
                                 <View style={{ display: 'flex', flexDirection: 'row' }}>
                                     <View style={{ width: '80%' }} >
-                                        <Text style={styles.title}>PN: {item.PN}</Text>
+                                        <Text style={styles.title}>{index+1}-PN: {item.PN}</Text>
                                         <Text>Descrição: {item.Description}</Text>
                                         <Text>Posição: {item.Position}</Text>
-                                        <Text>Contagem: {item.Score}</Text>
+                                        <Text>Contagem: {item.Score} Qtd.Original: {item.QtyOrigin} </Text>
                                     </View>
                                     {item.Qty
                                         ?
@@ -191,8 +191,8 @@ export default function ListPn({ navigation }) {
 
                                 </View>
                             </View>
-                            : null
-                        }
+                            {/* : null
+                        } */}
                     </TouchableOpacity>
                 )}
             // refreshControl={
