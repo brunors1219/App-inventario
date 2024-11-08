@@ -24,11 +24,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "owner": "controle_simples",
     "extra": {
       "eas": {
-        "projectId": "ace27e92-2101-471e-b283-bf3a0e3a681a"
+        "projectId": "313fc5b7-fd16-4c33-918c-382c47923d8d"
       }
-    },
-    "owner": "controle_simples"
+    }
   }
 }
