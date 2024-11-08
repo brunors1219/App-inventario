@@ -110,11 +110,15 @@ export default function Posicao({navigation}) {
             
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        <View  key={item.Posicao} style={styles.item}>
+                        <View  key={item.Posicao} style={item.Status === "Encerrado" ? styles.itemOpen : styles.itemEnd}>
                         {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
                         <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
-                            <View >
+                            <View style={{display:'flex',
+                                            flexDirection:'row', 
+                                            justifyContent:'space-between',
+                                            width:'100%'}}>
                                 <Text style={styles.text}>{item.Position}</Text>
+                                <Text style={styles.text}>{item.Status}</Text>
                             </View>
 
                         </View>
@@ -126,7 +130,20 @@ export default function Posicao({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    item: {
+    itemOpen: {       
+        backgroundColor: '#ccffcc',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        margin: 20
+    },
+    itemEnd: {       
         backgroundColor: '#f9f9f9',
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -139,6 +156,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         margin: 20
     },
+
     title: {
         fontSize: 18,
         fontWeight: 'bold',

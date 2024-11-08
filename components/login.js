@@ -3,15 +3,16 @@ import { View, Text, ActivityIndicator, StyleSheet, TextInput, Image, Pressable 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
-import { ENVIROMENT, USER_DEFAULT, PWD_DEFAUT } from '@env';
 import MyModal from "./myModal";
 
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState(ENVIROMENT === 'DEV' ? USER_DEFAULT : "");
-  const [password, setPassword] = useState(ENVIROMENT === 'DEV' ? PWD_DEFAUT : "");
+
+  const { setUserId, userId, setUserProfile, URL, gENVIRONMENT, gUSER_DEFAULT, gPWD_DEFAUT } = useContext(AppContext);
+
+  const [email, setEmail] = useState(gENVIRONMENT === 'DEV' ? gUSER_DEFAULT : "");
+  const [password, setPassword] = useState(gENVIRONMENT === 'DEV' ? gPWD_DEFAUT : "");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserId, userId, setUserProfile, URL } = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
   const [modalTitle, setModalTitle] = useState("");

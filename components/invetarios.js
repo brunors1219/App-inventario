@@ -15,7 +15,8 @@ export default function InventarioS({ navigation }) {
     const [positions, setPositions] = useState("")
     const [pns, setPNs] = useState("")
     const [score, setScore] = useState("")
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
+    const [isLoadingEnd, setIsLoadingEnd] = useState(false);
 
     const { URL,
         userId,
@@ -128,7 +129,7 @@ export default function InventarioS({ navigation }) {
 
     const ZerarContagem = async () => {
 
-        setIsLoading(true);
+        setIsLoadingEnd(true);
 
         if (!position) {
             setModalVisible(true)
@@ -161,7 +162,7 @@ export default function InventarioS({ navigation }) {
         if (!res.ok) {
             setModalTitle('Alerta')
             setModalType('error')
-            setIsUpdate(true)
+            setIsUpdate(false)
             setModalVisible(true);
             return
         } else {
@@ -173,8 +174,8 @@ export default function InventarioS({ navigation }) {
 
     }
     const register = async () => {
-        
-        setIsLoading(true);
+    
+        setIsLoadingRegister(true);
 
         if (!qty) {
             setModalVisible(true)
@@ -278,8 +279,9 @@ export default function InventarioS({ navigation }) {
             setModalTitle('Ação');
             setModalMsg('Digite primeiro a POSIÇÃO');
             setModalVisible(true);
+            setIsLoadingEnd(false);
+            setIsLoadingRegister(false);
             cancel();
-            setIsLoading(false);
             return;
         }
 
@@ -412,7 +414,9 @@ export default function InventarioS({ navigation }) {
         setGPN("");
         setGPosition("");
         setIsUpdate(false);
-        focusTextInputPosition();
+        setIsLoadingEnd(false);
+        setIsLoadingRegister(false);
+    focusTextInputPosition();
     }
 
     const chkUpdateSet = () => {
@@ -637,9 +641,9 @@ export default function InventarioS({ navigation }) {
             <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Pressable onPress={register}
                     style={styles.buttonReg}
-                    disabled={isLoading}
+                    disabled={isLoadingRegister}
                 >
-                    {isLoading ? (
+                    {isLoadingRegister ? (
                         <ActivityIndicator size={45} color="#fff" />
                     ) : (
                         <Text style={{
@@ -663,9 +667,9 @@ export default function InventarioS({ navigation }) {
             <View style={{ margin: 20, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Pressable onPress={ZerarContagem}
                     style={styles.buttonZerar}
-                    disabled={isLoading}
+                    disabled={isLoadingEnd}
                 >
-                    {isLoading ? (
+                    {isLoadingEnd ? (
                         <ActivityIndicator size={45} color="#fff" />
                     ) : (
                         <Text style={{
@@ -684,7 +688,7 @@ export default function InventarioS({ navigation }) {
                 modalTitle={modalTitle}
                 modalMsg={modalMsg}
                 setModalVisible={setModalVisible}
-                setIsLoading={setIsLoading}
+                setIsLoading={isLoadingRegister ? setIsLoadingRegister : setIsLoadingEnd}
             >
             </MyModal>
 

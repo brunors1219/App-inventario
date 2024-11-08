@@ -72,7 +72,7 @@ export default function ListPn({ navigation }) {
 
 
     const filteredData = searchId
-    ? data.filter(item => item.PN.includes(searchId) && (!isChecked || item.QtyOrigin > 0))
+    ? data.filter(item => item.PN.includes(searchId) && item.QtyOrigin > 0)
     : data.filter(item => !isChecked || item.QtyOrigin > 0);
 
     
