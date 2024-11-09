@@ -570,7 +570,7 @@ export default function InventarioS({ navigation }) {
                     {score > 0 && pn
                         ?
                         <View style={{
-                            backgroundColor: score == 1 ? 'green' : score == 2 ? 'blue' : 'yellow',
+                            backgroundColor: score == 1 ? 'green' : score == 2 ? 'blue' : score == 3 ?'yellow': 'red',
                             justifyContent: 'center',
                             alignItems: 'center',
                             alignContent: 'center',
@@ -591,7 +591,7 @@ export default function InventarioS({ navigation }) {
                             <Text style={{
                                 fontSize: 30,
                                 marginBottom: 5,
-                                color: score == 1 ? 'black' : score == 2 ? 'white' : 'yellow',
+                                color: score == 1 ? 'black' : score == 2 ? 'white' : 'black',
                                 fontWeight: "900"
                             }}>
                                 {score}º

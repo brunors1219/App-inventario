@@ -69,12 +69,12 @@ export default function ListPn({ navigation }) {
     }
 
     const filteredData = searchId
-                            ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && item.Qty) || (isChecked && (item.QtyOrigin > 0 && item.Qty))))
-                            : data.filter(item => (!isChecked && item.QtyOrigin > 0 && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin>0)));
-   
+        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && item.Qty) || (isChecked && (item.QtyOrigin > 0 && item.Qty))))
+        : data.filter(item => (!isChecked && item.QtyOrigin > 0 && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0)));
+
     const handlerSelectItem = (item) => {
 
-        if (item.status==="Encerrado") {
+        if (item.status === "Encerrado") {
             setModalVisible(true)
             setModalTitle("Bloqueio")
             setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
@@ -110,6 +110,10 @@ export default function ListPn({ navigation }) {
     //         setRefreshing(false); // Pare o indicador de atualização
     //     }, 2000);
     // }, [data]);
+
+    const totalItems = data.length;
+    const countedItems = data.filter(item => item.Qty || item.QtyOrigin > 0).length;
+    const pendingItems = data.filter(item => !item.Qty && item.QtyOrigin > 0).length;
 
     return (
         <View style={{ height: '100%' }}>
@@ -148,49 +152,49 @@ export default function ListPn({ navigation }) {
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
                         {/* {isChecked || (!isChecked && !item.Qty && item.QtyOrigin > 0)
                             ? */}
-                            <View key={item.PN}
-                                style={{
-                                    backgroundColor: item.Qty ? '#ccffcc' : '#f9f9f9',
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'center',
-                                    padding: 15,
-                                    marginVertical: 8,
-                                    borderRadius: 8,
-                                    shadowColor: '#000',
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 4,
-                                    elevation: 2,
-                                    width: '95%',
-                                    marginLeft: 10
-                                }} >
-                                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <View style={{ width: '80%' }} >
-                                        <Text style={styles.title}>{index+1}-PN: {item.PN}</Text>
-                                        <Text>Descrição: {item.Description}</Text>
-                                        <Text>Posição: {item.Position}</Text>
-                                        <Text>Contagem: {item.Score} {gENVIRONMENT==='DEV' ? 'Qtd.Original: '+item.QtyOrigin : null} </Text>
-                                    </View>
-                                    {item.Qty
-                                        ?
-                                        <View
-                                            style={{
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                backgroundColor: '#cceeff',
-                                                padding: 3,
-                                                width: '20%'
-                                            }} >
-                                            <Text>Quantidade</Text>
-                                            <Text style={{ fontSize: 15 }} >{parseFloat(item.Qty)}</Text>
-                                            <Text style={{ fontSize: 8 }} >{item.name}</Text>
-                                        </View>
-
-                                        : null
-                                    }
-
+                        <View key={item.PN}
+                            style={{
+                                backgroundColor: item.Qty ? '#ccffcc' : '#f9f9f9',
+                                alignItems: 'flex-start',
+                                justifyContent: 'center',
+                                padding: 15,
+                                marginVertical: 8,
+                                borderRadius: 8,
+                                shadowColor: '#000',
+                                shadowOpacity: 0.1,
+                                shadowRadius: 4,
+                                elevation: 2,
+                                width: '95%',
+                                marginLeft: 10
+                            }} >
+                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                <View style={{ width: '80%' }} >
+                                    <Text style={styles.title}>{index + 1}-PN: {item.PN}</Text>
+                                    <Text>Descrição: {item.Description}</Text>
+                                    <Text>Posição: {item.Position}</Text>
+                                    <Text>Contagem: {item.Score} {gENVIRONMENT === 'DEV' ? 'Qtd.Original: ' + item.QtyOrigin : null} </Text>
                                 </View>
+                                {item.Qty
+                                    ?
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: '#cceeff',
+                                            padding: 3,
+                                            width: '20%'
+                                        }} >
+                                        <Text>Quant.</Text>
+                                        <Text style={{ fontSize: 15 }} >{parseFloat(item.Qty)}</Text>
+                                        <Text style={{ fontSize: 8 }} >{item.name}</Text>
+                                    </View>
+
+                                    : null
+                                }
+
                             </View>
-                            {/* : null
+                        </View>
+                        {/* : null
                         } */}
                     </TouchableOpacity>
                 )}
@@ -218,9 +222,10 @@ export default function ListPn({ navigation }) {
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 20 }}>
-                    <Text style={styles.text}>Total: {data.length}</Text>
-                    <Text style={styles.text}>Pendente: {data.length - data.filter(f => f.Qty || (!f.Qty && f.QtyOrigin == 0)).length} </Text>
-                    <Text style={styles.text}>Zero: {data.filter(f => f.QtyOrigin == 0).length} </Text>
+                    <Text style={styles.text}>Total: {totalItems}</Text>
+                    <Text style={styles.text}>Pendente: {pendingItems}</Text>
+                    <Text style={styles.text}>Contados: {countedItems}</Text>
+
                 </View>
 
             </View>
