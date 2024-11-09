@@ -211,15 +211,23 @@ export default function ListPn({ navigation }) {
             <View style={{
                 justifyContent: 'center',
                 alignItems: "center",
-                backgroundColor: '#E6FFE6',
-                padding: 2
+                backgroundColor: 'white',
+                padding: 10,
+                borderTopLeftRadius:25,
+                borderTopRightRadius:25,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: -5 },  
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
             }}>
                 <View style={styles.box}>
                     <Text style={{
-                        fontSize: 15,
+                        fontSize: 18,
                         fontWeight: "bold",
+                        marginBottom:7,
                         color:'green'
-                    }}>Resumo: </Text>
+                    }}>Resumo</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -322,8 +330,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-end"
     },
+    boxResume:{
+
+    },
+    
     text: {
-        fontSize: 12,
+        fontSize: 15,
         marginRight: 2,
         color:'green'
     }
