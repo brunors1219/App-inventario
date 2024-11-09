@@ -17,6 +17,7 @@ export default function InventarioS({ navigation }) {
     const [score, setScore] = useState("")
     const [isLoadingRegister, setIsLoadingRegister] = useState(false);
     const [isLoadingEnd, setIsLoadingEnd] = useState(false);
+    const [navigationPage, setNavigationPage] = useState("");
 
     const { URL,
         userId,
@@ -230,20 +231,20 @@ export default function InventarioS({ navigation }) {
             });
         const data = await res.json();
         
-        console.log(data);
-
         setModalMsg(data.message);
 
         if (!res.ok) {
             setModalTitle('Alerta')
             setModalType('error')
             if (res.status===500) setIsUpdate(true)
+            setNavigationPage('')
             setModalVisible(true);
             return
         } else {
             setModalTitle('Informação')
             setModalType('success')
             setIsUpdate(false)
+            setNavigationPage('ListPn')
             setModalVisible(true);
         }
 
@@ -257,6 +258,9 @@ export default function InventarioS({ navigation }) {
     }
 
     const handleBlurPosition = () => {
+
+        if (!recoverCamera) recoverCamera = ""
+
         // Verifica se a posição existe no vetor
         if (position === "" && recoverCamera == "") return;
 
@@ -284,7 +288,7 @@ export default function InventarioS({ navigation }) {
             cancel();
             return;
         }
-
+        
         if (pn === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
@@ -294,7 +298,7 @@ export default function InventarioS({ navigation }) {
             || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
             || f.PN.toUpperCase() == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/)
         )
-        // console.log(_pn)
+
         _pnExist = _pn.length > 0
         if (!_pnExist) {
             setModalTitle('PN inválido');
@@ -305,19 +309,22 @@ export default function InventarioS({ navigation }) {
             return;
         }
 
+        if (recoverCamera!="") {
+            console.log("a", recoverCamera!="")
+            _pnExistPosition = pns.filter(f => (f.PN == recoverCamera.toUpperCase() 
+                                                || f.PNSimple == recoverCamera.toUpperCase()
+                                                || f.PN == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
+                                                && f.Position == position.toUpperCase()).length > 0
+        } else {
+            console.log("b", pn, position)
+            _pnExistPosition = pns.filter(f => (f.PN == pn.toUpperCase() 
+                                                || f.PNSimple == pn.toUpperCase() 
+                                                || f.PN == pn.match(/\d{3}\.\d{4}-\d{2}/))
+                                                && f.Position == position.toUpperCase()).length > 0
+        }
+
         setPN(_pn[0].PN)
 
-        if (recoverCamera!="") {
-            _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == recoverCamera.toUpperCase() 
-                                                || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
-                                                || f.PN.toUpperCase() == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
-                                                && f.Position.toUpperCase() == position.toUpperCase()).length > 0
-        } else {
-            _pnExistPosition = pns.filter(f => (f.PN.toUpperCase() == pn.toUpperCase() 
-                                                || f.PNSimple.toUpperCase() == pn.toUpperCase() 
-                                                || f.PN.toUpperCase() == pn.match(/\d{3}\.\d{4}-\d{2}/))
-                                                && f.Position.toUpperCase() == position.toUpperCase()).length > 0
-        }
 
         recoverCamera = ""
 
@@ -689,6 +696,8 @@ export default function InventarioS({ navigation }) {
                 modalMsg={modalMsg}
                 setModalVisible={setModalVisible}
                 setIsLoading={isLoadingRegister ? setIsLoadingRegister : setIsLoadingEnd}
+                navigation={navigation}
+                navigationPage={navigationPage}
             >
             </MyModal>
 

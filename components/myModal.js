@@ -2,11 +2,15 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoading }) => {
+const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoading, navigation, navigationPage }) => {
 
     const hideMessage = () => {
         setModalVisible(false);
         setIsLoading ? setIsLoading(false) : null;
+        console.log(navigationPage)
+        if (navigationPage !="") {
+            navigation.navigate("ListPn");
+        }
     };
 
     return (

@@ -1,6 +1,5 @@
 import { React, useEffect, useState, useContext } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ScrollView, Pressable, Button, Modal } from "react-native";
-import { BlurView } from 'expo-blur';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Pressable, } from "react-native";
 import { AppContext } from "./src/context/AppContext";
 import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -111,9 +110,9 @@ export default function ListPn({ navigation }) {
     //     }, 2000);
     // }, [data]);
 
-    const totalItems = data.length;
-    const countedItems = data.filter(item => item.Qty || item.QtyOrigin > 0).length;
+    const totalItems = data.filter(item => item.QtyOrigin > 0).length;
     const pendingItems = data.filter(item => !item.Qty && item.QtyOrigin > 0).length;
+    const countedItems = data.filter(item => item.Qty).length;
 
     return (
         <View style={{ height: '100%' }}>
@@ -132,7 +131,7 @@ export default function ListPn({ navigation }) {
                 <TouchableOpacity style={styles.checkbox} onPress={() => setIsChecked(!isChecked)}>
                     {isChecked && <View style={styles.checkmark} />}
                 </TouchableOpacity>
-                <Text>{isChecked ? 'Listando todos PN' : 'Listando apenas Pendente'}</Text>
+                <Text>{isChecked ? 'Listando todos PN' : 'Listando apenas Pendente'}-{gPosition}</Text>
             </View>
             {!scannedShow
                 ? null
@@ -184,7 +183,7 @@ export default function ListPn({ navigation }) {
                                             padding: 3,
                                             width: '20%'
                                         }} >
-                                        <Text>Quant.</Text>
+                                        <Text>Qtd.</Text>
                                         <Text style={{ fontSize: 15 }} >{parseFloat(item.Qty)}</Text>
                                         <Text style={{ fontSize: 8 }} >{item.name}</Text>
                                     </View>
@@ -211,23 +210,29 @@ export default function ListPn({ navigation }) {
             </MyModal>
             <View style={{
                 justifyContent: 'center',
-                paddingRight: 20,
-                alignItems: "center"
+                alignItems: "center",
+                backgroundColor: '#E6FFE6',
+                padding: 2
             }}>
                 <View style={styles.box}>
                     <Text style={{
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: "bold",
+                        color:'green'
                     }}>Resumo: </Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 20 }}>
-                    <Text style={styles.text}>Total: {totalItems}</Text>
-                    <Text style={styles.text}>Pendente: {pendingItems}</Text>
-                    <Text style={styles.text}>Contados: {countedItems}</Text>
-
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 20 }]}>
+                        Total: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
+                    </Text>
+                    <Text style={[styles.text, { flex: 1, textAlign: 'center' }]}>
+                        Pendente: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
+                    </Text>
+                    <Text style={[styles.text, { flex: 1, textAlign: 'right', marginRight: 20 }]}>
+                        Contados: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
+                    </Text>
                 </View>
-
             </View>
 
         </View>
@@ -308,7 +313,6 @@ const styles = StyleSheet.create({
     },
     box: {
         justifyContent: "center",
-        marginBottom: 10,
         fontSize: 35,
     },
     boxItems: {
@@ -319,8 +323,9 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     },
     text: {
-        fontSize: 17,
-        marginRight: 2
+        fontSize: 12,
+        marginRight: 2,
+        color:'green'
     }
 
 });
