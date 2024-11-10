@@ -133,6 +133,7 @@ export default function InventarioS({ navigation }) {
         setIsLoadingEnd(true);
 
         if (!position) {
+            setNavigationPage('');
             setModalVisible(true)
             setModalMsg("Informe a Posição!")
             focusTextInputPosition();
@@ -161,12 +162,14 @@ export default function InventarioS({ navigation }) {
         setModalMsg(data.message);
 
         if (!res.ok) {
+            setNavigationPage('');
             setModalTitle('Alerta')
             setModalType('error')
             setIsUpdate(false)
             setModalVisible(true);
             return
         } else {
+            setNavigationPage('listPn');
             setModalTitle('Informação')
             setModalType('success')
             setIsUpdate(false)
@@ -179,18 +182,31 @@ export default function InventarioS({ navigation }) {
         setIsLoadingRegister(true);
 
         if (!qty) {
+            setNavigationPage('')
             setModalVisible(true)
             setModalMsg("Informe uma Quantidade!")
             focusTextInputQty();
             return
         }
+        console.log(!isNaN(qty))
+        if (qty < 0) {
+            setNavigationPage("")
+            setQty("")
+            setModalVisible(true)
+            setModalMsg("Quantidade Inválida!")
+            focusTextInputQty();
+            return
+        }
+
         if (!position) {
+            setNavigationPage("")
             setModalVisible(true)
             setModalMsg("Informe a Posição!")
             focusTextInputPosition();
             return
         }
         if (!pn) {
+            setNavigationPage("")
             setModalVisible(true)
             setModalMsg("Informe o PN!")
             focusTextInputPN();
@@ -200,7 +216,8 @@ export default function InventarioS({ navigation }) {
         if (isUpdate) {
            
             if (!chkIncrease && !chkUpdate) {
-                
+
+                setNavigationPage("")
                 setModalVisible(true)
                 setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
                 
@@ -267,6 +284,7 @@ export default function InventarioS({ navigation }) {
         if (positions.includes(position.toUpperCase()) || positions.includes(recoverCamera.toUpperCase())) {
             focusTextInputPN();
         } else {
+            setNavigationPage('');
             setModalTitle('Posição inválida');
             setModalMsg('A posição não existe no armazém.');
             setModalVisible(true);
@@ -280,6 +298,7 @@ export default function InventarioS({ navigation }) {
     const handleBlurPN = () => {
 
         if (position === "") {
+            setNavigationPage('');
             setModalTitle('Ação');
             setModalMsg('Digite primeiro a POSIÇÃO');
             setModalVisible(true);
@@ -301,6 +320,7 @@ export default function InventarioS({ navigation }) {
 
         _pnExist = _pn.length > 0
         if (!_pnExist) {
+            setNavigationPage('');
             setModalTitle('PN inválido');
             setModalMsg('A PN não existe no cadastro. Acione o time de suporte!' + 'Rec:' + recoverCamera + " pn :" + pn);
             setModalVisible(true);
@@ -330,6 +350,7 @@ export default function InventarioS({ navigation }) {
 
         if (!_pnExistPosition) {
             if (qtyKey == 0 || PNKey != _pn[0].PN) {
+                setNavigationPage('');
                 setModalTitle('PN fora locação');
                 setModalMsg('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!');
                 setModalVisible(true);
@@ -374,6 +395,7 @@ export default function InventarioS({ navigation }) {
     }
 
     const hideMessage = () => {
+        setNavigationPage('');
         setModalVisible(false);
     };
 

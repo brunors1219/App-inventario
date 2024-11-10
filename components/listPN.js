@@ -79,7 +79,7 @@ export default function ListPn({ navigation }) {
             setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
         } else {
             setGPN(item.PN);
-            setGPosition(item.Position);
+            setGPosition(gPosition);
             setGDescription(item.Description);
             setGScore(item.Score);
             navigation.navigate("Digitação");
@@ -110,7 +110,7 @@ export default function ListPn({ navigation }) {
     //     }, 2000);
     // }, [data]);
 
-    const totalItems = data.filter(item => item.QtyOrigin > 0).length;
+    const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
     const pendingItems = data.filter(item => !item.Qty && item.QtyOrigin > 0).length;
     const countedItems = data.filter(item => item.Qty).length;
 
@@ -170,7 +170,7 @@ export default function ListPn({ navigation }) {
                                 <View style={{ width: '80%' }} >
                                     <Text style={styles.title}>{index + 1}-PN: {item.PN}</Text>
                                     <Text>Descrição: {item.Description}</Text>
-                                    <Text>Posição: {item.Position}</Text>
+                                    <Text>Posição: {item.Position}{item.PositionAux ? "," + item.PositionAux : null }</Text>
                                     <Text>Contagem: {item.Score} {gENVIRONMENT === 'DEV' ? 'Qtd.Original: ' + item.QtyOrigin : null} </Text>
                                 </View>
                                 {item.Qty
@@ -213,22 +213,25 @@ export default function ListPn({ navigation }) {
                 alignItems: "center",
                 backgroundColor: 'white',
                 padding: 10,
-                borderTopLeftRadius:25,
-                borderTopRightRadius:25,
+                borderRadius:25,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: -5 },  
                 shadowOpacity: 0.5,
                 shadowRadius: 10,
                 elevation: 10,
+                marginBottom: 3,
+                marginLeft: 10,
+                marginRight: 10
+
             }}>
-                <View style={styles.box}>
+                {/* <View style={styles.box}>
                     <Text style={{
                         fontSize: 18,
                         fontWeight: "bold",
                         marginBottom:7,
                         color:'green'
                     }}>Resumo</Text>
-                </View>
+                </View> */}
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 20 }]}>
