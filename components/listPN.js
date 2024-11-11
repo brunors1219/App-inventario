@@ -110,7 +110,9 @@ export default function ListPn({ navigation }) {
     //     }, 2000);
     // }, [data]);
 
-    const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
+    //const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
+    console.log(data)
+    const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty).length;
     const pendingItems = data.filter(item => !item.Qty && item.QtyOrigin > 0).length;
     const countedItems = data.filter(item => item.Qty).length;
 
@@ -234,14 +236,14 @@ export default function ListPn({ navigation }) {
                 </View> */}
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 20 }]}>
+                    <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 10 }]}>
                         Total: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
                     </Text>
                     <Text style={[styles.text, { flex: 1, textAlign: 'center' }]}>
                         Pendente: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
                     </Text>
-                    <Text style={[styles.text, { flex: 1, textAlign: 'right', marginRight: 20 }]}>
-                        Contados: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
+                    <Text style={[styles.text, { flex: 1, textAlign: 'right', marginRight: 10 }]}>
+                        Contado: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
                     </Text>
                 </View>
             </View>
