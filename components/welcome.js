@@ -1,7 +1,29 @@
-import React from 'react';
-import {View, Text, StyleSheet, Pressable, Image} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert, Button, TouchableOpacity} from 'react-native';
 
 export default function Welcome({ navigation }){
+
+    const [lastPress, setLastPress] = useState(0);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [password, setPassword] = useState('');
+    const [newUserVisible, setNewUserVisible] = useState(false);
+
+    const handleDoubleClick = () => {
+      const time = new Date().getTime();
+      const delta = time - lastPress;
+
+      if (delta < 300) {
+        setPassword("")
+        setIsModalVisible(true);  // Exibe o modal para digitar a senha
+      }
+      setLastPress(time);
+    };
+
+    const handlePasswordSubmit = () => {
+      // Lógica para validar ou usar a senha digitada
+      setNewUserVisible(password === "A9248D")
+      setIsModalVisible(false)
+    };
 
     const handleLoginPress = () =>{
         navigation.navigate('Login');
@@ -11,7 +33,9 @@ export default function Welcome({ navigation }){
   };
   return(
     <View style={styles.container}>
-      <Image source={require('../assets/data_access.png')} style={{width:350, height:350}}/>
+       <TouchableOpacity onPress={handleDoubleClick}>
+          <Image source={require('../assets/data_access.png')}  style={{width:350, height:350}}/>
+       </TouchableOpacity>
       <Text style={styles.title}>Bem vindo </Text>
       <View style={styles.conbutton}>
         <Pressable onPress={handleLoginPress} style={styles.loginbutton}>
@@ -23,18 +47,43 @@ export default function Welcome({ navigation }){
           </Text>
         </View>
 
-        <View style={{marginTop:30, alignItems:'center'}}>
-          
-          <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
-            <Text style={styles.logintext}>Registrar</Text>
-          </Pressable>
-          <View style={{width:'50%'}}>
-            <Text style={{textAlign:'center', color:'#a9a9a9'}}>
-              Para o primeiro acesso faça seu Cadastro.
-            </Text>
-          </View>          
-        </View>
+        {newUserVisible
+          ? <View style={{marginTop:30, alignItems:'center'}}>          
+              <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
+                <Text style={styles.logintext}>Registrar</Text>
+              </Pressable>
+              <View style={{width:'50%'}}>
+                <Text style={{textAlign:'center', color:'#a9a9a9'}}>
+                  Para o primeiro acesso faça seu Cadastro.
+                </Text>
+              </View>          
+            </View>
+          : null
+        }
 
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <TextInput
+                type={'custom'}
+                options={{
+                  mask: '****'  // Define uma máscara para que só aceite 4 caracteres
+                }}
+                value={password}
+                onChangeText={text => setPassword(text)}
+                placeholder="Digite sua senha"
+                secureTextEntry
+                style={styles.input}
+              />
+              <Button title="Confirmar" onPress={handlePasswordSubmit} />
+            </View>
+          </View>
+        </Modal>
 
       </View>
     </View>

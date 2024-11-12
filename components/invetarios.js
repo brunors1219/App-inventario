@@ -345,7 +345,6 @@ export default function InventarioS({ navigation }) {
 
         setPN(_pn[0].PN)
 
-
         recoverCamera = ""
 
         if (!_pnExistPosition) {
@@ -359,6 +358,7 @@ export default function InventarioS({ navigation }) {
                 setPN("");
                 setDescription("");
                 focusTextInputPN();
+                return;
             }
         }
 

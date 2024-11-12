@@ -67,10 +67,6 @@ export default function ListPn({ navigation }) {
         return <Text>Carregando dados...</Text>
     }
 
-    const filteredData = searchId
-        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && item.Qty) || (isChecked && (item.QtyOrigin > 0 && item.Qty))))
-        : data.filter(item => (!isChecked && item.QtyOrigin > 0 && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0)));
-
     const handlerSelectItem = (item) => {
 
         if (item.status === "Encerrado") {
@@ -79,7 +75,7 @@ export default function ListPn({ navigation }) {
             setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
         } else {
             setGPN(item.PN);
-            setGPosition(gPosition);
+            setGPosition(item.Position);
             setGDescription(item.Description);
             setGScore(item.Score);
             navigation.navigate("Digitação");
@@ -112,8 +108,13 @@ export default function ListPn({ navigation }) {
 
     //const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
     console.log(data)
-    const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty).length;
-    const pendingItems = data.filter(item => !item.Qty && item.QtyOrigin > 0).length;
+
+    const filteredData = searchId
+        ? data.filter(item => item.PN.includes(searchId) && (!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1)))
+        : data.filter(item => (!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1)));
+
+    const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty || item.Score > 1).length;
+    const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;
     const countedItems = data.filter(item => item.Qty).length;
 
     return (

@@ -7,9 +7,9 @@ const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoa
     const hideMessage = () => {
         setModalVisible(false);
         setIsLoading ? setIsLoading(false) : null;
-        console.log(navigationPage)
-        if (navigationPage !="") {
-            navigation.navigate("ListPn");
+
+        if (navigationPage && navigationPage !== "") {
+            navigation.navigate(navigationPage);
         }
     };
 
