@@ -19,10 +19,9 @@ export default function Cadastro({ navigation }) {
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState("");
 
+  const { URL, gENVIRONMENT } = useContext(AppContext)
 
-
-
-  const { URL } = useContext(AppContext)
+  console.log(gENVIRONMENT)
 
   const usersApp = async (data) => {
     try {
@@ -60,7 +59,35 @@ export default function Cadastro({ navigation }) {
     }
   }
 
+  const sample = async () => {
 
+    let usersList = name
+    usersList = usersList.split("-")
+    
+    users = []
+    usersList.map((user)=>{
+      userVetor = user.split(",")
+      userNew = {}
+      userNew.nome = userVetor[1]
+      userNew.email = userVetor[0]
+      userNew.senha = "1234567"  
+      users.push(userNew)
+    })
+
+    users.map(async (user)=>{
+      try {
+        const res = await createUserWithEmailAndPassword(auth, user.email, user.senha);
+  
+        if (res) {
+          const data = { name : user.nome, email : user.email, 'permissions': 'WAREHOUSEOPERATOR' };
+          const result = await usersApp(data);
+        }
+      } catch (error) {
+        console.log(error.message)
+      }  
+    })
+
+  }
   async function createUser() {
 
     if (!name) {
@@ -146,24 +173,48 @@ export default function Cadastro({ navigation }) {
           onChangeText={value => setPassword(value)}
           style={styles.input} />
 
-        <Pressable onPress={() => createUser()}
-          style={({ pressed }) => [
-            styles.button,
-            pressed ? styles.buttonPressed : null,
-          ]}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator size={45} color="#fff" />
-          ) : (
-            <Text style={{
-              fontSize: 20,
-              color: 'white',
-              fontWeight: "900",
-              padding: 15
-            }}>Cadastrar</Text>
-          )}
-        </Pressable>
+        <View style={{display:'flex', flexDirection:'row'}}>
+          <Pressable onPress={() => createUser()}
+            style={({ pressed }) => [
+              styles.button,
+              pressed ? styles.buttonPressed : null,
+            ]}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator size={45} color="#fff" />
+            ) : (
+              <Text style={{
+                fontSize: 20,
+                color: 'white',
+                fontWeight: "900",
+                padding: 15
+              }}>Cadastrar</Text>
+            )}
+          </Pressable>
+
+          <Pressable onPress={() => sample()}
+            style={({ pressed }) => [
+              styles.button,
+              pressed ? styles.buttonPressed : null,
+            ]}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator size={45} color="#fff" />
+            ) : (
+              <Text style={{
+                fontSize: 20,
+                color: 'white',
+                fontWeight: "900",
+                padding: 15
+              }}>Cad.Lote</Text>
+            )}
+          </Pressable>
+
+
+        </View>
+
       </View>
       <MyModal
         modalVisible={modalVisible}
