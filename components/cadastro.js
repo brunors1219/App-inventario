@@ -19,6 +19,8 @@ export default function Cadastro({ navigation }) {
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState("");
 
+  const [navigationPage, setNavigationPage] = useState("");
+
   const { URL, gENVIRONMENT } = useContext(AppContext)
 
   console.log(gENVIRONMENT)
@@ -63,28 +65,28 @@ export default function Cadastro({ navigation }) {
 
     let usersList = name
     usersList = usersList.split("-")
-    
+
     users = []
-    usersList.map((user)=>{
+    usersList.map((user) => {
       userVetor = user.split(",")
       userNew = {}
       userNew.nome = userVetor[1]
       userNew.email = userVetor[0]
-      userNew.senha = "1234567"  
+      userNew.senha = "1234567"
       users.push(userNew)
     })
 
-    users.map(async (user)=>{
+    users.map(async (user) => {
       try {
         const res = await createUserWithEmailAndPassword(auth, user.email, user.senha);
-  
+
         if (res) {
-          const data = { name : user.nome, email : user.email, 'permissions': 'WAREHOUSEOPERATOR' };
+          const data = { name: user.nome, email: user.email, 'permissions': 'WAREHOUSEOPERATOR' };
           const result = await usersApp(data);
         }
       } catch (error) {
         console.log(error.message)
-      }  
+      }
     })
 
   }
@@ -126,24 +128,28 @@ export default function Cadastro({ navigation }) {
         console.log('Cadastrado com sucesso! \n ' + res.user.uid);
         setModalTitle('Sucesso');
         setModalMsg("Usuário cadastrado com sucesso!");
+        setNavigationPage("Login");
         setModalVisible(true);
-        navigation.navigate("Login");
       }
     } catch (error) {
       setIsLoading(false);
       setModalTitle('Erro');
 
+      //se email estiver existente 
+        
       if (error.code === 'auth/email-already-in-use') {
         setModalMsg("Este e-mail já está em uso. Tente outro e-mail.");
+      
+      } else if (error.code === 'auth/invalid-email') {
+        setModalMsg("O e-mail fornecido é inválido. Por favor, insira um e-mail válido.");
+        console.log(error.code )
+      }else if(error.code === 'auth/weak-password') {
+        setModalMsg("A senha deve ter pelo menos 6 caracteres.");
       } else {
         setModalMsg("Não foi possível realizar o cadastro. Tente novamente.");
       }
-
       setModalVisible(true);
     }
-
-
-
 
   }
 
@@ -173,7 +179,7 @@ export default function Cadastro({ navigation }) {
           onChangeText={value => setPassword(value)}
           style={styles.input} />
 
-        <View style={{display:'flex', flexDirection:'row'}}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Pressable onPress={() => createUser()}
             style={({ pressed }) => [
               styles.button,
@@ -221,6 +227,8 @@ export default function Cadastro({ navigation }) {
         modalTitle={modalTitle}
         modalMsg={modalMsg}
         setModalVisible={setModalVisible}
+        navigation={navigation}
+        navigationPage={navigationPage}
       >
       </MyModal>
     </View>
