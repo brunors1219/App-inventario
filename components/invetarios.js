@@ -261,7 +261,7 @@ export default function InventarioS({ navigation }) {
             setModalTitle('Informação')
             setModalType('success')
             setIsUpdate(false)
-            setNavigationPage('ListPn')
+            setNavigationPage('')
             setModalVisible(true);
         }
 
@@ -445,7 +445,7 @@ export default function InventarioS({ navigation }) {
         setIsUpdate(false);
         setIsLoadingEnd(false);
         setIsLoadingRegister(false);
-    focusTextInputPosition();
+        focusTextInputPosition();
     }
 
     const chkUpdateSet = () => {

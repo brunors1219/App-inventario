@@ -33,6 +33,9 @@ export default function ListPn({ navigation }) {
     const [modalTitle, setModalTitle] = useState("");
     const [modalType, setModalType] = useState("");
 
+    const [chkAllPN, setChkAllPN] = useState(false);
+    const [chkPendingPN, setChkPendingPN] = useState(true);
+
     // useEffect(() => {
     //     setData([])
     //     loadData();
@@ -117,6 +120,17 @@ export default function ListPn({ navigation }) {
     const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;
     const countedItems = data.filter(item => item.Qty).length;
 
+    const chkPendingPNSet = () => {
+        setChkAllPN(false);
+        setChkPendingPN(true);
+        setIsChecked(false)
+    }
+    const chkAllPNSet = () => {
+        setChkPendingPN(false)
+        setChkAllPN(true)
+        setIsChecked(true)
+    }
+
     return (
         <View style={{ height: '100%' }}>
             <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
@@ -130,12 +144,27 @@ export default function ListPn({ navigation }) {
                     <Ionicons name='barcode-outline' size={50} color='green' />
                 </Pressable>
             </View>
-            <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', paddingRight: 20, display: 'flex', flexDirection: 'row' }}>
+            <View style={{ alignItems: 'stretch', justifyContent: 'space-between',  marginLeft: 30, marginRight: 30, padding: 5, display: 'flex', flexDirection: 'row' }}>
+                <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                    <TouchableOpacity style={styles.checkbox} onPress={chkAllPNSet}>
+                        {chkAllPN && <View style={styles.checkmark} />}
+                    </TouchableOpacity>
+                    <Text>Todos PNs</Text>
+                </View>
+                <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
+                    <TouchableOpacity style={styles.checkbox} onPress={chkPendingPNSet}>
+                        {chkPendingPN && <View style={styles.checkmark} />}
+                    </TouchableOpacity>
+                    <Text>PNs Pendentes</Text>
+                </View>
+            </View>
+
+            {/* <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', paddingRight: 20, display: 'flex', flexDirection: 'row' }}>
                 <TouchableOpacity style={styles.checkbox} onPress={() => setIsChecked(!isChecked)}>
                     {isChecked && <View style={styles.checkmark} />}
                 </TouchableOpacity>
                 <Text>{isChecked ? 'Listando todos PN' : 'Listando apenas Pendente'}-{gPosition}</Text>
-            </View>
+            </View> */}
             {!scannedShow
                 ? null
                 :
@@ -182,12 +211,12 @@ export default function ListPn({ navigation }) {
                                         style={{
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            backgroundColor: '#cceeff',
+                                            backgroundColor: item.Score == 1 ? 'green' : item.score == 2 ? 'blue' : item.score == 3 ?'yellow': 'red',
                                             padding: 3,
                                             width: '20%'
                                         }} >
                                         <Text>Qtd.</Text>
-                                        <Text style={{ fontSize: 15 }} >{parseFloat(item.Qty)}</Text>
+                                        <Text style={{ fontSize: 15, color: item.Score == 1 ? 'black' : item.score == 2 ? 'white' : 'black' }} >{parseFloat(item.Qty)}</Text>
                                         <Text style={{ fontSize: 8 }} >{item.name}</Text>
                                     </View>
 
@@ -344,6 +373,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginRight: 2,
         color:'green'
-    }
+    },
 
 });
