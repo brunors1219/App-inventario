@@ -2,11 +2,7 @@
   "expo": {
     "name": "appin",
     "slug": "appin",
-<<<<<<< HEAD
     "version": "1.0.18",
-=======
-    "version": "1.0.17",
->>>>>>> 33a0c1b14dfa71d5a67654069f775f80a4c6c10f
     "orientation": "portrait",
     "icon": "./assets/splash.png",
     "userInterfaceStyle": "light",
