@@ -110,12 +110,11 @@ export default function ListPn({ navigation }) {
     // }, [data]);
 
     //const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
-    console.log(data)
-
+    
     const filteredData = searchId
-        ? data.filter(item => item.PN.includes(searchId) && (!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1)))
+        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1))))
         : data.filter(item => (!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1)));
-
+    
     const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty || item.Score > 1).length;
     const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;
     const countedItems = data.filter(item => item.Qty).length;
@@ -211,13 +210,26 @@ export default function ListPn({ navigation }) {
                                         style={{
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            backgroundColor: item.Score == 1 ? 'green' : item.score == 2 ? 'blue' : item.score == 3 ?'yellow': 'red',
+                                            backgroundColor: item.Score == 1 ? 'green' : item.Score == 2 ? 'blue' : item.Score == 3 ?'yellow': 'red',
                                             padding: 3,
                                             width: '20%'
                                         }} >
-                                        <Text>Qtd.</Text>
-                                        <Text style={{ fontSize: 15, color: item.Score == 1 ? 'black' : item.score == 2 ? 'white' : 'black' }} >{parseFloat(item.Qty)}</Text>
-                                        <Text style={{ fontSize: 8 }} >{item.name}</Text>
+                                        <Text style={{ color: item.Score == 1 ? 'black' : item.Score == 2 ? 'white' : 'black' }}>
+                                            Qtd.
+                                        </Text>
+                                        <Text style={{ fontSize: 15, 
+                                                        color: item.Score == 1 ? 'black' : item.Score == 2 ? 'white' : 'black' }} >
+                                            {parseFloat(item.Qty)}
+                                        </Text>
+                                        <Text style={{ fontSize: 10, 
+                                                        fontWeight: 900, 
+                                                        color: item.Score == 1 ? 'black' : item.Score == 2 ? 'white' : 'black'}} >
+                                            {item.PositionCounter}
+                                        </Text>
+                                        <Text style={{ fontSize: 8, 
+                                                        color: item.Score == 1 ? 'black' : item.Score == 2 ? 'white' : 'black'}} >
+                                            {item.name}
+                                        </Text>
                                     </View>
 
                                     : null

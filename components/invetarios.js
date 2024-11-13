@@ -334,13 +334,15 @@ export default function InventarioS({ navigation }) {
             _pnExistPosition = pns.filter(f => (f.PN == recoverCamera.toUpperCase() 
                                                 || f.PNSimple == recoverCamera.toUpperCase()
                                                 || f.PN == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
-                                                && f.Position == position.toUpperCase()).length > 0
+                                                && (f.Position == position.toUpperCase()
+                                                || f.PositionAux.includes(position.toUpperCase()))).length > 0
         } else {
             console.log("b", pn, position)
             _pnExistPosition = pns.filter(f => (f.PN == pn.toUpperCase() 
                                                 || f.PNSimple == pn.toUpperCase() 
                                                 || f.PN == pn.match(/\d{3}\.\d{4}-\d{2}/))
-                                                && f.Position == position.toUpperCase()).length > 0
+                                                && (f.Position == position.toUpperCase()
+                                                || f.PositionAux.includes(position.toUpperCase()))).length > 0
         }
 
         setPN(_pn[0].PN)
