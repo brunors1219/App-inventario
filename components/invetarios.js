@@ -335,7 +335,7 @@ export default function InventarioS({ navigation }) {
                                                 || f.PNSimple == recoverCamera.toUpperCase()
                                                 || f.PN == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
                                                 && (f.Position == position.toUpperCase()
-                                                || (f.PositionAux ? f.PositionAux.includess(position.toUpperCase()) : true)
+                                                || (f.PositionAux ? f.PositionAux.includes(position.toUpperCase()) : true)
                                                 )).length > 0
         } else {
             console.log("b", pn, position)
@@ -343,7 +343,7 @@ export default function InventarioS({ navigation }) {
                                                 || f.PNSimple == pn.toUpperCase() 
                                                 || f.PN == pn.match(/\d{3}\.\d{4}-\d{2}/))
                                                 && (f.Position == position.toUpperCase()
-                                                || (f.PositionAux ? f.PositionAux.includess(position.toUpperCase()) : true)
+                                                || (f.PositionAux ? f.PositionAux.includes(position.toUpperCase()) : true)
                                                 )).length > 0
         }
 
