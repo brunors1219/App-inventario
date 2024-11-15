@@ -223,7 +223,7 @@ export default function ListPn({ navigation }) {
                                         </Text>
                                         <Text style={{ fontSize: 10, 
                                                         fontWeight: 900, 
-                                                        color: item.Score == 1 ? 'black' : item.Score == 2 ? 'white' : 'black'}} >
+                                                        color: 'white'}} >
                                             {item.PositionCounter}
                                         </Text>
                                         <Text style={{ fontSize: 8, 
