@@ -8,7 +8,14 @@ import MyModal from "./myModal";
 
 export default function Login({ navigation }) {
 
-  const { setUserId, userId, setUserProfile, URL, gENVIRONMENT, gUSER_DEFAULT, gPWD_DEFAUT } = useContext(AppContext);
+  const { setIdCompany,
+          setIdInventory,
+          setUserId, userId, 
+          setUserProfile, 
+          URL, 
+          gENVIRONMENT, 
+          gUSER_DEFAULT, 
+          gPWD_DEFAUT } = useContext(AppContext);
 
   const [email, setEmail] = useState(gENVIRONMENT === 'DEV' ? gUSER_DEFAULT : "");
   const [password, setPassword] = useState(gENVIRONMENT === 'DEV' ? gPWD_DEFAUT : "");
@@ -38,7 +45,6 @@ export default function Login({ navigation }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-     
 
       try {
         console.log(`${URL}/api/usersApp?email=${user.email}`)
@@ -48,6 +54,13 @@ export default function Login({ navigation }) {
         console.log(data)
         setUserId(data[0].id);
         setUserProfile(data[0].permissions)
+
+        if (data.length>0){
+          //Here we need will implemented a new screen to user choige the company and inventory to operation
+        }else{
+          setIdCompany((data[0].idCompany))
+          setIdInventory((data[0].idInventory))
+        }
       } catch (error) {
         setUserId('');
         console.error("Erro ao buscar dados:", error);

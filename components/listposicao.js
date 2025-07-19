@@ -14,7 +14,7 @@ export default function Posicao({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('');
     
-    const { URL, setGPosition, setGPN } = useContext(AppContext)
+    const { URL, setGPosition, setGPN, idCompany, idInventory } = useContext(AppContext)
     
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
@@ -47,7 +47,7 @@ export default function Posicao({navigation}) {
                 //     ...doc.data(),
                 // }));
                 //console.log(`${URL}/api/invproducts?selection=position`);
-                const res = await fetch(`${URL}/api/invproducts?selection=position`)
+                const res = await fetch(`${URL}/api/invproducts?idCompany=${idCompany}&idInventory=${idInventory}&selection=position`)
                 const data = await res.json()
                 setData(data)
                 //setData(dataList);

@@ -4,6 +4,9 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
 
+  const [idCompany, setIdCompany] = useState(null);
+  const [idInventory, setIdInventory] = useState(null);
+
   const [userId, setUserId] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [theme, setTheme] = useState("light");
@@ -30,7 +33,9 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider 
-      value={{ userId, setUserId, 
+      value={{  idCompany, setIdCompany,
+                idInventory, setIdInventory,
+                userId, setUserId, 
                 userProfile, setUserProfile,
                 URL, 
                 theme, setTheme, 
