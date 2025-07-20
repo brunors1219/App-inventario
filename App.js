@@ -11,9 +11,12 @@ import Tabs from './router';
 import { AppProvider } from './components/src/context/AppContext';
 import ResetPasswordScreen from './components/password';
 
+import './i18n.js'; // importa a configuração do i18n
+
 const Stack = createStackNavigator();
 
 export default function App() {
+  
   return (
     <AppProvider>
       <LayoutComRodape>

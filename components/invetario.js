@@ -3,6 +3,7 @@ import { Text, View, TextInput, StyleSheet, Pressable, ScrollView, Button } from
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
 import { AppContext } from "./src/context/AppContext";
+import { useTranslation } from 'react-i18next';
 
 export default function Inventario({navigation}) {
 
@@ -15,6 +16,8 @@ export default function Inventario({navigation}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
+    const { t } = useTranslation();
+    
     useEffect(() => {
         const getCameraPermissions = async () => {
           const { status } = await Camera.requestCameraPermissionsAsync();

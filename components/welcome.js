@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert, Button, TouchableOpacity} from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export default function Welcome({ navigation }){
 
@@ -7,6 +8,8 @@ export default function Welcome({ navigation }){
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [password, setPassword] = useState('');
     const [newUserVisible, setNewUserVisible] = useState(false);
+
+    const { t } = useTranslation();
 
     const handleDoubleClick = () => {
       const time = new Date().getTime();
@@ -36,14 +39,14 @@ export default function Welcome({ navigation }){
        <TouchableOpacity onPress={handleDoubleClick}>
           <Image source={require('../assets/data_access.png')}  style={{width:350, height:350}}/>
        </TouchableOpacity>
-      <Text style={styles.title}>Bem vindo </Text>
+      <Text style={styles.title}>{t("welcome")}</Text>
       <View style={styles.conbutton}>
         <Pressable onPress={handleLoginPress} style={styles.loginbutton}>
-          <Text style={styles.logintext}>Login</Text>
+          <Text style={styles.logintext}>{t("login")}</Text>
         </Pressable>
         <View style={{width:'70%'}}>
           <Text style={{textAlign:'center', color:'#a9a9a9'}}>
-            Para acessar o sistema, você precisará de seu e-mail e senha
+            {t("instructionMsgToEnter")}            
           </Text>
         </View>
 

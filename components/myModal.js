@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { useTranslation } from 'react-i18next';
 
 const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoading, navigation, navigationPage }) => {
+
+    const { t } = useTranslation();
 
     const hideMessage = () => {
         setModalVisible(false);

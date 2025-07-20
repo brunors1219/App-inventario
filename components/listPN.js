@@ -6,7 +6,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import MyModal from "./myModal";
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-
+import { useTranslation } from 'react-i18next';
 
 export default function ListPn({ navigation }) {
 
@@ -20,7 +20,8 @@ export default function ListPn({ navigation }) {
         setGPN,
         setGDescription,
         setGScore,
-        gENVIRONMENT } = useContext(AppContext)
+        gENVIRONMENT,
+        token } = useContext(AppContext)
 
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
@@ -36,6 +37,8 @@ export default function ListPn({ navigation }) {
     const [chkAllPN, setChkAllPN] = useState(false);
     const [chkPendingPN, setChkPendingPN] = useState(true);
 
+    const { t } = useTranslation();
+    
     // useEffect(() => {
     //     setData([])
     //     loadData();
@@ -55,7 +58,7 @@ export default function ListPn({ navigation }) {
         if (!gPosition) return; // Condição extra de segurança
 
         try {
-            const res = await fetch(`${URL}/api/invproducts?position=${gPosition}`);
+            const res = await fetch(`${URL}/api/invproducts?${token}&position=${gPosition}`);
             const data = await res.json();
             setData(data);
         } catch (error) {

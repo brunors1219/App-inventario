@@ -24,6 +24,8 @@ export const AppProvider = ({ children }) => {
 
   const [forceUpdate, setForceUpdate] = useState(false)
 
+  const token = `idCompany=${idCompany}&idInventory=${idInventory}`;
+
   const clearContextItem = () => {
     //setGPosition("");
     setGPN("");
@@ -36,6 +38,7 @@ export const AppProvider = ({ children }) => {
       value={{  idCompany, setIdCompany,
                 idInventory, setIdInventory,
                 userId, setUserId, 
+                token, 
                 userProfile, setUserProfile,
                 URL, 
                 theme, setTheme, 

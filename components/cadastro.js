@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
 import MyModal from "./myModal";
-
+import { useTranslation } from 'react-i18next';
 
 export default function Cadastro({ navigation }) {
 
@@ -21,10 +21,10 @@ export default function Cadastro({ navigation }) {
 
   const [navigationPage, setNavigationPage] = useState("");
 
-  const { URL, gENVIRONMENT } = useContext(AppContext)
+  const { URL } = useContext(AppContext)
 
-  console.log(gENVIRONMENT)
-
+  const { t } = useTranslation();
+  
   const usersApp = async (data) => {
     try {
       const response = await fetch(`${URL}/api/usersApp`, {

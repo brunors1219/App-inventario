@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect } from '@react-navigation/native';
 import MyModal from "../components/myModal";
+import { useTranslation } from 'react-i18next';
 
 export default function InventarioS({ navigation }) {
 
@@ -28,7 +29,8 @@ export default function InventarioS({ navigation }) {
         gDescription,
         gScore,
         clearContextItem,
-        setForceUpdate } = useContext(AppContext)
+        setForceUpdate ,
+        token } = useContext(AppContext)
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
@@ -48,6 +50,8 @@ export default function InventarioS({ navigation }) {
     const [chkUpdate, setChkUpdate] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
 
+    const { t } = useTranslation();
+    
     useEffect(() => {
 
         // console.log(userId);
@@ -65,7 +69,7 @@ export default function InventarioS({ navigation }) {
         const fetchData = async () => {
 
             try {
-                const res = await fetch(`${URL}/api/invproducts?selection=products`)
+                const res = await fetch(`${URL}/api/invproducts?${token}&selection=products`)
                 const data = await res.json()
                 setPNs(data)
                 setIsUpdate(false)
@@ -145,7 +149,7 @@ export default function InventarioS({ navigation }) {
         body.Position = position
         body.User_Id = userId
 
-        const res = await fetch(`${URL}/api/invproducts?zerocounter=true`,
+        const res = await fetch(`${URL}/api/invproducts?${token}&zerocounter=true`,
             {
                 method: "POST",
                 headers: {
@@ -236,7 +240,7 @@ export default function InventarioS({ navigation }) {
             body.kindUpdate = chkIncrease ? "increase" : "update"
         }
 
-        const res = await fetch(`${URL}/api/invproducts?counter=true`,
+        const res = await fetch(`${URL}/api/invproducts?${token}&counter=true`,
             {
                 method: "POST",
                 headers: {

@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 import { AppContext } from "./src/context/AppContext";
+import { useTranslation } from 'react-i18next';
 
 // import { collection, getDocs } from "firebase/firestore";
 // import { db } from "./src/service/firebase";
@@ -14,12 +15,14 @@ export default function Posicao({navigation}) {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState('');
     
-    const { URL, setGPosition, setGPN, idCompany, idInventory } = useContext(AppContext)
+    const { URL, setGPosition, setGPN, token } = useContext(AppContext)
     
     const [scanned, setScanned] = useState(false);
     const [scannedData, setScannedData] = useState('');
     const [scannedShow, setScannedShow] = useState(false);
 
+    const { t } = useTranslation();
+       
     useEffect(() => {
         loadDataDB();
     }, []);
@@ -46,8 +49,10 @@ export default function Posicao({navigation}) {
                 //     id: doc.id,
                 //     ...doc.data(),
                 // }));
-                //console.log(`${URL}/api/invproducts?selection=position`);
-                const res = await fetch(`${URL}/api/invproducts?idCompany=${idCompany}&idInventory=${idInventory}&selection=position`)
+                
+                //console.log(`${URL}/api/invproducts?${token}&selection=position`);
+
+                const res = await fetch(`${URL}/api/invproducts?${token}&selection=position`)
                 const data = await res.json()
                 setData(data)
                 //setData(dataList);

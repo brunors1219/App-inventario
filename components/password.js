@@ -3,8 +3,7 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { View, TextInput, Pressable, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import MyModal from "./myModal";
 
-
-
+import { useTranslation } from 'react-i18next';
 
 export default function ResetPasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -13,6 +12,8 @@ export default function ResetPasswordScreen({ navigation }) {
     const [modalMsg, setModalMsg] = useState("");
     const [modalTitle, setModalTitle] = useState("");
 
+    const { t } = useTranslation();
+    
     async function resetPassword(email) {
         const auth = getAuth();
     

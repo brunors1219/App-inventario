@@ -4,12 +4,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./src/service/firebase"; // Importa o auth do Firebase configurado
 import { AppContext } from "./src/context/AppContext";
 import MyModal from "./myModal";
-
+import { useTranslation } from 'react-i18next';
 
 export default function Login({ navigation }) {
 
-  const { setIdCompany,
-          setIdInventory,
+  const { setIdCompany, idCompany,
+          setIdInventory, idInventory,
           setUserId, userId, 
           setUserProfile, 
           URL, 
@@ -24,6 +24,8 @@ export default function Login({ navigation }) {
   const [modalMsg, setModalMsg] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [modalType, setModalType] = useState("");
+
+  const { t } = useTranslation();
 
   async function handleLogin() {
     
@@ -55,20 +57,21 @@ export default function Login({ navigation }) {
         setUserId(data[0].id);
         setUserProfile(data[0].permissions)
 
-        if (data.length>0){
+        if (data.length>1){
           //Here we need will implemented a new screen to user choige the company and inventory to operation
-        }else{
-          setIdCompany((data[0].idCompany))
-          setIdInventory((data[0].idInventory))
+        }else{          
+          setIdCompany(data[0].IdCompany)
+          setIdInventory(data[0].IdInventory)
         }
       } catch (error) {
         setUserId('');
         console.error("Erro ao buscar dados:", error);
+        return
       } finally {
         setIsLoading(false);
       };
 
-      console.log("Login realizado com sucesso! ID: " + user.uid + " Banco ID: " + userId);
+      console.log(`Login realizado com sucesso! ID: ${user.uid} Banco ID: ${userId} Company: ${idCompany} Inventory: ${idInventory}`);
       
       navigation.navigate("Inventário");
 

@@ -2,8 +2,12 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Constants from 'expo-constants';
+import { useTranslation } from 'react-i18next';
 
 const LayoutComRodape = ({ children }) => {
+
+    const { t } = useTranslation();
+    
     return (
         <View style={styles.container}>
             <View style={styles.content}>{children}</View>

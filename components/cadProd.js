@@ -3,7 +3,7 @@ import { Text, View, TextInput, StyleSheet, Pressable, Button, ScrollView } from
 import { db } from './src/service/firebase'; // importar a configuração do firebase
 import { collection, addDoc } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
+import { useTranslation } from 'react-i18next';
 
 export default function Cadprod() {
 
@@ -15,6 +15,8 @@ export default function Cadprod() {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
+    
+    const { t } = useTranslation();
     
     const onChange = (event, selectedDate) => {
 
