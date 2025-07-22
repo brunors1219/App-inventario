@@ -50,10 +50,13 @@ export default function Posicao({navigation}) {
                 //     ...doc.data(),
                 // }));
                 
-                //console.log(`${URL}/api/invproducts?${token}&selection=position`);
+                console.log(`${new Date()} ${URL}/api/invproducts?${token}&selection=position`);
 
                 const res = await fetch(`${URL}/api/invproducts?${token}&selection=position`)
                 const data = await res.json()
+                
+                console.log(data);
+
                 setData(data)
                 //setData(dataList);
             } catch (error) {
@@ -74,8 +77,7 @@ export default function Posicao({navigation}) {
         : data;
 
     const handlerSelectItem = (item) => {
-        setGPosition(item.Position)
-        navigation.navigate("ListPn");
+        navigation.navigate("ListPn",  { position: item.Position });
     }
 
     const handleBarCodeScanned = ({ type, data }) => {
@@ -111,8 +113,7 @@ export default function Posicao({navigation}) {
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
-                
-            
+                        
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
                         <View  key={item.Posicao} style={item.Status === "Encerrado" ? styles.itemOpen : styles.itemEnd}>

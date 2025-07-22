@@ -2,5 +2,7 @@
   "welcome": "Bienvenido",
   "login": "Iniciar sesión",
   "greeting": "Hola, ¿cómo estás?",
-  "instructionMsgToEnter": "Para acceder al sistema, necesitarás tu correo electrónico y contraseña"
+  "instructionMsgToEnter": "Para acceder al sistema, necesitarás tu correo electrónico y contraseña",
+  "btnregistrar" : "Registro"
 }
+

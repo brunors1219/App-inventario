@@ -6,32 +6,32 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect } from '@react-navigation/native';
 import MyModal from "../components/myModal";
 import { useTranslation } from 'react-i18next';
+import { useRoute } from '@react-navigation/native';
 
 export default function InventarioS({ navigation }) {
 
-    const [position, setPosition] = useState("")
-    const [description, setDescription] = useState("")
-    const [pn, setPN] = useState("")
-    const [qty, setQty] = useState("")
-    const [positions, setPositions] = useState("")
-    const [pns, setPNs] = useState("")
-    const [score, setScore] = useState("")
-    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
-    const [isLoadingEnd, setIsLoadingEnd] = useState(false);
-    const [navigationPage, setNavigationPage] = useState("");
-
     const { URL,
+        idCompany,
+        idInventory,
         userId,
-        setGPosition,
-        gPosition,
-        setGPN,
-        gPN,
-        gDescription,
-        gScore,
         clearContextItem,
         setForceUpdate ,
         token } = useContext(AppContext)
 
+    const route = useRoute();
+    
+    console.log(route)
+    
+    const [position, setPosition] = useState(route.params?.position)
+    const [description, setDescription] = useState(route.params?.description)
+    const [pn, setPN] = useState(route.params?.pn)
+    const [qty, setQty] = useState(route.params?.qty)
+    const [positions, setPositions] = useState("")
+    const [pns, setPNs] = useState("")
+    const [score, setScore] = useState(route.params?.score)
+    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
+    const [isLoadingEnd, setIsLoadingEnd] = useState(false);
+    const [navigationPage, setNavigationPage] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMsg, setModalMsg] = useState("");
     const [modalTitle, setModalTitle] = useState("");
@@ -60,9 +60,6 @@ export default function InventarioS({ navigation }) {
 
     }, [])
 
-    useEffect(() => {
-       setGPosition(position) 
-    },[position]);
 
     const loadDataDB = () => {
 
@@ -98,23 +95,36 @@ export default function InventarioS({ navigation }) {
       
     }
 
-    useEffect(() => {
-        if (gPosition) {
-            setPosition(gPosition);
-        }
-        if (gPN) {
-            setPN(gPN);
-            setDescription(gDescription);
-            setScore(gScore)
-            // setTimeout(handleBlurPN, 1000);
-            focusTextInputQty();
-            clearContextItem();
-        }
+    // useEffect(() => {
+    //     if (myRoutes.position) {
+    //         setPosition(myRoutes.position);
+    //     }
+    //     if (gPN) {
+    //         setPN(gPN);
+    //         setDescription(gDescription);
+    //         setScore(gScore)
+    //         // setTimeout(handleBlurPN, 1000);
+    //         focusTextInputQty();
+    //         clearContextItem();
+    //     }
 
-    }, [gPosition, gPN]);
+    // }, [gPosition, gPN]);
+
+    useEffect(() => {
+       setPosition(route.params?.position);
+    }, [route.params?.position]);
 
     useFocusEffect(
         useCallback(() => {
+            setPosition(route.params?.position);
+            setPN(route.params?.pn);
+            setDescription(route.params?.description);
+            setScore(route.params?.score)
+            setQty(route.params?.qty)
+            // setTimeout(handleBlurPN, 1000);
+            focusTextInputQty();
+            clearContextItem();
+
             // Código a ser executado quando a tela ganha o foco
             loadDataDB();
 
@@ -124,7 +134,7 @@ export default function InventarioS({ navigation }) {
                 // Código a ser executado quando a tela perder foco, se necessário
                 clearContextItem();
             };
-        }, [])
+        }, [route.params?.pn, route.params?.position])
     );
 
     useEffect(() => {
@@ -148,8 +158,11 @@ export default function InventarioS({ navigation }) {
 
         body.Position = position
         body.User_Id = userId
+        body.idCompany = idCompany
+        body.idInventory = idInventory
+        body.zerocounter = true
 
-        const res = await fetch(`${URL}/api/invproducts?${token}&zerocounter=true`,
+        const res = await fetch(`${URL}/api/invproducts`,
             {
                 method: "POST",
                 headers: {
@@ -181,6 +194,7 @@ export default function InventarioS({ navigation }) {
         }
 
     }
+
     const register = async () => {
     
         setIsLoadingRegister(true);
@@ -192,7 +206,7 @@ export default function InventarioS({ navigation }) {
             focusTextInputQty();
             return
         }
-        console.log(!isNaN(qty))
+        console.log('Qtd:' , !isNaN(qty))
         if (qty < 0) {
             setNavigationPage("")
             setQty("")
@@ -231,16 +245,21 @@ export default function InventarioS({ navigation }) {
 
         const body = {}
 
+        body.idCompany = idCompany
+        body.idInventory = idInventory
+
+        body.counter = true
+
         body.PN = pn
         body.Position = position
         body.Qty = qty
         body.User_Id = userId
 
-        if (isUpdate) {
-            body.kindUpdate = chkIncrease ? "increase" : "update"
-        }
+        body.kindUpdate = chkIncrease ? "increase" : "update"
 
-        const res = await fetch(`${URL}/api/invproducts?${token}&counter=true`,
+        console.log(body);
+
+        const res = await fetch(`${URL}/api/invproducts`,
             {
                 method: "POST",
                 headers: {
@@ -448,8 +467,6 @@ export default function InventarioS({ navigation }) {
         setQtyKey(0);
         setPNKey("");
         setScore(0);
-        setGPN("");
-        setGPosition("");
         setIsUpdate(false);
         setIsLoadingEnd(false);
         setIsLoadingRegister(false);

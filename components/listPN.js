@@ -7,6 +7,7 @@ import MyModal from "./myModal";
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRoute } from '@react-navigation/native';
 
 export default function ListPn({ navigation }) {
 
@@ -15,11 +16,6 @@ export default function ListPn({ navigation }) {
     const [searchId, setSearchId] = useState('')
 
     const { URL,
-        gPosition,
-        setGPosition,
-        setGPN,
-        setGDescription,
-        setGScore,
         gENVIRONMENT,
         token } = useContext(AppContext)
 
@@ -38,27 +34,27 @@ export default function ListPn({ navigation }) {
     const [chkPendingPN, setChkPendingPN] = useState(true);
 
     const { t } = useTranslation();
+
+    const route = useRoute();
+    const [position, setPosition] = useState(route.params?.position);
     
-    // useEffect(() => {
-    //     setData([])
-    //     loadData();
-    // }, [gPosition]);
+    useEffect(() => {
+       setPosition(route.params?.position);
+       loadData();
+    }, [route.params?.position]);
 
     useFocusEffect(
         useCallback(() => {
-            if (gPosition) {
-                loadData();
-            } else {
-                console.warn("gPosition está indefinido.");
-            }
-        }, [gPosition])
+            loadData();
+        }, [position])
     );
 
     const loadData = async () => {
-        if (!gPosition) return; // Condição extra de segurança
+
+        if (!position) return; // Condição extra de segurança
 
         try {
-            const res = await fetch(`${URL}/api/invproducts?${token}&position=${gPosition}`);
+            const res = await fetch(`${URL}/api/invproducts?${token}&position=${position}`);
             const data = await res.json();
             setData(data);
         } catch (error) {
@@ -67,7 +63,6 @@ export default function ListPn({ navigation }) {
             setLoading(false);
         }
     };
-
 
     if (loading) {
         return <Text>Carregando dados...</Text>
@@ -80,11 +75,14 @@ export default function ListPn({ navigation }) {
             setModalTitle("Bloqueio")
             setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
         } else {
-            setGPN(item.PN);
-            setGPosition(item.Position);
-            setGDescription(item.Description);
-            setGScore(item.Score);
-            navigation.navigate("Digitação");
+            const data = {
+                "pn" : item.PN,
+                "position" : item.Position,
+                "description" : item.Description,
+                "score" : item.Score,
+                "qty" : item.Qty
+            }
+            navigation.navigate("Digitação", data);
         }
 
     }
@@ -98,25 +96,10 @@ export default function ListPn({ navigation }) {
         setScannedShow(false);
         setSearchId(data);
     };
-
-    // const [refreshing, setRefreshing] = useState(false);
-
-    // Função de atualização ao puxar a lista para baixo
-    // const onRefresh = useCallback(() => {
-    //     setRefreshing(true);
-    //     // Simule uma atualização com um timeout (ou substitua com uma função async para buscar novos dados)
-    //     setTimeout(() => {
-    //         // Atualize os dados aqui (substitua por sua lógica de atualização)
-    //         loadData();
-    //         setRefreshing(false); // Pare o indicador de atualização
-    //     }, 2000);
-    // }, [data]);
-
-    //const totalItems = data.filter(item => item.Qty).length > data.filter(item => item.QtyOrigin > 0).length ? data.filter(item => item.Qty).length : data.filter(item => item.QtyOrigin > 0).length;
     
-    const filteredData = searchId
-        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1))))
-        : data.filter(item => (!isChecked && (item.QtyOrigin > 0 || item.Score > 1) && !item.Qty) || (isChecked && (item.Qty || item.QtyOrigin > 0 || item.Score > 1)));
+    const filteredData = searchId 
+        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && !item.Qty) || (isChecked )))
+        : data.filter(item => (!isChecked && !item.Qty) || (isChecked ));
     
     const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty || item.Score > 1).length;
     const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;

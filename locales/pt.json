@@ -2,5 +2,6 @@
   "welcome": "Bem-vindo",
   "login": "Entrar",
   "greeting": "Olá, como vai você?",
-  "instructionMsgToEnter": "Para acessar o sistema, você precisará de seu e-mail e senha"
+  "instructionMsgToEnter": "Para acessar o sistema, você precisará de seu e-mail e senha",
+  "btnregistrar" : "Registrar"
 }

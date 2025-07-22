@@ -53,7 +53,7 @@ export default function Welcome({ navigation }){
         {newUserVisible
           ? <View style={{marginTop:30, alignItems:'center'}}>          
               <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
-                <Text style={styles.logintext}>Registrar</Text>
+                <Text style={styles.logintext}>t("btnRegistrar")</Text>
               </Pressable>
               <View style={{width:'50%'}}>
                 <Text style={{textAlign:'center', color:'#a9a9a9'}}>
