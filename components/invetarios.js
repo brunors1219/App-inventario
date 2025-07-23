@@ -199,20 +199,13 @@ export default function InventarioS({ navigation }) {
     
         setIsLoadingRegister(true);
 
-        if (!qty) {
+        // Verifica se qty é um número válido e positivo
+        if (!qty || isNaN(qty) || Number(qty) <= 0) {
             setNavigationPage('')
             setModalVisible(true)
-            setModalMsg("Informe uma Quantidade!")
+            setModalMsg("Informe uma Quantidade válida!")
             focusTextInputQty();
-            return
-        }
-        console.log('Qtd:' , !isNaN(qty))
-        if (qty < 0) {
-            setNavigationPage("")
-            setQty("")
-            setModalVisible(true)
-            setModalMsg("Quantidade Inválida!")
-            focusTextInputQty();
+            setIsLoadingRegister(false);
             return
         }
 
@@ -247,14 +240,11 @@ export default function InventarioS({ navigation }) {
 
         body.idCompany = idCompany
         body.idInventory = idInventory
-
         body.counter = true
-
         body.PN = pn
         body.Position = position
-        body.Qty = qty
+        body.Qty = Number(qty) // Garante que seja número
         body.User_Id = userId
-
         body.kindUpdate = chkIncrease ? "increase" : "update"
 
         console.log(body);

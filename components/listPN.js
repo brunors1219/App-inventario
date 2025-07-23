@@ -39,26 +39,34 @@ export default function ListPn({ navigation }) {
     const [position, setPosition] = useState(route.params?.position);
     
     useEffect(() => {
-       setPosition(route.params?.position);
-       loadData();
+        setPosition(route.params?.position);
     }, [route.params?.position]);
+
+    useEffect(() => {
+        setLoading(true);
+        loadData();
+    }, [position]);
 
     useFocusEffect(
         useCallback(() => {
+            setLoading(true);
             loadData();
         }, [position])
     );
 
     const loadData = async () => {
-
-        if (!position) return; // Condição extra de segurança
-
+        if (!position) {
+            setData([]);
+            setLoading(false);
+            return;
+        }
         try {
             const res = await fetch(`${URL}/api/invproducts?${token}&position=${position}`);
             const data = await res.json();
             setData(data);
         } catch (error) {
             console.error("Erro ao buscar dados:", error);
+            setData([]);
         } finally {
             setLoading(false);
         }
@@ -98,8 +106,11 @@ export default function ListPn({ navigation }) {
     };
     
     const filteredData = searchId 
-        ? data.filter(item => item.PN.includes(searchId) && ((!isChecked && !item.Qty) || (isChecked )))
-        : data.filter(item => (!isChecked && !item.Qty) || (isChecked ));
+        ? data.filter(item => 
+            (item.PN && item.PN.toUpperCase().includes(searchId.toUpperCase())) && 
+            ((!isChecked && !item.Qty) || isChecked)
+        )
+        : data.filter(item => (!isChecked && !item.Qty) || isChecked );
     
     const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty || item.Score > 1).length;
     const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;
