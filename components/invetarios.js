@@ -21,7 +21,7 @@ export default function InventarioS({ navigation }) {
     const route = useRoute();
     
     console.log(route)
-    
+
     const [position, setPosition] = useState(route.params?.position)
     const [description, setDescription] = useState(route.params?.description)
     const [pn, setPN] = useState(route.params?.pn)
@@ -69,7 +69,6 @@ export default function InventarioS({ navigation }) {
                 const res = await fetch(`${URL}/api/invproducts?${token}&selection=products`)
                 const data = await res.json()
                 setPNs(data)
-                setIsUpdate(false)
                 setChkIncrease(false)
                 setChkUpdate(false)
                 
@@ -114,6 +113,7 @@ export default function InventarioS({ navigation }) {
        setPosition(route.params?.position);
     }, [route.params?.position]);
 
+
     useFocusEffect(
         useCallback(() => {
             setPosition(route.params?.position);
@@ -121,6 +121,7 @@ export default function InventarioS({ navigation }) {
             setDescription(route.params?.description);
             setScore(route.params?.score)
             setQty(route.params?.qty)
+            setIsUpdate(route.params.qty)
             // setTimeout(handleBlurPN, 1000);
             focusTextInputQty();
             clearContextItem();
@@ -134,7 +135,7 @@ export default function InventarioS({ navigation }) {
                 // Código a ser executado quando a tela perder foco, se necessário
                 clearContextItem();
             };
-        }, [route.params?.pn, route.params?.position])
+        }, [route.params?.pn, route.params?.position, route.params?.qty])
     );
 
     useEffect(() => {
