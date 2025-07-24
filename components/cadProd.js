@@ -64,16 +64,16 @@ export default function Cadprod() {
         <ScrollView style={styles.scroll}>
             <View style={styles.container}>
                 <View style={styles.title}>
-                    <Text style={styles.text}>Cadastro de Produto</Text>
+                    <Text style={styles.text}>{t("cadastroproduto")}</Text>
                 </View>
-                <Text style={styles.label}>Código do produto: </Text>
+                <Text style={styles.label}>{t("codigoproduto")} </Text>
                 <TextInput placeholder="Digite código" style={styles.input} value={id} onChangeText={setId}
                 />
-                <Text style={styles.label}>Posição: </Text>
+                <Text style={styles.label}>{t("posicao")}</Text>
                 <TextInput placeholder="Digite posição" style={styles.input}
                     value={pos}
                     onChangeText={setPos} />
-                <Text style={styles.label}>Quantidade: </Text>
+                <Text style={styles.label}>{t("quantidade")} </Text>
                 <TextInput placeholder="Digite quantidade" style={styles.input}
                     value={quant}
                     onChangeText={setQuant} />
@@ -98,7 +98,7 @@ export default function Cadprod() {
                     </Text>
                 </View> */}
                 <Pressable onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>Enviar</Text>
+                    <Text style={styles.text}>{t("enviar")}</Text>
                 </Pressable>
             </View>
 

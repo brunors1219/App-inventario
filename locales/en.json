@@ -3,5 +3,24 @@
   "login":"Login",
   "greeting": "Hello, how are you?",
   "instructionMsgToEnter": "To access the system, you will need your email and password.",
-  "btnregistrar" : "Register"
+  "btnregistrar" : "Register",
+  "frase1" : "For your first access, please register.",
+  "usuario": "User",
+  "senha": "Password",
+  "cadastra": "Register",
+  "cad.lote": "Register Batch",
+  "cadastro": "Registration",
+  "cadastroproduto" : "Product Registration",
+  "codigoproduto" : "Product Code",
+  "posicao" : "Position",
+  "quantidade" : "Quantity",
+  "descricao" : "Description",
+  "enviar" : "Send",
+  "registra" : "Register",
+  "cancelar" : "Cancel",
+  "acessar": "Access",
+  "entrar": "Login",
+  "esqueceuSenha": "Forgot your password?"
+
+
 }

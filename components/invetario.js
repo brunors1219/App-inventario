@@ -95,29 +95,29 @@ export default function Inventario({navigation}) {
                     )}
                 </View>
 
-                <Text style={styles.label}>Descrição: </Text>
-                <TextInput placeholder="Descrição" style={styles.input}
+                <Text style={styles.label}>{t("descricao")} </Text>
+                <TextInput placeholder={t("descricao")} style={styles.input}
                     value={description}
                     onChangeText={setDescription} />
 
-                <Text style={styles.label}>Posição: </Text>
+                <Text style={styles.label}>{t("posicao")} </Text>
                 <TextInput placeholder="Posicao" style={styles.input}
                     value={position}
                     onChangeText={setPositon}
                      />
                 
-                <Text style={styles.label}>Quantidade</Text>
-                <TextInput placeholder="Quantidade" 
+                <Text style={styles.label}>{t("quantidade")}</Text>
+                <TextInput placeholder={t("quantidade")}
                     value={qty}
                     onChangeText={setQty} />
             </View>
 
             <View>
                 <Pressable onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>Registrar</Text>
+                    <Text style={styles.text}>{t("registra")}</Text>
                 </Pressable>
                 <Pressable onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>Cancelar</Text>
+                    <Text style={styles.text}>{t('cancelar')}</Text>
                 </Pressable>
             </View>
         

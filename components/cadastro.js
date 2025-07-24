@@ -157,9 +157,9 @@ export default function Cadastro({ navigation }) {
     <View style={styles.container}>
       <View style={styles.box}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
-        <Text style={styles.title}>Cadastro</Text>
+        <Text style={styles.title}>{t("cadastro")}</Text>
         <TextInput
-          placeholder="Usuario"
+          placeholder={t("usuario")}
           placeholderTextColor="#313131"
           value={name}
           onChangeText={value => setName(value)}
@@ -173,7 +173,7 @@ export default function Cadastro({ navigation }) {
           style={styles.input} />
 
         <TextInput
-          placeholder="Senha"
+          placeholder={t("senha")}
           placeholderTextColor="#313131"
           value={password}
           onChangeText={value => setPassword(value)}
@@ -195,7 +195,7 @@ export default function Cadastro({ navigation }) {
                 color: 'white',
                 fontWeight: "900",
                 padding: 15
-              }}>Cadastrar</Text>
+              }}>{t("cadastra")}</Text>
             )}
           </Pressable>
 
@@ -214,7 +214,7 @@ export default function Cadastro({ navigation }) {
                 color: 'white',
                 fontWeight: "900",
                 padding: 15
-              }}>Cad.Lote</Text>
+              }}>{t("cad.lote")}</Text>
             )}
           </Pressable>
 

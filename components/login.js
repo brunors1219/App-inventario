@@ -96,7 +96,7 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <View style={styles.box}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>{t("entrar")}</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -107,7 +107,7 @@ export default function Login({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Senha"
+          placeholder={t("senha")}
           placeholderTextColor="#313131"
           value={password}
           onChangeText={setPassword}
@@ -126,10 +126,10 @@ export default function Login({ navigation }) {
               color: 'white',
               fontWeight: "900",
               padding: 15
-            }}>Acessar</Text>
+            }}>{t("acessar")}</Text>
           )}
         </Pressable>
-        <Text style={styles.link} onPress={() => navigation.navigate('Resert_password')}>Esqueceu a senha</Text>
+        <Text style={styles.link} onPress={() => navigation.navigate('Resert_password')}>{t("esqueceuSenha")}</Text>
       </View>
       <MyModal
         modalVisible={modalVisible}

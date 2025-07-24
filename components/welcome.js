@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert, Button, TouchableOpacity} from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Welcome({ navigation }){
 
@@ -8,8 +9,8 @@ export default function Welcome({ navigation }){
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [password, setPassword] = useState('');
     const [newUserVisible, setNewUserVisible] = useState(false);
-
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
 
     const handleDoubleClick = () => {
       const time = new Date().getTime();
@@ -24,7 +25,7 @@ export default function Welcome({ navigation }){
 
     const handlePasswordSubmit = () => {
       // Lógica para validar ou usar a senha digitada
-      setNewUserVisible(password === "A9248D")
+      setNewUserVisible(password === "1234"); // Exemplo de validação simples
       setIsModalVisible(false)
     };
 
@@ -34,11 +35,29 @@ export default function Welcome({ navigation }){
     const handleCadastraPress = () =>{
       navigation.navigate('Cadastro');
   };
+
+  const handleLanguageChange = (lang) => {
+    setSelectedLanguage(lang);
+    i18n.changeLanguage(lang);
+  };
+
   return(
     <View style={styles.container}>
        <TouchableOpacity onPress={handleDoubleClick}>
           <Image source={require('../assets/data_access.png')}  style={{width:350, height:350}}/>
        </TouchableOpacity>
+       {/* Campo de seleção de idioma centralizado */}
+       <View style={{ width: 200, marginBottom: 10, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+          <Picker
+            selectedValue={selectedLanguage}
+            onValueChange={handleLanguageChange}
+            style={{ height: 40, width: 200 }}
+          >
+            <Picker.Item label="Português" value="pt" />
+            <Picker.Item label="English" value="en" />
+            <Picker.Item label="Español" value="es" />
+          </Picker>
+        </View>
       <Text style={styles.title}>{t("welcome")}</Text>
       <View style={styles.conbutton}>
         <Pressable onPress={handleLoginPress} style={styles.loginbutton}>
@@ -53,11 +72,11 @@ export default function Welcome({ navigation }){
         {newUserVisible
           ? <View style={{marginTop:30, alignItems:'center'}}>          
               <Pressable onPress={handleCadastraPress} style={styles.loginbutton}>
-                <Text style={styles.logintext}>t("btnRegistrar")</Text>
+                <Text style={styles.logintext}>{t("btnregistrar")}</Text>
               </Pressable>
               <View style={{width:'50%'}}>
                 <Text style={{textAlign:'center', color:'#a9a9a9'}}>
-                  Para o primeiro acesso faça seu Cadastro.
+                  {t("frase1")}
                 </Text>
               </View>          
             </View>

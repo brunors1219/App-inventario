@@ -3,5 +3,22 @@
   "login": "Entrar",
   "greeting": "Olá, como vai você?",
   "instructionMsgToEnter": "Para acessar o sistema, você precisará de seu e-mail e senha",
-  "btnregistrar" : "Registrar"
+  "btnregistrar" : "Registrar",
+  "frase1" : "Para seu primeiro acesso, por favor, registre-se.",
+  "usuario": "Usuário",
+  "senha": "Senha",
+  "cadastra": "Registrar",
+  "cad.lote": "Registrar Lote",
+  "cadastro": "Cadastro",
+  "cadastroproduto" : "Cadastro de Produto",
+  "codigoproduto" : "Código do Produto",
+  "posicao" : "Posição",
+  "quantidade": "Quantidade",
+  "descricao": "Descrição",
+  "enviar": "Enviar",
+  "registra": "Registrar",
+  "cancelar": "Cancelar",
+  "acessar": "Acessar",
+  "entrar": "Entrar",
+  "esqueceuSenha": "Esqueceu a senha"
 }
