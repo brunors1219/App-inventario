@@ -120,8 +120,8 @@ export default function InventarioS({ navigation }) {
             setPN(route.params?.pn);
             setDescription(route.params?.description);
             setScore(route.params?.score)
-            setQty(route.params?.qty)
-            setIsUpdate(route.params.qty)
+            setQty(route.params && route.params.qty !== undefined ? route.params.qty : ""); // Corrigido para evitar undefined
+            setIsUpdate(route.params && route.params.qty !== undefined && route.params.qty !== "" && route.params.qty !== null);
             // setTimeout(handleBlurPN, 1000);
             focusTextInputQty();
             clearContextItem();
@@ -492,7 +492,7 @@ export default function InventarioS({ navigation }) {
                         marginTop: -20,
                         padding: 15
                     }}>
-                        Contagem/Digitação
+                        {t("Contagem/Digitação")}
                     </Text>
                 </View>
 
@@ -501,9 +501,9 @@ export default function InventarioS({ navigation }) {
                     marginBottom: 5,
                     color: '#333',
                     fontWeight: "600"
-                }}>Posição/Locação </Text>
+                }}>{t("Posição/Locação")}</Text>
                 <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
-                    <TextInput placeholder="Posição/Locação"
+                    <TextInput placeholder={t("Posição/Locação")} 
                         style={{
                             width: '80%',
                             margin: 0,
@@ -601,7 +601,7 @@ export default function InventarioS({ navigation }) {
                             marginTop: 15,
                             color: '#333'
                         }}>
-                            Descrição
+                            {t("descricao")}
                         </Text>
                         <Text style={{
                             fontSize: 20,
@@ -654,8 +654,8 @@ export default function InventarioS({ navigation }) {
                     marginBottom: 5,
                     color: '#333',
                     fontWeight: "600"
-                }}>Quantidade:</Text>
-                <TextInput placeholder="Quantidade"
+                }}>{t("quantidade")}</Text>
+                <TextInput placeholder={t("quantidade")}
                     style={styles.input}
                     ref={textInputRefQty}
                     value={qty}
@@ -670,13 +670,13 @@ export default function InventarioS({ navigation }) {
                         <TouchableOpacity style={styles.checkbox} onPress={chkIncreaseSet}>
                             {chkIncrease && <View style={styles.checkmark} />}
                         </TouchableOpacity>
-                        <Text>ADICIONAR Cont.</Text>
+                        <Text>{t("ADICIONAR Cont")}</Text>
                     </View>
                     <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
                         <TouchableOpacity style={styles.checkbox} onPress={chkUpdateSet}>
                             {chkUpdate && <View style={styles.checkmark} />}
                         </TouchableOpacity>
-                        <Text>ALTERAR Cont.</Text>
+                        <Text>{t("ALTERAR Cont")}</Text>
                     </View>
                 </View>
 

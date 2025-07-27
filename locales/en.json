@@ -20,7 +20,15 @@
   "cancelar" : "Cancel",
   "acessar": "Access",
   "entrar": "Login",
-  "esqueceuSenha": "Forgot your password?"
-
+  "esqueceuSenha": "Forgot your password?",
+  "Contagem/Digitação": "Counting/Data Entry",
+  "Posição/Locação": "Position/Location",
+  "descricao": "Description",
+  "quantidade": "Quantity",
+  "ADICIONAR Cont": "ADD Cont.",
+  "ALTERAR Cont": "EDIT Cont.",
+  "registrar": "Register",
+  "cancelar": "Cancel",
+  "encerrar contagem posicao": "End position counting"
 
 }

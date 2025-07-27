@@ -20,5 +20,14 @@
   "cancelar": "Cancelar",
   "acessar": "Acessar",
   "entrar": "Entrar",
-  "esqueceuSenha": "Esqueceu a senha"
+  "esqueceuSenha": "Esqueceu a senha",
+  "Contagem/Digitação": "Contagem/Digitação",
+  "Posição/Locação": "Posição/Locação",
+  "descricao":"Descrição",
+  "quantidade":"Quantidade",
+  "ADICIONAR Cont": "ADICIONAR Cont.",
+  "ALTERAR Cont": "ALTERAR Cont.",
+  "registrar": "Registrar",
+  "cancelar": "Cancelar",
+  "encerrar contagem posicao": "Encerrar contagem posição"
 }

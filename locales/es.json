@@ -19,6 +19,15 @@
   "registra" : "Registrar",
   "cancelar": "Cancelar",
   "acessar": "Acceder",
-  "esqueceuSenha": "¿Olvidaste tu contraseña?"
+  "esqueceuSenha": "¿Olvidaste tu contraseña?",
+  "Contagem/Digitação": "Conteo/Entrada de Datos",
+  "Posição/Locação": "Posición/Ubicación",
+  "descricao": "Descripción",
+  "quantidade": "Cantidad",
+  "ADICIONAR Cont": "AÑADIR Cont.",
+  "ALTERAR Cont": "MODIFICAR Cont.",
+  "registrar": "Registrar",
+  "cancelar": "Cancelar",
+  "encerrar contagem posicao": "Finalizar conteo de posición"
 }
 
