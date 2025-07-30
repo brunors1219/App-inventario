@@ -107,9 +107,19 @@ export default function Inventario({navigation}) {
                      />
                 
                 <Text style={styles.label}>{t("quantidade")}</Text>
-                <TextInput placeholder={t("quantidade")}
+                <TextInput
+                    placeholder={t("quantidade")}
                     value={qty}
-                    onChangeText={setQty} />
+                    onChangeText={text => {
+                        // Aceita ponto ou vírgula como separador decimal
+                        const normalized = text.replace(',', '.');
+                        // Permite apenas números e um ponto decimal
+                        if (/^\d*\.?\d*$/.test(normalized)) {
+                            setQty(normalized);
+                        }
+                    }}
+                    keyboardType="decimal-pad"
+                />
             </View>
 
             <View>
