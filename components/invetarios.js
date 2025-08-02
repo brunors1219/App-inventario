@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import MyModal from "../components/myModal";
 import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
+import { exists } from "i18next";
 
 export default function InventarioS({ navigation }) {
 
@@ -68,6 +69,7 @@ export default function InventarioS({ navigation }) {
             try {
                 const res = await fetch(`${URL}/api/invproducts?${token}&selection=products`)
                 const data = await res.json()
+                console.log(data)
                 setPNs(data)
                 setChkIncrease(false)
                 setChkUpdate(false)
@@ -310,6 +312,8 @@ export default function InventarioS({ navigation }) {
     };
 
     const handleBlurPN = () => {
+        
+        if (modalVisible) return;
 
         if (position === "") {
             setNavigationPage('');
@@ -325,7 +329,7 @@ export default function InventarioS({ navigation }) {
         if (pn === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
-        _pn = pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase()
+        _pn = ! pns ? null : pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase()
             || f.PN.toUpperCase() == recoverCamera.toUpperCase()
             || f.PNSimple.toUpperCase() == pn.toUpperCase()
             || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
@@ -416,7 +420,6 @@ export default function InventarioS({ navigation }) {
         setNavigationPage('');
         setModalVisible(false);
     };
-
 
     let recoverCamera = ""
 
