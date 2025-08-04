@@ -634,7 +634,7 @@ export default function InventarioS({ navigation }) {
                                 marginTop: 15,
                                 color: score == 1 ? 'black' : score == 2 ? 'white' : 'black'
                             }}>
-                                Contagem
+                                {t("contagem")}
                             </Text>
                             <Text style={{
                                 fontSize: 30,
@@ -699,7 +699,7 @@ export default function InventarioS({ navigation }) {
                             color: 'white',
                             fontWeight: "900",
                             padding: 15
-                        }}>Registrar</Text>
+                        }}>{t("registrar")}</Text>
                     )}
                 </Pressable>
                 <Pressable onPress={cancel} style={styles.button}>
@@ -708,7 +708,7 @@ export default function InventarioS({ navigation }) {
                         color: 'white',
                         fontWeight: "900",
                         padding: 15
-                    }}>Cancelar</Text>
+                    }}>{t("cancelar")}</Text>
                 </Pressable>
             </View>
 
@@ -725,7 +725,7 @@ export default function InventarioS({ navigation }) {
                             color: 'white',
                             fontWeight: "900",
                             padding: 15
-                        }}>Encerrar Contagem Posição</Text>
+                        }}>{t("encerrar contagem posicao")}</Text>
                     )}
                 </Pressable>
             </View>
