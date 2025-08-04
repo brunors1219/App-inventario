@@ -132,7 +132,7 @@ export default function ListPn({ navigation }) {
             <View style={{ padding: 0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
-                    placeholder="🔍 Digite o código do produto"
+                    placeholder={t("Digite o código do produto")}
                     value={searchId}
                     onChangeText={(text) => setSearchId(text.toUpperCase())}
                     autoCapitalize="characters" />
@@ -145,13 +145,13 @@ export default function ListPn({ navigation }) {
                     <TouchableOpacity style={styles.checkbox} onPress={chkAllPNSet}>
                         {chkAllPN && <View style={styles.checkmark} />}
                     </TouchableOpacity>
-                    <Text>Todos PNs</Text>
+                    <Text>{t("Todos PNs")}</Text>
                 </View>
                 <View style={{ alignItems: 'flex-start', justifyContent: 'flex-end', display: 'flex', flexDirection: 'row' }}>
                     <TouchableOpacity style={styles.checkbox} onPress={chkPendingPNSet}>
                         {chkPendingPN && <View style={styles.checkmark} />}
                     </TouchableOpacity>
-                    <Text>PNs Pendentes</Text>
+                    <Text>{t("PNs Pendentes")}</Text>
                 </View>
             </View>
 
@@ -197,9 +197,9 @@ export default function ListPn({ navigation }) {
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ width: '80%' }} >
                                     <Text style={styles.title}>{index + 1}-PN: {item.PN}</Text>
-                                    <Text>Descrição: {item.Description}</Text>
-                                    <Text>Posição: {item.Position}{item.PositionAux ? "," + item.PositionAux : null }</Text>
-                                    <Text>Contagem: {item.Score} {gENVIRONMENT === 'DEV' ? 'Qtd.Original: ' + item.QtyOrigin : null} </Text>
+                                    <Text>{t("descricao")}: {item.Description}</Text>
+                                    <Text>{t("posicao")}: {item.Position}{item.PositionAux ? "," + item.PositionAux : null }</Text>
+                                    <Text>{t("contagem")}: {item.Score} {gENVIRONMENT === 'DEV' ? 'Qtd.Original: ' + item.QtyOrigin : null} </Text>
                                 </View>
                                 {item.Qty
                                     ?
@@ -276,13 +276,13 @@ export default function ListPn({ navigation }) {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 10 }]}>
-                        Total: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
+                        {t("total")}: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
                     </Text>
                     <Text style={[styles.text, { flex: 1, textAlign: 'center' }]}>
-                        Pendente: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
+                        {t("pedentes")}: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
                     </Text>
                     <Text style={[styles.text, { flex: 1, textAlign: 'right', marginRight: 10 }]}>
-                        Contado: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
+                        {t("contado")}: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
                     </Text>
                 </View>
             </View>

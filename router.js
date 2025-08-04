@@ -5,9 +5,11 @@ import InventarioS from "./components/invetarios";
 import { Ionicons } from '@expo/vector-icons';
 import ListPn from "./components/listPN";
 import Position from "./components/listposicao";
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 export default function Tabs(){
+    const { t } = useTranslation();
     return(
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -34,10 +36,21 @@ export default function Tabs(){
             tabBarActiveTintColor: 'blue',
             tabBarInactiveTintColor: 'gray',
           })}>
-            <Tab.Screen name="Digitação" component={InventarioS}/>            
-            <Tab.Screen name="Posição" component={Position}/>
-            <Tab.Screen name="ListPn" component={ListPn}/>
-            
+            <Tab.Screen
+                name="Digitação"
+                component={InventarioS}
+                options={{ tabBarLabel: t("digitacao") }}
+            />            
+            <Tab.Screen
+                name="Posição"
+                component={Position}
+                options={{ tabBarLabel: t("posicao") }}
+            />
+            <Tab.Screen
+                name="ListPn"
+                component={ListPn}
+                options={{ tabBarLabel: t("listPn") }}
+            />
         </Tab.Navigator>
     );
     

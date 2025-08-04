@@ -29,6 +29,18 @@
   "ALTERAR Cont": "EDIT Cont.",
   "registrar": "Register",
   "cancelar": "Cancel",
-  "encerrar contagem posicao": "End position counting"
+  "encerrar contagem posicao": "End position counting",
+  "digitacao": "Data Entry",
+  "posicao": "Position",
+  "listPn": "List PN",
+  "Carregando dados": "Loading data...",
+  "digite a posicao": "🔍 Enter the position",
+  "Digite o código do produto": "🔍 Enter the product code",
+  "PNs Pendentes": "Pending PNs",
+  "Todos PNs": "All PNs",
+  "total": "Total",
+  "pedentes": "Pending",
+  "contado": "Counted",
+  "contagem": "Counting"
 
 }

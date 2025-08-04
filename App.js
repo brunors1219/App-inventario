@@ -12,11 +12,13 @@ import { AppProvider } from './components/src/context/AppContext';
 import ResetPasswordScreen from './components/password';
 
 import './i18n.js'; // importa a configuração do i18n
+import { useTranslation } from 'react-i18next';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  
+  const { t } = useTranslation();
+
   return (
     <AppProvider>
       <LayoutComRodape>
@@ -28,11 +30,31 @@ export default function App() {
               },
               headerTintColor: '#fff', // Cor do texto
             }}>
-            <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }}/>
-            <Stack.Screen name="Login" component={Login}/>
-            <Stack.Screen name="Cadastro" component={Cadastro} />
-            <Stack.Screen name="Inventário" component={Tabs}/>
-            <Stack.Screen name="Resert_password" component={ResetPasswordScreen}/>
+            <Stack.Screen
+              name="Welcome"
+              component={Welcome}
+              options={{ headerShown: false, title: t("welcome") }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ title: t("login") }}
+            />
+            <Stack.Screen
+              name="Cadastro"
+              component={Cadastro}
+              options={{ title: t("cadastro") }}
+            />
+            <Stack.Screen
+              name="Inventário"
+              component={Tabs}
+              options={{ title: t("inventario") }}
+            />
+            <Stack.Screen
+              name="Resert_password"
+              component={ResetPasswordScreen}
+              options={{ title: t("reset_password") }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </LayoutComRodape>

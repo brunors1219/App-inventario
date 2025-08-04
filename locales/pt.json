@@ -29,5 +29,19 @@
   "ALTERAR Cont": "ALTERAR Cont.",
   "registrar": "Registrar",
   "cancelar": "Cancelar",
-  "encerrar contagem posicao": "Encerrar contagem posição"
+  "encerrar contagem posicao": "Encerrar contagem posição",
+  "digitacao": "Digitação",
+  "posicao": "Posição",
+  "listPn": "Lista PN",
+  "Carregando dados": "Carregando dados...",
+  "digite a posicao": "🔍 Digite a posição",
+  "Digite o código do produto": "🔍 Digite o código do produto",
+  "PNs Pendentes": "PNs Pendentes",
+  "Todos PNs": "Todos PNs",
+  "Total": "Total",
+  "Pedentes": "Pendentes",
+  "Contato": "Contado",
+  "contagem": "Contagem"
+
+
 }

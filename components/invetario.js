@@ -124,10 +124,10 @@ export default function Inventario({navigation}) {
 
             <View>
                 <Pressable onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>{t("registra")}</Text>
+                    <Text style={styles.text}>{t("registrar")}</Text>
                 </Pressable>
                 <Pressable onPress={handleRegister} style={styles.button}>
-                    <Text style={styles.text}>{t('cancelar')}</Text>
+                    <Text style={styles.text}>{t("cancelar")}</Text>
                 </Pressable>
             </View>
         

@@ -69,7 +69,7 @@ export default function Posicao({navigation}) {
     }
 
     if (loading) {
-        return <Text>Carregando dados...</Text>
+        return <Text>{t("Carregando dados")}</Text>
     }
 
     const filteredData = searchId
@@ -91,7 +91,7 @@ export default function Posicao({navigation}) {
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
-                    placeholder="🔍 Digite a posição"
+                    placeholder={t("digite a posicao")} 
                     value={searchId}
                     onChangeText={(text) => setSearchId(text.toUpperCase())} 
                     autoCapitalize="characters"/>
