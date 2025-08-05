@@ -93,25 +93,25 @@ export default function Cadastro({ navigation }) {
   async function createUser() {
 
     if (!name) {
-      setModalTitle('Erro Usuario');
+      setModalTitle(t("erro Usuario"));
       setModalVisible(true)
-      setModalMsg("Informe nome de usuário!")
+      setModalMsg(t("informe nome de usuario"))
       setIsLoading(false);
       return
     }
 
     if (!email) {
-      setModalTitle('Erro Email');
+      setModalTitle(t('erro email'));
       setModalVisible(true)
-      setModalMsg("Informe um email!")
+      setModalMsg(t("informe um email"))
       setIsLoading(false);
       return
     }
 
     if (!password) {
-      setModalTitle('Erro Senha');
+      setModalTitle(t('erro senha'));
       setModalVisible(true)
-      setModalMsg("Informe uma senha de 6 números!")
+      setModalMsg(t("informe uma senha de 6 numeros"))
       setIsLoading(false);
       return
     }
@@ -126,8 +126,8 @@ export default function Cadastro({ navigation }) {
         handlerRegister();
         setIsLoading(false);
         console.log('Cadastrado com sucesso! \n ' + res.user.uid);
-        setModalTitle('Sucesso');
-        setModalMsg("Usuário cadastrado com sucesso!");
+        setModalTitle(t("sucesso"));
+        setModalMsg(t("usuario cadastrado com sucesso"));
         setNavigationPage("Login");
         setModalVisible(true);
       }
@@ -138,15 +138,15 @@ export default function Cadastro({ navigation }) {
       //se email estiver existente 
         
       if (error.code === 'auth/email-already-in-use') {
-        setModalMsg("Este e-mail já está em uso. Tente outro e-mail.");
+        setModalMsg(t("este e-mail ja esta em uso. tente outro e-mail."));
       
       } else if (error.code === 'auth/invalid-email') {
-        setModalMsg("O e-mail fornecido é inválido. Por favor, insira um e-mail válido.");
+        setModalMsg(t("O e-mail fornecido é inválido. Por favor, insira um e-mail válido."));
         console.log(error.code )
       }else if(error.code === 'auth/weak-password') {
-        setModalMsg("A senha deve ter pelo menos 6 caracteres.");
+        setModalMsg(t("A senha deve ter pelo menos 6 caracteres."));
       } else {
-        setModalMsg("Não foi possível realizar o cadastro. Tente novamente.");
+        setModalMsg(t("Não foi possível realizar o cadastro. Tente novamente."));
       }
       setModalVisible(true);
     }

@@ -30,7 +30,7 @@ const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoa
                         <Text style={styles.message}>{modalMsg}</Text>
                         <Pressable onPress={hideMessage}
                             style={styles.buttonReg}>
-                            <Text style={styles.buttonText}>Fechar</Text>
+                            <Text style={styles.buttonText}>{t("fechar")}</Text>
                         </Pressable>
                     </View>
                 </View>

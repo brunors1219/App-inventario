@@ -22,9 +22,9 @@ export default function ResetPasswordScreen({ navigation }) {
             await sendPasswordResetEmail(auth, email);
             setIsLoading(true);
             console.log("E-mail de redefinição de senha enviado com sucesso.");
-            setModalTitle('Sucesso');
+            setModalTitle(t('Sucesso'));
             setModalVisible(true)
-            setModalMsg("Um e-mail de redefinição de senha foi enviado para o endereço informado.")
+            setModalMsg(t("Um e-mail de redefinição de senha foi enviado para o endereço informado."))
             
     
         } catch (error) {
@@ -47,9 +47,9 @@ export default function ResetPasswordScreen({ navigation }) {
     const handleResetPassword = () => {
         setIsLoading(true);
         if (!email) {
-            setModalTitle('Erro Email');
+            setModalTitle(t('Erro Email'));
             setModalVisible(true)
-            setModalMsg("Por favor, insira um endereço de e-mail!")
+            setModalMsg(t("Por favor, insira um endereço de email"))
             setIsLoading(false);
             return
         } else {
@@ -63,9 +63,9 @@ export default function ResetPasswordScreen({ navigation }) {
         <View style={styles.container}>
             <View style={styles.box}>
                 <Image source={require('../assets/logo.png')} style={styles.image} />
-                <Text style={styles.title}>Digite email para redefinição da senha: </Text>
+                <Text style={styles.title}>{t("Digite email para redefinição da senha")} </Text>
                 <TextInput
-                    placeholder="Digite seu e-mail"
+                    placeholder={t("digite seu email")}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -87,7 +87,7 @@ export default function ResetPasswordScreen({ navigation }) {
                             color: 'white',
                             fontWeight: 900,
                             padding: 15
-                        }}>Enviar</Text>
+                        }}>{t("enviar")}</Text>
                     )}
                 </Pressable>
             </View>

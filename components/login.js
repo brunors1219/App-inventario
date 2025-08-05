@@ -30,17 +30,17 @@ export default function Login({ navigation }) {
   async function handleLogin() {
     
     if (!email) {
-      setModalTitle('Erro Email');
+      setModalTitle(t('Erro Email'));
       setModalVisible(true)
-      setModalMsg("Informe um email!")
+      setModalMsg(t("Informe um email"))
     
       return
     }
 
     if (!password) {
-      setModalTitle('Erro Senha');
+      setModalTitle(t('Erro Senha'));
       setModalVisible(true)
-      setModalMsg("Informe uma senha de 6 números!")
+      setModalMsg(t("Informe uma senha de 6 caracteres"))
       return
     }
     setIsLoading(true);
@@ -78,14 +78,14 @@ export default function Login({ navigation }) {
     } catch (error) {
       setIsLoading(false);
       if (error.code === 'auth/invalid-credential') {
-        setModalTitle("Erro");
-        setModalMsg("Credencial inválida. Por favor, verifique suas informações.");
+        setModalTitle(t("Erro"));
+        setModalMsg(t("Credencial inválida. Por favor, verifique suas informações."));
         setModalVisible(true);
     
         
       } else {
         // Pode adicionar mais verificações ou mensagens de erro para outros códigos
-        setModalMsg("Erro de autenticação. Tente novamente.");
+        setModalMsg(t("Erro de autenticação. Tente novamente."));
         setModalVisible(true);
        
       }
@@ -96,7 +96,7 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <View style={styles.box}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
-        <Text style={styles.title}>{t("entrar")}</Text>
+        <Text style={styles.title}>{t("login")}</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
