@@ -58,9 +58,25 @@
   "Erro de autenticação. Tente novamente.": "Error de autenticación. Inténtalo de nuevo.",
   "Erro Email": "Error de Correo Electrónico",
   "Erro Senha": "Error de Contraseña",
-  "Por favor, insira um endereço de e-mail": "¡Por favor, ingrese una dirección de correo electrónico!",
+  "Por favor, insira um endereço de email": "¡Por favor, ingrese una dirección de correo electrónico!",
   "Digite email para redefinição da senha": "Ingrese el correo electrónico para la redefinición de la contraseña:",
   "digite seu email": "Ingrese su correo electrónico",
-  "fechar": "Cerrar"
+  "fechar": "Cerrar",
+  "Usuário não encontrado": "Usuario no encontrado",
+  "O e-mail fornecido é inválido": "El correo electrónico proporcionado es inválido",
+  "Ocorreu um erro. Tente novamente": "Ocurrió un error. Inténtalo de nuevo.",
+  "Informe a posição": "¡Por favor, ingrese la posición!",
+  "Informe o PN": "¡Por favor, ingrese el PN!",
+  "Posição inválida": "Posición inválida",
+  "A posição não existe no armazém.": "La posición no existe en el almacén.",
+  "Digite primeiro a POSIÇÃO": "Por favor, ingrese primero la POSICIÓN",
+  "Ação": "Acción",
+  "É necessário selecionar a Ação ADICIONAR ou ALTERAR": "Es necesario seleccionar la acción AÑADIR o MODIFICAR",
+  "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!": "El PN existe, pero no es de esta posición. Para estar seguro del PN, es necesario ingresarlo una vez más!",
+  "PN inválido": "PN inválido",
+  "A PN não existe no cadastro. Acione o time de suporte!": "El PN no existe en el registro. ¡Contacta al equipo de soporte!",
+  "PN fora locação": "PN fuera de ubicación",
+  "Bloqueio": "Bloqueo",
+  "Posição já foi encerrada não pode mais ser alterada!": "¡La posición ya ha sido finalizada y no puede ser modificada más!"
 }
 

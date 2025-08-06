@@ -31,14 +31,14 @@ export default function ResetPasswordScreen({ navigation }) {
             console.error("Erro ao enviar e-mail de redefinição de senha:", error);
             switch (error.code) {
                 case 'auth/user-not-found':
-                    alert("Usuário não encontrado.");
+                    alert(t("Usuário não encontrado"));
                     
                     break;
                 case 'auth/invalid-email':
-                    alert("O e-mail fornecido é inválido.");
+                    alert(t("O e-mail fornecido é inválido"));
                     break;
                 default:
-                    alert("Ocorreu um erro. Tente novamente.");
+                    alert(t("Ocorreu um erro. Tente novamente"));
             }
         }
     }

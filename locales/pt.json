@@ -62,5 +62,21 @@
   "Digite email para redefinição da senha": "Digite o e-mail para redefinição da senha:",
   "Por favor, insira um endereço de email": "Por favor, insira um endereço de e-mail!",
   "digite seu email": "Digite seu e-mail",
-  "fechar": "Fechar"
+  "fechar": "Fechar",
+  "Usuário não encontrado": "Usuário não encontrado",
+  "O e-mail fornecido é inválido": "O e-mail fornecido é inválido",
+  "Ocorreu um erro. Tente novamente": "Ocorreu um erro. Tente novamente.",
+  "Informe a posição": "Informe a posição!",
+  "Informe o PN": "Informe o PN!",
+  "É necessário selecionar a Ação ADICIONAR ou ALTERAR": "É necessário selecionar a Ação ADICIONAR ou ALTERAR",
+  "Posição inválida": "Posição inválida",
+  "A posição não existe no armazém.": "A posição não existe no armazém.",
+  "Digite primeiro a POSIÇÃO": "Digite primeiro a POSIÇÃO",
+  "Ação": "Ação",
+  "PN inválido": "PN inválido",
+  "A PN não existe no cadastro. Acione o time de suporte!": "A PN não existe no cadastro. Acione o time de suporte!",
+  "PN fora locação": "PN fora locação",
+  "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!": "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!",
+  "Bloqueio": "Bloqueio",
+  "Posição já foi encerrada não pode mais ser alterada!": "Posição já foi encerrada não pode mais ser alterada!"
 }

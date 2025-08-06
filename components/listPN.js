@@ -80,8 +80,8 @@ export default function ListPn({ navigation }) {
 
         if (item.status === "Encerrado") {
             setModalVisible(true)
-            setModalTitle("Bloqueio")
-            setModalMsg("Posição já foi encerrada não pode mais ser alterada!")
+            setModalTitle(t("Bloqueio"))
+            setModalMsg(t("Posição já foi encerrada não pode mais ser alterada!"))
         } else {
             const data = {
                 "pn" : item.PN,

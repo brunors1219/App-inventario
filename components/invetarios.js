@@ -206,7 +206,7 @@ export default function InventarioS({ navigation }) {
         if (!qty || isNaN(qty) || Number(qty) <= 0) {
             setNavigationPage('')
             setModalVisible(true)
-            setModalMsg("Informe uma Quantidade válida!")
+            setModalMsg(t("Informe uma Quantidade válida!"))
             focusTextInputQty();
             setIsLoadingRegister(false);
             return
@@ -215,14 +215,14 @@ export default function InventarioS({ navigation }) {
         if (!position) {
             setNavigationPage("")
             setModalVisible(true)
-            setModalMsg("Informe a Posição!")
+            setModalMsg(t("Informe a Posição!"))
             focusTextInputPosition();
             return
         }
         if (!pn) {
             setNavigationPage("")
             setModalVisible(true)
-            setModalMsg("Informe o PN!")
+            setModalMsg(t("Informe o PN!"))
             focusTextInputPN();
             return
         } 
@@ -233,7 +233,7 @@ export default function InventarioS({ navigation }) {
 
                 setNavigationPage("")
                 setModalVisible(true)
-                setModalMsg("É necessário selecionar a Ação ADICIONAR ou ALTERAR")
+                setModalMsg(t("É necessário selecionar a Ação ADICIONAR ou ALTERAR"))
                 
                 return
             }
@@ -301,8 +301,8 @@ export default function InventarioS({ navigation }) {
             focusTextInputPN();
         } else {
             setNavigationPage('');
-            setModalTitle('Posição inválida');
-            setModalMsg('A posição não existe no armazém.');
+            setModalTitle(t('Posição inválida'));
+            setModalMsg(t('A posição não existe no armazém.'));
             setModalVisible(true);
             setPosition("");
             focusTextInputPosition();
@@ -317,8 +317,8 @@ export default function InventarioS({ navigation }) {
 
         if (position === "") {
             setNavigationPage('');
-            setModalTitle('Ação');
-            setModalMsg('Digite primeiro a POSIÇÃO');
+            setModalTitle(t('Ação'));
+            setModalMsg(t('Digite primeiro a POSIÇÃO'));
             setModalVisible(true);
             setIsLoadingEnd(false);
             setIsLoadingRegister(false);
@@ -339,8 +339,8 @@ export default function InventarioS({ navigation }) {
         _pnExist = _pn.length > 0
         if (!_pnExist) {
             setNavigationPage('');
-            setModalTitle('PN inválido');
-            setModalMsg('A PN não existe no cadastro. Acione o time de suporte!' + 'Rec:' + recoverCamera + " pn :" + pn);
+            setModalTitle(t('PN inválido'));
+            setModalMsg(t('A PN não existe no cadastro. Acione o time de suporte!') + 'Rec:' + recoverCamera + " pn :" + pn);
             setModalVisible(true);
             setPN("");
             focusTextInputPN();
@@ -372,8 +372,8 @@ export default function InventarioS({ navigation }) {
         if (!_pnExistPosition) {
             if (qtyKey == 0 || PNKey != _pn[0].PN) {
                 setNavigationPage('');
-                setModalTitle('PN fora locação');
-                setModalMsg('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!');
+                setModalTitle(t('PN fora locação'));
+                setModalMsg(t('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!'));
                 setModalVisible(true);
                 setQtyKey(1);
                 setPNKey(_pn[0].PN)
