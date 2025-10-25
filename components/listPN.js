@@ -174,12 +174,10 @@ export default function ListPn({ navigation }) {
 
             <FlatList
                 data={filteredData}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.PN ? item.PN : String(item.id) + String(item.Position)}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        {/* {isChecked || (!isChecked && !item.Qty && item.QtyOrigin > 0)
-                            ? */}
-                        <View key={item.PN}
+                        <View
                             style={{
                                 backgroundColor: item.Qty ? '#ccffcc' : '#f9f9f9',
                                 alignItems: 'flex-start',
@@ -234,8 +232,6 @@ export default function ListPn({ navigation }) {
 
                             </View>
                         </View>
-                        {/* : null
-                        } */}
                     </TouchableOpacity>
                 )}
             // refreshControl={

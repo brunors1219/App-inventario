@@ -27,8 +27,8 @@ export default function InventarioS({ navigation }) {
     const [description, setDescription] = useState(route.params?.description)
     const [pn, setPN] = useState(route.params?.pn)
     const [qty, setQty] = useState(route.params?.qty)
-    const [positions, setPositions] = useState("")
-    const [pns, setPNs] = useState("")
+    const [positions, setPositions] = useState([]) // was ""
+    const [pns, setPNs] = useState([]) // was ""
     const [score, setScore] = useState(route.params?.score)
     const [isLoadingRegister, setIsLoadingRegister] = useState(false);
     const [isLoadingEnd, setIsLoadingEnd] = useState(false);
@@ -291,13 +291,15 @@ export default function InventarioS({ navigation }) {
     }
 
     const handleBlurPosition = () => {
-
         if (!recoverCamera) recoverCamera = ""
 
         // Verifica se a posição existe no vetor
-        if (position === "" && recoverCamera == "") return;
+        if (((position ?? "") === "") && recoverCamera == "") return;
 
-        if (positions.includes(position.toUpperCase()) || positions.includes(recoverCamera.toUpperCase())) {
+        const posValue = (position ?? "").toUpperCase();
+        const recoverValue = (recoverCamera ?? "").toUpperCase();
+
+        if (positions.includes(posValue) || positions.includes(recoverValue)) {
             focusTextInputPN();
         } else {
             setNavigationPage('');
@@ -307,7 +309,6 @@ export default function InventarioS({ navigation }) {
             setPosition("");
             focusTextInputPosition();
         }
-
         recoverCamera = ""
     };
 
@@ -315,7 +316,7 @@ export default function InventarioS({ navigation }) {
         
         if (modalVisible) return;
 
-        if (position === "") {
+        if ((position ?? "") === "") {
             setNavigationPage('');
             setModalTitle(t('Ação'));
             setModalMsg(t('Digite primeiro a POSIÇÃO'));
@@ -326,17 +327,18 @@ export default function InventarioS({ navigation }) {
             return;
         }
         
-        if (pn === "" && recoverCamera == "") return;
+        if ((pn ?? "") === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
-        _pn = ! pns ? null : pns.filter(f => f.PN.toUpperCase() == pn.toUpperCase()
-            || f.PN.toUpperCase() == recoverCamera.toUpperCase()
-            || f.PNSimple.toUpperCase() == pn.toUpperCase()
-            || f.PNSimple.toUpperCase() == recoverCamera.toUpperCase()
-            || f.PN.toUpperCase() == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/)
+        const _pn = !pns ? [] : pns.filter(f =>
+            ((f.PN ?? "").toUpperCase() == (pn ?? "").toUpperCase())
+            || ((f.PN ?? "").toUpperCase() == (recoverCamera ?? "").toUpperCase())
+            || ((f.PNSimple ?? "").toUpperCase() == (pn ?? "").toUpperCase())
+            || ((f.PNSimple ?? "").toUpperCase() == (recoverCamera ?? "").toUpperCase())
+            || ((f.PN ?? "").toUpperCase() == ((recoverCamera ?? "").match(/\d{3}\.\d{4}-\d{2}/)))
         )
 
-        _pnExist = _pn.length > 0
+        const _pnExist = _pn && _pn.length > 0
         if (!_pnExist) {
             setNavigationPage('');
             setModalTitle(t('PN inválido'));
@@ -347,26 +349,41 @@ export default function InventarioS({ navigation }) {
             return;
         }
 
-        if (recoverCamera!="") {
-            console.log("a", recoverCamera!="")
-            _pnExistPosition = pns.filter(f => (f.PN == recoverCamera.toUpperCase() 
-                                                || f.PNSimple == recoverCamera.toUpperCase()
-                                                || f.PN == recoverCamera.match(/\d{3}\.\d{4}-\d{2}/) )
-                                                && (f.Position == position.toUpperCase()
-                                                || (f.PositionAux ? f.PositionAux.includes(position.toUpperCase()) : true)
-                                                )).length > 0
-        } else {
-            console.log("b", pn, position)
-            _pnExistPosition = pns.filter(f => (f.PN == pn.toUpperCase() 
-                                                || f.PNSimple == pn.toUpperCase() 
-                                                || f.PN == pn.match(/\d{3}\.\d{4}-\d{2}/))
-                                                && (f.Position == position.toUpperCase()
-                                                || (f.PositionAux ? f.PositionAux.includes(position.toUpperCase()) : true)
-                                                )).length > 0
+        // --- substitui lógica frágil por verificação robusta de PN x posição ---
+        const normalize = s => (s ?? "").toString().toUpperCase();
+        const posUpper = normalize(position);
+        const valueToCheck = normalize(recoverCamera !== "" ? recoverCamera : pn);
+
+        const extractFormatted = v => {
+            const m = v.match(/\d{3}\.\d{4}-\d{2}/);
+            return m ? m[0].toUpperCase() : null;
+        }
+        const formattedFromValue = extractFormatted(valueToCheck);
+
+        const pnMatchesValue = (f) => {
+            const fPN = normalize(f.PN);
+            const fPNSimple = normalize(f.PNSimple);
+            if (formattedFromValue) {
+                return fPN === formattedFromValue || fPNSimple === formattedFromValue;
+            }
+            return fPN === valueToCheck || fPNSimple === valueToCheck;
         }
 
-        setPN(_pn[0].PN)
+        const positionMatches = (f) => {
+            const fPos = normalize(f.Position);
+            if (fPos === posUpper) return true;
+            if (f.PositionAux) {
+                const auxArr = f.PositionAux.split(',').map(p => p.trim().toUpperCase());
+                return auxArr.includes(posUpper);
+            }
+            return false;
+        }
 
+        const _pnExistPosition = pns.some(f => pnMatchesValue(f) && positionMatches(f));
+        // --- fim da nova lógica ---
+
+        // garante que seja exibido o PN padronizado do cadastro
+        setPN(_pn[0].PN)
         recoverCamera = ""
 
         if (!_pnExistPosition) {
@@ -384,7 +401,6 @@ export default function InventarioS({ navigation }) {
             }
         }
 
-        // console.log(_pn);
         setDescription(_pn[0].Description)
         setScore(_pn[0].Score)
         focusTextInputQty();
