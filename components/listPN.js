@@ -112,8 +112,10 @@ export default function ListPn({ navigation }) {
         )
         : data.filter(item => (!isChecked && !item.Qty) || isChecked );
     
-    const totalItems = data.filter(item => item.QtyOrigin >0 || item.Qty || item.Score > 1).length;
-    const pendingItems = data.filter(item => !item.Qty && (item.QtyOrigin > 0 || item.Score > 1)).length;
+    console.log(data);
+
+    const totalItems = data.length;
+    const pendingItems = data.filter(item => !item.Qty).length;
     const countedItems = data.filter(item => item.Qty).length;
 
     const chkPendingPNSet = () => {

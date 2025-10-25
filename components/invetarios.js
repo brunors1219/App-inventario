@@ -279,6 +279,7 @@ export default function InventarioS({ navigation }) {
             setIsUpdate(false)
             setNavigationPage('')
             setModalVisible(true);
+            navigation.navigate("ListPn",  { position: position });
         }
 
         setQty('');
@@ -326,7 +327,7 @@ export default function InventarioS({ navigation }) {
             cancel();
             return;
         }
-        
+
         if ((pn ?? "") === "" && recoverCamera == "") return;
 
         // Verifica se a PN existe no cadastro
@@ -378,15 +379,19 @@ export default function InventarioS({ navigation }) {
             }
             return false;
         }
+        //const _pnExistPosition = pns.some(f => pnMatchesValue(f) && positionMatches(f));
 
-        const _pnExistPosition = pns.some(f => pnMatchesValue(f) && positionMatches(f));
+        const _pnExistPosition = pns.filter(f =>
+            (f.PN ?? "").toUpperCase() == (_pn[0].PN ?? "").toUpperCase()
+            && (f.Position ?? "").toUpperCase() == (position ?? "").toUpperCase()
+        )
         // --- fim da nova lógica ---
-
+        console.log(_pnExistPosition, _pnExistPosition.length == 0)
         // garante que seja exibido o PN padronizado do cadastro
         setPN(_pn[0].PN)
         recoverCamera = ""
 
-        if (!_pnExistPosition) {
+        if (!_pnExistPosition || _pnExistPosition.length == 0) {
             if (qtyKey == 0 || PNKey != _pn[0].PN) {
                 setNavigationPage('');
                 setModalTitle(t('PN fora locação'));
