@@ -216,8 +216,8 @@ export default function InventarioS({ navigation }) {
             setNavigationPage("")
             setModalVisible(true)
             setModalMsg(t("Informe a Posição!"))
-            focusTextInputPosition();
-            
+            focusTextInputPosition();            
+            setIsLoadingRegister(false);
             return
         }
         if (!pn) {
@@ -225,6 +225,7 @@ export default function InventarioS({ navigation }) {
             setModalVisible(true)
             setModalMsg(t("Informe o PN!"))
             focusTextInputPN();
+            setIsLoadingRegister(false);
             return
         } 
 
@@ -235,7 +236,7 @@ export default function InventarioS({ navigation }) {
                 setNavigationPage("")
                 setModalVisible(true)
                 setModalMsg(t("É necessário selecionar a Ação ADICIONAR ou ALTERAR"))
-                
+                setIsLoadingRegister(false);
                 return
             }
         }
@@ -273,14 +274,15 @@ export default function InventarioS({ navigation }) {
             if (res.status===500) setIsUpdate(true)
             setNavigationPage('')
             setModalVisible(true);
+            setIsLoadingRegister(false);
             return
         } else {
             setModalTitle('Informação')
             setModalType('success')
             setIsUpdate(false)
             setNavigationPage('')
-            setModalVisible(true);
-            
+            setModalVisible(true);            
+            setIsLoadingRegister(false);
         }
 
         setQty('');
@@ -290,7 +292,6 @@ export default function InventarioS({ navigation }) {
         focusTextInputPN();
         setIsUpdate(false);
         setForceUpdate(true);
-
         navigation.navigate("ListPn",  { position: position });
     }
 
