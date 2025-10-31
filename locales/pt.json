@@ -78,5 +78,7 @@
   "PN fora locação": "PN fora locação",
   "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!": "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!",
   "Bloqueio": "Bloqueio",
-  "Posição já foi encerrada não pode mais ser alterada!": "Posição já foi encerrada não pode mais ser alterada!"
+  "Posição já foi encerrada não pode mais ser alterada!": "Posição já foi encerrada não pode mais ser alterada!",
+  "UserWithoutAccess" : "Usuário sem empresa ou inventário associado. Contate o administrador.",
+  "Erro de Login" : "Erro de Login"
 }

@@ -3,7 +3,14 @@ import { View, Text, Pressable, StyleSheet, Modal } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { useTranslation } from 'react-i18next';
 
-const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoading, navigation, navigationPage }) => {
+const MyModal = ({ modalVisible, 
+                    setModalVisible, 
+                    modalTitle, 
+                    modalMsg, 
+                    modalType,
+                    setIsLoading, 
+                    navigation, 
+                    navigationPage }) => {
 
     const { t } = useTranslation();
 
@@ -16,6 +23,13 @@ const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoa
         }
     };
 
+    const backgroundColor =
+        modalType === "alert"
+            ? styles.modalContentAlert
+            : modalType === "error"
+                ? styles.modalContentError
+                : styles.modalContentSuccess
+
     return (
         <Modal
             animationType="fade"
@@ -24,8 +38,8 @@ const MyModal = ({ modalVisible, setModalVisible, modalTitle, modalMsg, setIsLoa
             onRequestClose={hideMessage}
         >
             <BlurView intensity={150} style={StyleSheet.absoluteFill}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
+                <View style={styles.modalContainer }>
+                    <View style={[styles.modalContent, backgroundColor]}>
                         <Text style={styles.title}>{modalTitle}</Text>
                         <Text style={styles.message}>{modalMsg}</Text>
                         <Pressable onPress={hideMessage}
@@ -54,6 +68,16 @@ const styles = StyleSheet.create({
         elevation: 5,
         borderRadius: 10,
     },
+    modalContentError: {
+        backgroundColor: 'rgba(255, 0, 0, 0.2)'
+    },
+    modalContentSuccess: {
+        backgroundColor: 'white'
+    },
+    modalContentAlert: {
+        backgroundColor: 'rgba(255, 165, 0, 0.2)'
+    },
+
     modalContainer: {
         flex: 1,
         justifyContent: 'center',

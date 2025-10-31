@@ -80,5 +80,7 @@
   "A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!": "The PN exists, but it is not for this position. To confirm the PN, you need to enter it again!",
   "PN fora locação": "PN out of location",
   "Bloqueio": "Lock",
-  "Posição já foi encerrada não pode mais ser alterada!": "The position has already been closed and cannot be changed anymore!"
+  "Posição já foi encerrada não pode mais ser alterada!": "The position has already been closed and cannot be changed anymore!",
+  "UserWithoutAccess" : "User without a company or associated inventory. Contact the administrator.",
+  "Erro de Login" : "Login Error"
 }

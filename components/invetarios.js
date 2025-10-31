@@ -217,6 +217,7 @@ export default function InventarioS({ navigation }) {
             setModalVisible(true)
             setModalMsg(t("Informe a Posição!"))
             focusTextInputPosition();
+            
             return
         }
         if (!pn) {
@@ -279,7 +280,7 @@ export default function InventarioS({ navigation }) {
             setIsUpdate(false)
             setNavigationPage('')
             setModalVisible(true);
-            navigation.navigate("ListPn",  { position: position });
+            
         }
 
         setQty('');
@@ -289,6 +290,8 @@ export default function InventarioS({ navigation }) {
         focusTextInputPN();
         setIsUpdate(false);
         setForceUpdate(true);
+
+        navigation.navigate("ListPn",  { position: position });
     }
 
     const handleBlurPosition = () => {
@@ -305,6 +308,7 @@ export default function InventarioS({ navigation }) {
         } else {
             setNavigationPage('');
             setModalTitle(t('Posição inválida'));
+            setModalType('error')
             setModalMsg(t('A posição não existe no armazém.'));
             setModalVisible(true);
             setPosition("");
@@ -320,6 +324,7 @@ export default function InventarioS({ navigation }) {
         if ((position ?? "") === "") {
             setNavigationPage('');
             setModalTitle(t('Ação'));
+            setModalType('alert')
             setModalMsg(t('Digite primeiro a POSIÇÃO'));
             setModalVisible(true);
             setIsLoadingEnd(false);
@@ -343,6 +348,7 @@ export default function InventarioS({ navigation }) {
         if (!_pnExist) {
             setNavigationPage('');
             setModalTitle(t('PN inválido'));
+            setModalType('error')
             setModalMsg(t('A PN não existe no cadastro. Acione o time de suporte!') + 'Rec:' + recoverCamera + " pn :" + pn);
             setModalVisible(true);
             setPN("");
@@ -395,6 +401,7 @@ export default function InventarioS({ navigation }) {
             if (qtyKey == 0 || PNKey != _pn[0].PN) {
                 setNavigationPage('');
                 setModalTitle(t('PN fora locação'));
+                setModalType('alert')
                 setModalMsg(t('A PN existe, mas não é dessa posição. Para ter certeza do PN é necessário digitar ele mais uma vez!'));
                 setModalVisible(true);
                 setQtyKey(1);
@@ -755,6 +762,7 @@ export default function InventarioS({ navigation }) {
             <MyModal
                 modalVisible={modalVisible}
                 modalTitle={modalTitle}
+                modalType={modalType}
                 modalMsg={modalMsg}
                 setModalVisible={setModalVisible}
                 setIsLoading={isLoadingRegister ? setIsLoadingRegister : setIsLoadingEnd}

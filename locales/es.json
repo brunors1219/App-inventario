@@ -77,6 +77,8 @@
   "A PN não existe no cadastro. Acione o time de suporte!": "El PN no existe en el registro. ¡Contacta al equipo de soporte!",
   "PN fora locação": "PN fuera de ubicación",
   "Bloqueio": "Bloqueo",
-  "Posição já foi encerrada não pode mais ser alterada!": "¡La posición ya ha sido finalizada y no puede ser modificada más!"
+  "Posição já foi encerrada não pode mais ser alterada!": "¡La posición ya ha sido finalizada y no puede ser modificada más!",
+  "UserWithoutAccess" : "Usuario sin empresa ni inventario asociado. Contacte con el administrador.",
+  "Erro de Login" : "Erro de Login"
 }
 

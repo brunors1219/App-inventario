@@ -59,9 +59,14 @@ export default function Login({ navigation }) {
 
         if (data.length>1){
           //Here we need will implemented a new screen to user choige the company and inventory to operation
-        }else{          
+        }else if (data[0].IdCompany > 0) {          
           setIdCompany(data[0].IdCompany)
           setIdInventory(data[0].IdInventory)
+        }else {
+          setModalTitle(t("Erro de Login"));
+          setModalMsg(t("UserWithoutAccess"));
+          setModalVisible(true);
+          return
         }
       } catch (error) {
         setUserId('');

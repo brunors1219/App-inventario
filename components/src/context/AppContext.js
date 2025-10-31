@@ -18,9 +18,11 @@ export const AppProvider = ({ children }) => {
 
   const [gENVIRONMENT, setgENVIRONMENT] = useState(ENVIRONMENT);
   const [gUSER_DEFAULT, setgUSER_DEFAULT] = useState(USER_DEFAULT);
-  const [gPWD_DEFAUT, setgPWD_DEFAUT] = useState(PWD_DEFAUT);
+  const [gPWD_DEFAUT, setgPWD_DEFAUT] = useState(PWD_DEFAUT);  
 
   const [URL, setURL] = useState(ENVIRONMENT=="DEV" ? API_URL_DEV : API_URL_PROD)
+
+  // const [URL, setURL] = useState("https://afd1d83c3d55.ngrok-free.app")
 
   const [forceUpdate, setForceUpdate] = useState(false)
 
