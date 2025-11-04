@@ -146,7 +146,7 @@ export default function InventarioS({ navigation }) {
    
 
     const ZerarContagem = async () => {
-
+        if (isLoadingEnd) return; // evita duplo clique
         setIsLoadingEnd(true);
 
         if (!position) {
@@ -196,106 +196,113 @@ export default function InventarioS({ navigation }) {
             setModalVisible(true);
         }
 
+        setIsLoadingEnd(false); // libera botão após finalizar
     }
 
     const register = async () => {
-    
+        if (isLoadingRegister) return;
         setIsLoadingRegister(true);
 
-        // Verifica se qty é um número válido e positivo
-        if (!qty || isNaN(qty) || Number(qty) <= 0) {
-            setNavigationPage('')
-            setModalVisible(true)
-            setModalMsg(t("Informe uma Quantidade válida!"))
-            focusTextInputQty();
-            setIsLoadingRegister(false);
-            return
-        }
-
-        if (!position) {
-            setNavigationPage("")
-            setModalVisible(true)
-            setModalMsg(t("Informe a Posição!"))
-            focusTextInputPosition();            
-            setIsLoadingRegister(false);
-            return
-        }
-        if (!pn) {
-            setNavigationPage("")
-            setModalVisible(true)
-            setModalMsg(t("Informe o PN!"))
-            focusTextInputPN();
-            setIsLoadingRegister(false);
-            return
-        } 
-
-        if (isUpdate) {
-           
-            if (!chkIncrease && !chkUpdate) {
-
-                setNavigationPage("")
+        try {
+            // Verifica se qty é um número válido e positivo
+            if (!qty || isNaN(qty) || Number(qty) <= 0) {
+                setNavigationPage('')
                 setModalVisible(true)
-                setModalMsg(t("É necessário selecionar a Ação ADICIONAR ou ALTERAR"))
+                setModalMsg(t("Informe uma Quantidade válida!"))
+                focusTextInputQty();
                 setIsLoadingRegister(false);
                 return
             }
-        }
 
-        const body = {}
+            if (!position) {
+                setNavigationPage("")
+                setModalVisible(true)
+                setModalMsg(t("Informe a Posição!"))
+                focusTextInputPosition();            
+                setIsLoadingRegister(false);
+                return
+            }
+            if (!pn) {
+                setNavigationPage("")
+                setModalVisible(true)
+                setModalMsg(t("Informe o PN!"))
+                focusTextInputPN();
+                setIsLoadingRegister(false);
+                return
+            } 
 
-        body.idCompany = idCompany
-        body.idInventory = idInventory
-        body.counter = true
-        body.PN = pn
-        body.Position = position
-        body.Qty = Number(qty) // Garante que seja número
-        body.User_Id = userId
-        body.kindUpdate = chkIncrease ? "increase" : "update"
+            if (isUpdate) {
+               
+                if (!chkIncrease && !chkUpdate) {
 
-        console.log(body);
+                    setNavigationPage("")
+                    setModalVisible(true)
+                    setModalMsg(t("É necessário selecionar a Ação ADICIONAR ou ALTERAR"))
+                    setIsLoadingRegister(false);
+                    return
+                }
+            }
 
-        const res = await fetch(`${URL}/api/invproducts`,
-            {
+            const body = {}
+
+            body.idCompany = idCompany
+            body.idInventory = idInventory
+            body.counter = true
+            body.PN = pn
+            body.Position = position
+            body.Qty = Number(qty) // Garante que seja número
+            body.User_Id = userId
+            body.kindUpdate = chkIncrease ? "increase" : "update"
+
+            console.log(body);
+
+            const res = await fetch(`${URL}/api/invproducts`, {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                //make sure to serialize your JSON body
                 body: JSON.stringify(body)
             });
-        const data = await res.json();
-        
-        setModalMsg(data.message);
+            const data = await res.json();
 
-        if (!res.ok) {
-            setModalTitle('Alerta')
-            setModalType('error')
-            if (res.status===500) setIsUpdate(true)
-            setNavigationPage('')
+            setModalMsg(data.message);
+
+            if (!res.ok) {
+                setModalTitle('Alerta');
+                setModalType('error');
+                if (res.status === 500) setIsUpdate(true);
+                setNavigationPage('');
+                setModalVisible(true);
+            } else {
+                setModalTitle('Informação');
+                setModalType('success');
+                setIsUpdate(false);
+                setNavigationPage('');
+                setModalVisible(true);
+                // Remova a navegação automática aqui para evitar travamento
+                // navigation.navigate("ListPn", { position: position });
+            }
+
+            setQty('');
+            setQtyKey(0);
+            setPN('');
+            setDescription('');
+            focusTextInputPN();
+            setIsUpdate(false);
+            setForceUpdate(true);
+        } catch (e) {
+            setModalTitle('Erro');
+            setModalType('error');
+            setModalMsg('Falha ao registrar. Tente novamente.');
             setModalVisible(true);
-            setIsLoadingRegister(false);
-            return
-        } else {
-            setModalTitle('Informação')
-            setModalType('success')
-            setIsUpdate(false)
-            setNavigationPage('')
-            setModalVisible(true);            
+        } finally {
             setIsLoadingRegister(false);
         }
-
-        setQty('');
-        setQtyKey(0);
-        setPN('');
-        setDescription('');
-        focusTextInputPN();
-        setIsUpdate(false);
-        setForceUpdate(true);
-        navigation.navigate("ListPn",  { position: position });
     }
 
     const handleBlurPosition = () => {
+        if (isLoadingRegister || isLoadingEnd) return; // bloqueia durante loading
         if (!recoverCamera) recoverCamera = ""
 
         // Verifica se a posição existe no vetor
@@ -319,7 +326,8 @@ export default function InventarioS({ navigation }) {
     };
 
     const handleBlurPN = () => {
-        
+        if (isLoadingRegister || isLoadingEnd) return; // bloqueia durante loading
+
         if (modalVisible) return;
 
         if ((position ?? "") === "") {
@@ -357,7 +365,7 @@ export default function InventarioS({ navigation }) {
             return;
         }
 
-        // --- substitui lógica frágil por verificação robusta de PN x posição ---
+        // --- robusta verificação de PN x posição ---
         const normalize = s => (s ?? "").toString().toUpperCase();
         const posUpper = normalize(position);
         const valueToCheck = normalize(recoverCamera !== "" ? recoverCamera : pn);
@@ -386,19 +394,14 @@ export default function InventarioS({ navigation }) {
             }
             return false;
         }
-        //const _pnExistPosition = pns.some(f => pnMatchesValue(f) && positionMatches(f));
 
-        const _pnExistPosition = pns.filter(f =>
-            (f.PN ?? "").toUpperCase() == (_pn[0].PN ?? "").toUpperCase()
-            && (f.Position ?? "").toUpperCase() == (position ?? "").toUpperCase()
-        )
+        const _pnExistPosition = pns.some(f => pnMatchesValue(f) && positionMatches(f));
         // --- fim da nova lógica ---
-        console.log(_pnExistPosition, _pnExistPosition.length == 0)
-        // garante que seja exibido o PN padronizado do cadastro
+
         setPN(_pn[0].PN)
         recoverCamera = ""
 
-        if (!_pnExistPosition || _pnExistPosition.length == 0) {
+        if (!_pnExistPosition) {
             if (qtyKey == 0 || PNKey != _pn[0].PN) {
                 setNavigationPage('');
                 setModalTitle(t('PN fora locação'));
@@ -497,11 +500,12 @@ export default function InventarioS({ navigation }) {
     }
 
     const chkUpdateSet = () => {
+        if (isLoadingRegister || isLoadingEnd) return;
         if (!chkUpdate) setChkIncrease(false);
         setChkUpdate(!chkUpdate);
-
     }
     const chkIncreaseSet = () => {
+        if (isLoadingRegister || isLoadingEnd) return;
         if (!chkIncrease) setChkUpdate(false)
         setChkIncrease(!chkIncrease)
     }

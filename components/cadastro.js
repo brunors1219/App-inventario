@@ -33,15 +33,23 @@ export default function Cadastro({ navigation }) {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        //make sure to serialize your JSON body
         body: JSON.stringify(data)
       });
 
       if (!response.ok) {
-        throw new Error('Falha ao inserir os dados');
+        // tenta ler mensagem de erro do backend
+        let msg = "Falha ao inserir os dados";
+        try {
+          const errJson = await response.json();
+          if (errJson && errJson.message) msg = errJson.message;
+        } catch (e) {}
+        throw new Error(msg);
       }
 
-      const res = await response.json();
+      // só tenta parsear se houver conteúdo
+      const text = await response.text();
+      if (!text) throw new Error("Resposta vazia do servidor");
+      const res = JSON.parse(text);
       return res;
     } catch (error) {
       console.error('Erro:', error);
@@ -56,8 +64,10 @@ export default function Cadastro({ navigation }) {
       const result = await usersApp(data);
       setResponse(result);
       setError(null);
+      return true; // indica sucesso
     } catch (err) {
       setError(err.message);
+      return false; // indica erro
     }
   }
 
@@ -123,11 +133,11 @@ export default function Cadastro({ navigation }) {
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
       if (res) {
-        handlerRegister();
+        const ok = await handlerRegister(); // aguarda cadastro no backend
         setIsLoading(false);
         console.log('Cadastrado com sucesso! \n ' + res.user.uid);
         setModalTitle(t("sucesso"));
-        setModalMsg(t("usuario cadastrado com sucesso"));
+        setModalMsg(ok ? t("usuario cadastrado com sucesso") : t("usuario criado no Firebase, mas não cadastrado no sistema"));
         setNavigationPage("Login");
         setModalVisible(true);
       }

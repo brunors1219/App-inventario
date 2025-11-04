@@ -12,7 +12,7 @@ const LayoutComRodape = ({ children }) => {
         <View style={styles.container}>
             <View style={styles.content}>{children}</View>
             <View style={styles.footer}>
-                <Text>© 2024 By Data Access - v{Constants.expoConfig?.version}</Text>
+                <Text>© 2025 By Data Access - v{Constants.expoConfig?.version}</Text>
             </View>
         </View>
     );
