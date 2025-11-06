@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Pressable, StyleSheet, TextInput, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, StyleSheet, TextInput, Image, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from './src/service/firebase';
 import { AppContext } from "./src/context/AppContext";
@@ -7,26 +7,25 @@ import MyModal from "./myModal";
 import { useTranslation } from 'react-i18next';
 
 export default function Cadastro({ navigation }) {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [permissions, setPermissions] = useState("WAREHOUSEOPERATOR");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
   const [modalTitle, setModalTitle] = useState("");
-  const [modalType, setModalType] = useState("");
-
   const [navigationPage, setNavigationPage] = useState("");
 
-  const { URL } = useContext(AppContext)
-
+  const { URL } = useContext(AppContext);
   const { t } = useTranslation();
-  
+
+  // Função de chamada à API com logs de depuração
   const usersApp = async (data) => {
     try {
+      console.log('[usersApp] POST ->', `${URL}/api/usersApp`, 'payload:', data);
       const response = await fetch(`${URL}/api/usersApp`, {
         method: "POST",
         headers: {
@@ -36,131 +35,163 @@ export default function Cadastro({ navigation }) {
         body: JSON.stringify(data)
       });
 
+      const status = response.status;
+      const text = await response.text();
+      console.log('[usersApp] status:', status, 'body text:', text);
+
       if (!response.ok) {
-        // tenta ler mensagem de erro do backend
-        let msg = "Falha ao inserir os dados";
+        let msg = `Falha ao inserir os dados (status ${status})`;
         try {
-          const errJson = await response.json();
+          const errJson = text ? JSON.parse(text) : null;
           if (errJson && errJson.message) msg = errJson.message;
-        } catch (e) {}
+        } catch (e) {
+          // texto não-json
+          msg = text || msg;
+        }
         throw new Error(msg);
       }
 
-      // só tenta parsear se houver conteúdo
-      const text = await response.text();
-      if (!text) throw new Error("Resposta vazia do servidor");
-      const res = JSON.parse(text);
-      return res;
-    } catch (error) {
-      console.error('Erro:', error);
-      throw error;
-    }
+      if (!text) throw new Error("O servidor não retornou confirmação do cadastro.");
 
+      let res;
+      try {
+        res = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Resposta da API inválida (não é JSON): " + text);
+      }
+
+      return res;
+    } catch (err) {
+      console.error('[usersApp] erro:', err);
+      throw err;
+    }
   };
 
   const handlerRegister = async () => {
     try {
-      const data = { name, email, 'permissions': 'WAREHOUSEOPERATOR' };
+      const data = { name, email, permissions };
+      console.log('[handlerRegister] enviando para API ->', data);
       const result = await usersApp(data);
+      console.log('[handlerRegister] resultado da API ->', result);
       setResponse(result);
       setError(null);
-      return true; // indica sucesso
+
+      return (result && (result.success || result.id || result._id)) ? true : false;
     } catch (err) {
-      setError(err.message);
-      return false; // indica erro
+      console.error('[handlerRegister] erro:', err);
+      setError(err.message || JSON.stringify(err));
+      return false;
     }
-  }
+  };
 
   const sample = async () => {
+    if (!name) {
+      setModalTitle('Erro');
+      setModalMsg('Campo nome vazio para operação em lote. Use o formato: email1,Nome1-email2,Nome2');
+      setModalVisible(true);
+      return;
+    }
 
-    let usersList = name
-    usersList = usersList.split("-")
+    const usersList = name.split("-").map(s => s.trim()).filter(Boolean);
 
-    users = []
-    usersList.map((user) => {
-      userVetor = user.split(",")
-      userNew = {}
-      userNew.nome = userVetor[1]
-      userNew.email = userVetor[0]
-      userNew.senha = "1234567"
-      users.push(userNew)
-    })
+    const users = usersList.map((user) => {
+      const userVetor = user.split(",").map(s => s.trim());
+      return {
+        nome: userVetor[1] || 'SemNome',
+        email: userVetor[0],
+        senha: password || "12345678"
+      };
+    });
 
-    users.map(async (user) => {
+    for (const user of users) {
       try {
+        console.log('[sample] criando no firebase ->', user.email);
         const res = await createUserWithEmailAndPassword(auth, user.email, user.senha);
-
-        if (res) {
-          const data = { name: user.nome, email: user.email, 'permissions': 'WAREHOUSEOPERATOR' };
-          const result = await usersApp(data);
+        console.log('[sample] firebase res ->', res);
+        if (res && res.user) {
+          await usersApp({ name: user.nome, email: user.email, password: user.senha, permissions: 'WAREHOUSEOPERATOR' });
+          console.log('[sample] cadastrado no backend ->', user.email);
+        } else {
+          console.warn('[sample] createUserWithEmailAndPassword não retornou res.user para', user.email, res);
         }
-      } catch (error) {
-        console.log(error.message)
+      } catch (err) {
+        console.error('[sample] erro ao criar usuário', user.email, err);
       }
-    })
+    }
+  };
 
-  }
   async function createUser() {
-
     if (!name) {
       setModalTitle(t("erro Usuario"));
-      setModalVisible(true)
-      setModalMsg(t("informe nome de usuario"))
-      setIsLoading(false);
-      return
+      setModalMsg(t("informe nome de usuario"));
+      setModalVisible(true);
+      return;
     }
 
     if (!email) {
-      setModalTitle(t('erro email'));
-      setModalVisible(true)
-      setModalMsg(t("informe um email"))
-      setIsLoading(false);
-      return
+      setModalTitle(t("erro email"));
+      setModalMsg(t("informe um email"));
+      setModalVisible(true);
+      return;
     }
 
-    if (!password) {
-      setModalTitle(t('erro senha'));
-      setModalVisible(true)
-      setModalMsg(t("informe uma senha de 6 numeros"))
-      setIsLoading(false);
-      return
+    if (!password || password.length < 6) {
+      setModalTitle(t("erro senha"));
+      setModalMsg(t("A senha deve ter pelo menos 6 caracteres."));
+      setModalVisible(true);
+      return;
     }
-
 
     setIsLoading(true);
 
     try {
+      console.log('[createUser] criando no firebase ->', email);
       const res = await createUserWithEmailAndPassword(auth, email, password);
+      console.log('[createUser] firebase res ->', res);
 
-      if (res) {
-        const ok = await handlerRegister(); // aguarda cadastro no backend
+      if (res && res.user) {
+        const ok = await handlerRegister();
         setIsLoading(false);
-        console.log('Cadastrado com sucesso! \n ' + res.user.uid);
+
         setModalTitle(t("sucesso"));
         setModalMsg(ok ? t("usuario cadastrado com sucesso") : t("usuario criado no Firebase, mas não cadastrado no sistema"));
         setNavigationPage("Login");
+        setModalVisible(true);
+      } else {
+        // Caso raro: firebase não retornou user
+        setIsLoading(false);
+        setModalTitle('Erro');
+        const msg = 'Firebase criou a conta mas não retornou dados de usuário (res.user undefined).';
+        console.error('[createUser] ' + msg, res);
+        setModalMsg(msg);
         setModalVisible(true);
       }
     } catch (error) {
       setIsLoading(false);
       setModalTitle('Erro');
+      console.error('[createUser] catch ->', error);
 
-      //se email estiver existente 
-        
-      if (error.code === 'auth/email-already-in-use') {
-        setModalMsg(t("este e-mail ja esta em uso. tente outro e-mail."));
-      
-      } else if (error.code === 'auth/invalid-email') {
-        setModalMsg(t("O e-mail fornecido é inválido. Por favor, insira um e-mail válido."));
-        console.log(error.code )
-      }else if(error.code === 'auth/weak-password') {
-        setModalMsg(t("A senha deve ter pelo menos 6 caracteres."));
-      } else {
-        setModalMsg(t("Não foi possível realizar o cadastro. Tente novamente."));
+      // Mostra mensagem detalhada para debug (mensagem de erro do Firebase)
+      const code = error?.code;
+      const message = error?.message || String(error);
+
+      switch (code) {
+        case 'auth/email-already-in-use':
+          setModalMsg(t("este e-mail ja esta em uso. tente outro e-mail.") + ` (${message})`);
+          break;
+        case 'auth/invalid-email':
+          setModalMsg(t("O e-mail fornecido é inválido.") + ` (${message})`);
+          break;
+        case 'auth/weak-password':
+          setModalMsg(t("A senha deve ter pelo menos 6 caracteres.") + ` (${message})`);
+          break;
+        default:
+          setModalMsg((t("Não foi possível realizar o cadastro. Tente novamente.") + ` (${message})`).slice(0, 1000));
+          break;
       }
+
       setModalVisible(true);
     }
-
   }
 
   return (
@@ -168,70 +199,45 @@ export default function Cadastro({ navigation }) {
       <View style={styles.box}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
         <Text style={styles.title}>{t("cadastro")}</Text>
+
         <TextInput
           placeholder={t("usuario")}
           placeholderTextColor="#313131"
           value={name}
-          onChangeText={value => setName(value)}
-          style={styles.input} />
+          onChangeText={setName}
+          style={styles.input}
+        />
 
         <TextInput
           placeholder="Email"
           placeholderTextColor="#313131"
           value={email}
-          onChangeText={value => setEmail(value)}
-          style={styles.input} />
+          onChangeText={setEmail}
+          style={styles.input}
+        />
 
         <TextInput
           placeholder={t("senha")}
           placeholderTextColor="#313131"
+          secureTextEntry
           value={password}
-          onChangeText={value => setPassword(value)}
-          style={styles.input} />
+          onChangeText={setPassword}
+          style={styles.input}
+        />
 
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
-          <Pressable onPress={() => createUser()}
-            style={({ pressed }) => [
-              styles.button,
-              pressed ? styles.buttonPressed : null,
-            ]}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator size={45} color="#fff" />
-            ) : (
-              <Text style={{
-                fontSize: 20,
-                color: 'white',
-                fontWeight: "900",
-                padding: 15
-              }}>{t("cadastra")}</Text>
-            )}
+        <View style={{ flexDirection: 'row' }}>
+          <Pressable onPress={createUser} style={styles.button} disabled={isLoading}>
+            {isLoading ? <ActivityIndicator size={45} color="#fff" /> :
+              <Text style={styles.btnText}>{t("cadastra")}</Text>
+            }
           </Pressable>
 
-          <Pressable onPress={() => sample()}
-            style={({ pressed }) => [
-              styles.button,
-              pressed ? styles.buttonPressed : null,
-            ]}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator size={45} color="#fff" />
-            ) : (
-              <Text style={{
-                fontSize: 20,
-                color: 'white',
-                fontWeight: "900",
-                padding: 15
-              }}>{t("cad.lote")}</Text>
-            )}
+          <Pressable onPress={sample} style={styles.button} disabled={isLoading}>
+            <Text style={styles.btnText}>{t("cad.lote")}</Text>
           </Pressable>
-
-
         </View>
-
       </View>
+
       <MyModal
         modalVisible={modalVisible}
         modalTitle={modalTitle}
@@ -239,19 +245,12 @@ export default function Cadastro({ navigation }) {
         setModalVisible={setModalVisible}
         navigation={navigation}
         navigationPage={navigationPage}
-      >
-      </MyModal>
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -266,10 +265,8 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 50,
     fontSize: 20,
-    boderColor: "black",
+    borderColor: "black",
     borderWidth: 1,
-    marginBottom: 15,
-    padding: 10,
     borderRadius: 5,
     marginBottom: 20,
     padding: 10,
@@ -278,32 +275,28 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
   },
-
   button: {
     backgroundColor: '#76bc21',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     borderRadius: 10,
-    margin: 15
+    margin: 7,
+    paddingHorizontal: 14,
   },
-
-  buttonPressed: {
-    opacity: 0.7,
+  btnText: {
+    fontSize: 20,
+    color: 'white',
+    fontWeight: "900",
+    padding: 13
   },
-
   box: {
-    width: 350,
+    width: 400,
     justifyContent: 'center',
     alignItems: "center",
-    backgroundColor: '#fff', // Cor de fundo do container
-    borderRadius: 20, // Bordas arredondadas
-    padding: 20, // Espaçamento interno
-    shadowColor: '#000', // Cor da sombra
-    shadowOffset: { width: 0, height: 2 }, // Deslocamento da sombra
-    shadowOpacity: 0.25, // Opacidade da sombra
-    shadowRadius: 3.84, // Raio da sombra
-    elevation: 5, // Elevação (necessário para Android)
-    height: 500,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    elevation: 5,
+    height: 600,
   }
-})
+});
