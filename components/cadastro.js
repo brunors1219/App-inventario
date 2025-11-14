@@ -73,7 +73,10 @@ export default function Cadastro({ navigation }) {
       userNew.nome = userVetor[1]
       userNew.email = userVetor[0]
       userNew.senha = "1234567"
+      
       users.push(userNew)
+
+      //console.log(userNew)
     })
 
     users.map(async (user) => {
