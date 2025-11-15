@@ -325,7 +325,7 @@ export default function InventarioS({ navigation }) {
         recoverCamera = ""
     };
 
-    const handleBlurPN = () => {
+    const handleBlurPN = async () => {
         if (isLoadingRegister || isLoadingEnd) return; // bloqueia durante loading
 
         if (modalVisible) return;
@@ -416,6 +416,15 @@ export default function InventarioS({ navigation }) {
                 return;
             }
         }
+
+        const res = await fetch(`${URL}/api/invproducts?${token}&selection=productPosition&PN=${_pn[0].PN}&position=${position}`)
+        const data = await res.json()
+        if (data && data.length > 0) {
+            setIsUpdate(true);
+            setQty(data[0].Qty.toString());
+        }
+        console.log(data)
+       
 
         setDescription(_pn[0].Description)
         setScore(_pn[0].Score)
