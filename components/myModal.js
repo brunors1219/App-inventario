@@ -39,11 +39,11 @@ const MyModal = ({ modalVisible,
         >
             <BlurView intensity={150} style={StyleSheet.absoluteFill}>
                 <View style={styles.modalContainer }>
-                    <View style={[styles.modalContent, backgroundColor]}>
-                        <Text style={styles.title}>{modalTitle}</Text>
+                    <View style={[styles.modalContent]}>
+                        <Text style={[styles.title, backgroundColor]}>{modalTitle}</Text>
                         <Text style={styles.message}>{modalMsg}</Text>
                         <Pressable onPress={hideMessage}
-                            style={styles.buttonReg}>
+                            style={[styles.buttonReg, backgroundColor]}>
                             <Text style={styles.buttonText}>{t("fechar")}</Text>
                         </Pressable>
                     </View>
@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     modalContentError: {
-        backgroundColor: 'rgba(255, 0, 0, 0.2)'
+        backgroundColor: 'red'
     },
     modalContentSuccess: {
-        backgroundColor: 'white'
+        backgroundColor: 'yellowgreen'
     },
     modalContentAlert: {
-        backgroundColor: 'rgba(255, 165, 0, 0.2)'
+        backgroundColor: 'yellow'
     },
 
     modalContainer: {

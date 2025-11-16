@@ -274,13 +274,13 @@ export default function ListPn({ navigation }) {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={[styles.text, { flex: 1, textAlign: 'left', marginLeft: 10 }]}>
-                        {t("total")}: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
+                        {t("Total")}: <Text style={{ fontWeight: 'bold' }}>{totalItems}</Text>
                     </Text>
                     <Text style={[styles.text, { flex: 1, textAlign: 'center' }]}>
-                        {t("pedentes")}: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
+                        {t("Pedente")}: <Text style={{ fontWeight: 'bold' }}>{pendingItems}</Text>
                     </Text>
                     <Text style={[styles.text, { flex: 1, textAlign: 'right', marginRight: 10 }]}>
-                        {t("contado")}: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
+                        {t("Contado")}: <Text style={{ fontWeight: 'bold' }}>{countedItems}</Text>
                     </Text>
                 </View>
             </View>
