@@ -86,8 +86,29 @@ export default function Posicao({navigation}) {
         setSearchId(data);
       };
 
+    const getItemBackgroundColor = (item) => {
+        const rawScore = item.score ?? item.Score;
+        const score = parseInt(rawScore, 10);
+        if (score === 1) {
+            return '#e8f5e9'; // 1: Verde muito claro (pastel)
+        }
+        if (score === 2) {
+            return '#bbdefb'; // 2: Azul mais encorpado e definido
+        }
+        if (score === 3) {
+            return '#fef9c3'; // 3: Amarelo muito claro (pastel)
+        }
+        if (score >= 4) {
+            return '#ffebee'; // 4+: Vermelho muito claro (pastel)
+        }
+        if (item.Status === "Encerrado") {
+            return '#e8f5e9'; // Verde suave se encerrado
+        }
+        return '#f9f9f9'; // Branco neutro
+    };
+
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <View style={{padding:0, alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                     style={styles.input}
@@ -110,32 +131,59 @@ export default function Posicao({navigation}) {
                     </View>
                 }
 
+            <View style={styles.headerContainer}>
+                <Text style={[styles.headerText, { flex: 1, textAlign: 'left' }]}>{t("posicao")}</Text>
+                <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>{t("contagem")}</Text>
+                <Text style={[styles.headerText, { flex: 1, textAlign: 'right' }]}>{t("status")}</Text>
+            </View>
+
             <FlatList
                 data={filteredData}
                 keyExtractor={item => item.id}
                         
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handlerSelectItem(item)}>
-                        <View  key={item.Posicao} style={item.Status === "Encerrado" ? styles.itemOpen : styles.itemEnd}>
-                        {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
-                        <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
-                            <View style={{display:'flex',
-                                            flexDirection:'row', 
-                                            justifyContent:'space-between',
-                                            width:'100%'}}>
-                                <Text style={styles.text}>{item.Position}</Text>
-                                <Text style={styles.text}>{item.Status}</Text>
-                            </View>
+                renderItem={({ item }) => {
+                    const rawScore = item.score ?? item.Score;
+                    const scoreDisplay = rawScore != null && rawScore !== ''
+                        ? (String(rawScore).endsWith('º') ? String(rawScore) : `${rawScore}º`)
+                        : '';
 
-                        </View>
-                    </TouchableOpacity>
-                )}
+                    return (
+                        <TouchableOpacity onPress={() => handlerSelectItem(item)}>
+                            <View key={item.Posicao} style={[styles.itemCard, { backgroundColor: getItemBackgroundColor(item) }]}>
+                            {/* <Text style={styles.title}>Codigo do produto: {item.PN}</Text>
+                            <Text style={styles.text}>Quantidade: {item.Description}</Text> */}
+                                <View style={{display:'flex',
+                                                flexDirection:'row', 
+                                                justifyContent:'space-between',
+                                                alignItems: 'center',
+                                                width:'100%'}}>
+                                    <Text style={[styles.text, { flex: 1, textAlign: 'left' }]}>{item.Position}</Text>
+                                    <Text style={[styles.text, { flex: 1, textAlign: 'center' }]}>{scoreDisplay}</Text>
+                                    <Text style={[styles.text, { flex: 1, textAlign: 'right' }]}>{item.Status}</Text>
+                                </View>
+
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }}
             />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    itemCard: {       
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        margin: 20
+    },
     itemOpen: {       
         backgroundColor: '#ccffcc',
         alignItems: 'flex-start',
@@ -178,5 +226,22 @@ const styles = StyleSheet.create({
     },
     column: {
         justifyContent: 'center',
-      },
+    },
+    headerContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 35,
+        paddingVertical: 8,
+        marginTop: 5,
+    },
+    headerText: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#444',
+    },
+    text: {
+        fontSize: 15,
+    },
 });

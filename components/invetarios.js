@@ -205,7 +205,7 @@ export default function InventarioS({ navigation }) {
 
         try {
             // Verifica se qty é um número válido e positivo
-            if (!qty || isNaN(qty) || Number(qty) <= 0) {
+            if (!qty || isNaN(qty) || Number(qty) < 0) {
                 setNavigationPage('')
                 setModalVisible(true)
                 setModalMsg(t("Informe uma Quantidade válida!"))
@@ -417,7 +417,7 @@ export default function InventarioS({ navigation }) {
             }
         }
 
-        const res = await fetch(`${URL}/api/invproducts?${token}&selection=productPosition&PN=${_pn[0].PN}&position=${position}`)
+        const res = await fetch(`${URL}/api/invproducts?${token}&selection=productPosition&PN=${_pn[0].PN}&Position=${position}`)
         const data = await res.json()
         if (data && data.length > 0) {
             setIsUpdate(true);

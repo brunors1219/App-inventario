@@ -38,6 +38,7 @@
   "Pedente": "Pending",
   "Contado": "Counted",
   "contagem": "Counting",
+  "status": "Status",
   "erro Usuario": "User Error",
   "informe nome de usuario": "Please enter the username!",
   "erro Senha": "Password Error",
